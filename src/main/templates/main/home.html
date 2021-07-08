@@ -1,7 +1,11 @@
 <html>
 <head>
 
+{% if env == 'production' %}
     <title>DFB</title>
+{% else %}
+    <title>DFB - {{env|title}} </title>
+{% endif %}
 
 {% load bootstrap4 %}
 {% bootstrap_css %}
