@@ -29,4 +29,8 @@ Create a database for the project, create a role and modify with the following.
 ALTER ROLE some_user SET client_encoding TO 'utf8';
 ALTER ROLE some_user SET default_transaction_isolation TO 'read committed';
 ALTER ROLE some_user SET timezone TO 'UTC';
-GRANT ALL PRIVILEGES ON DATABASE some_database TO some_user;```
+GRANT ALL PRIVILEGES ON DATABASE some_database TO some_user;
+```
+
+For running tests need
+`ALTER ROLE some_user NOSUPERUSER CREATEDB NOCREATEROLE NOINHERIT LOGIN;`
