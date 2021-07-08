@@ -11,3 +11,14 @@ class MainViewTests(TestCase):
         url = reverse('home')
         response = self.client.get(url)
         self.assertContains(response, text='DFB HOME', status_code=200)
+
+
+    def test_bootstrap_present(self):
+        """
+        Bootstrap and jquey should be in the page head.
+        """
+        url = reverse('home')
+        response = self.client.get(url)
+        self.assertContains(response, text='jquery', status_code=200)
+        self.assertContains(response, text='bootstrap', status_code=200)
+
