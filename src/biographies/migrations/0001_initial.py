@@ -37,8 +37,8 @@ class Migration(migrations.Migration):
                 ('featured', models.BooleanField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('primary_country', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='+', to='main.country')),
-                ('secondary_country', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='+', to='main.country')),
+                ('primary_country', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='+', to='biographies.country')),
+                ('secondary_country', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='+', to='biographies.country')),
             ],
             options={
                 'verbose_name_plural': 'Biographies',

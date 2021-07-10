@@ -1,4 +1,3 @@
-import os
 from django.test import TestCase
 from django.urls import reverse
 from django.conf import settings
@@ -46,7 +45,7 @@ class CountryModelTests(TestCase):
             CountryFactory.create(name="Northern Ireland")
 
 
-class MainViewTests(TestCase):
+class BiographiesViewsTests(TestCase):
 
     def test_home_page(self):
         """
