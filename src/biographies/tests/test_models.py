@@ -19,3 +19,14 @@ class CountryModelTests(TestCase):
         CountryFactory.create(name="Northern Ireland")
         with self.assertRaises(IntegrityError):
             CountryFactory.create(name="Northern Ireland")
+
+    def test_country_sorted_by_name_ascending(self):
+        CountryFactory.create(name="Chile")
+        CountryFactory.create(name="Argentina")
+        CountryFactory.create(name="Brazil")
+
+        self.assertEqual(Country.objects.all().first().name, "Argentina")
+        self.assertEqual(Country.objects.all().last().name, "Chile")
+
+
+
