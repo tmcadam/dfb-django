@@ -28,6 +28,9 @@ class CountryModelTests(TestCase):
         self.assertEqual(Country.objects.all().first().name, "Argentina")
         self.assertEqual(Country.objects.all().last().name, "Chile")
 
+    def test_str_representation_of_country_shows_country_name(self):
+        c = CountryFactory.create(name="Chile")
+        self.assertEqual(str(c), "Chile")
 
 class BiographyModelTests(TestCase):
 
