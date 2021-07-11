@@ -21,6 +21,11 @@ class Biography(models.Model):
         ordering = ["title"]
         verbose_name_plural = "Biographies"
 
+    def __str__(self):
+        if self.lifespan:
+            return "{} ({})".format(self.title, self.lifespan)
+        return self.title
+
 
 class Country(models.Model):
 

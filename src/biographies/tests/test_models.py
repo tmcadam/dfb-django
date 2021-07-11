@@ -123,3 +123,9 @@ class BiographyModelTests(TestCase):
         BiographyFactory.create(lifespan=None)
         b1 = Biography.objects.all().first()
         self.assertIsNone(b1.lifespan)
+
+    def test_str_representation_of_biography_shows_biography_title_and_lifespan(self):
+        b = BiographyFactory.create(title="Fred Burns", lifespan="1922-1986")
+        self.assertEqual(str(b), "Fred Burns (1922-1986)")
+        b = BiographyFactory.create(title="Fred Burns", lifespan=None)
+        self.assertEqual(str(b), "Fred Burns")
