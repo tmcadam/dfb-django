@@ -40,10 +40,10 @@ class BiographyModelTests(TestCase):
         with self.assertRaises(IntegrityError):
             BiographyFactory.create(title=None)
 
-    def test_create_biography_fails_if_title_not_unique(self):
+    def test_create_biography_if_title_not_unique(self):
         BiographyFactory.create(title="Bio1")
-        with self.assertRaises(IntegrityError):
-            BiographyFactory.create(title="Bio1")
+        BiographyFactory.create(title="Bio1")
+        self.assertEqual(Biography.objects.all().count(), 2)
 
     def test_create_biography_fails_if_slug_missing(self):
         with self.assertRaises(IntegrityError):
@@ -84,7 +84,7 @@ class BiographyModelTests(TestCase):
         b1 = Biography.objects.all().first()
         self.assertIsNone(b1.secondary_country)
 
-    def test_can_create_country_with_south_georgia_set_to_true(self):
+    def test_can_create_biography_with_south_georgia_set_to_true(self):
         BiographyFactory.create(south_georgia=True)
         b1 = Biography.objects.all().first()
         self.assertTrue(b1.south_georgia)
@@ -95,3 +95,28 @@ class BiographyModelTests(TestCase):
         BiographyFactory.create(featured=False)
         result = Biography.objects.filter(featured=True)
         self.assertEqual(result.count(), 2)
+
+    def test_can_create_biography_with_no_revisions(self):
+        BiographyFactory.create(revisions=None)
+        b1 = Biography.objects.all().first()
+        self.assertIsNone(b1.revisions)
+
+    def test_can_create_biography_with_no_authors(self):
+        BiographyFactory.create(authors=None)
+        b1 = Biography.objects.all().first()
+        self.assertIsNone(b1.authors)
+    
+    def test_can_create_biography_with_no_links(self):
+        BiographyFactory.create(external_links=None)
+        b1 = Biography.objects.all().first()
+        self.assertIsNone(b1.external_links)
+    
+    def test_can_create_biography_with_no_references(self):
+        BiographyFactory.create(references=None)
+        b1 = Biography.objects.all().first()
+        self.assertIsNone(b1.references)
+
+    def test_can_create_biography_with_no_lifespan(self):
+        BiographyFactory.create(lifespan=None)
+        b1 = Biography.objects.all().first()
+        self.assertIsNone(b1.lifespan)

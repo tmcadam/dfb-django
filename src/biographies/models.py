@@ -2,14 +2,14 @@ from django.db import models
 
 class Biography(models.Model):
 
-    title = models.CharField(max_length=250, unique=True)
+    title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=50, db_index=True, unique=True)
-    lifespan = models.CharField(max_length=50)
+    lifespan = models.CharField(max_length=50, null=True)
     body = models.TextField()
-    authors = models.CharField(max_length=250)
-    revisions = models.TextField()
-    external_links = models.TextField()
-    references = models.TextField()
+    authors = models.CharField(max_length=250, null=True)
+    revisions = models.TextField(null=True)
+    external_links = models.TextField(null=True)
+    references = models.TextField(null=True)
     primary_country = models.ForeignKey('Country', on_delete=models.PROTECT, null=True, related_name='+')
     secondary_country = models.ForeignKey('Country', on_delete=models.PROTECT, null=True, related_name='+')
     south_georgia = models.BooleanField()
