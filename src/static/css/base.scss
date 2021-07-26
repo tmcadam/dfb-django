@@ -1,0 +1,71 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ */
+
+ @font-face {
+    font-family: 'Roboto Slab';
+    src: url(static('vendor/fonts/RobotoSlab-Bold.ttf')) format('truetype'),
+}
+@font-face {
+    font-family: 'Open Sans';
+    src: url(static('vendor/fonts/OpenSans-Regular.ttf')) format('truetype'),
+}
+
+$body-bg:                                 #F2F2F2;
+$font-family-sans-serif:                  'Open Sans', sans-serif;
+$font-size-base:                           1rem;
+$primary:                                  #1B1217;
+
+$link-color:                              green;
+$link-decoration:                         none !default;
+$link-hover-color:                        gray;
+$link-hover-decoration:                   none !default;
+
+$navbar-padding-y:                        18px;
+$navbar-nav-link-padding-x:               20px;
+$navbar-dark-color:                       #f5b451;
+$navbar-dark-active-color:                #f5b451;
+$navbar-brand-font-size:                  1.7rem;
+
+$dropdown-border-radius:                  0px;
+$dropdown-border-width:                   0px;
+$dropdown-item-padding-y:                 0.75rem;
+$dropdown-font-size:                      0.9rem;
+$dropdown-spacer:                         $navbar-padding-y + 1;
+
+@import "vendor/bootstrap/bootstrap";
+@import "vendor/fontawesome/font-awesome";
+
+html {
+    font-size: 15px;
+}
+
+// @import "lightbox-bootstrap";
+// @import "biographies";
+// @import "authors";
+// @import "summernote-bs4";
+// @import "images";
+@import "css/navbar"; 
+// @import "comments";
+// @import "lightbox";
+// @import "static_content";
+@import "css/home";
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+.dfb-yellow {
+    color: #f5b451 !important;
+}
