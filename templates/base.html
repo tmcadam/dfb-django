@@ -8,7 +8,11 @@
 
 {% include "favicon.html" %}
 
-<title>DFB</title>
+{% if env == 'production' %}
+    <title>DFB</title>
+{% else %}
+    <title>DFB - {{env|title}} </title>
+{% endif %}
 
 {% load compress %}
 {% compress css %}
