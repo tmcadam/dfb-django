@@ -34,3 +34,13 @@ class PagesViewsTests(TestCase):
         settings.ENVIRONMENT = 'production'
         self.assertContains(response, text='DFB', status_code=200)
         self.assertNotContains(response, text='DFB - Production')
+
+
+    def test_page_has_footer(self):
+        """
+        The home page contains a footer
+        """
+        url = reverse('home')
+        response = self.client.get(url)
+        self.assertContains(response, text='2012-21 David Tatham. All rights reserved.', status_code=200)
+   
