@@ -6,12 +6,11 @@ class PagesViewsTests(TestCase):
 
     def test_home_page(self):
         """
-        The home view of the DFB site returns a simple
-        test string.
+        The home view of the DFB site returns a simple test string.
         """
         url = reverse('home')
         response = self.client.get(url)
-        self.assertContains(response, text='DFB HOME', status_code=200)
+        self.assertContains(response, text='The Dictionary of Falklands Biography', status_code=200)
 
 
     def test_bootstrap_present(self):
@@ -26,8 +25,7 @@ class PagesViewsTests(TestCase):
 
     def test_page_title(self):
         """
-        The title of the page (browser tab) contains the environment name, 
-        unless in production.
+        The title of the page (browser tab) contains the environment name, unless in production.
         """
         url = reverse('home')
         settings.ENVIRONMENT = 'staging'
