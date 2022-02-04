@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>
+    <strong>{{ biography.title }}</strong>
+</h3>
+
+<h4>
+    {{ biography.lifespan }}
+    <span class="pull-right">
+        {% if biography.primary_country %}
+            <em><small>
+                from {{ biography.primary_country.name }}
+                {% if biography.secondary_country %}
+                    (also {{ biography.secondary_country.name }})
+                {% endif %}
+            </small></em>
+        {% endif %}
+        {% if biography.south_georgia %}
+            <button type="button" class="btn btn-outline-dark btn-sm ml-3 px-1" data-toggle="tooltip" data-placement="left" title="South Georgia">SG</button>
+        {% endif %}
+    </span>
+</h4>
+
+{{ biography.body|safe }}
+
+{% endblock %}
