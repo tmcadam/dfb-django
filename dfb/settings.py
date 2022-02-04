@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'biographies',
     'pages',
-    'compressor'
+    'compressor',
+    'django_summernote'
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,27 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'public')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SUMMERNOTE_CONFIG = {
+
+    # You can put custom Summernote settings
+    'summernote': {
+
+        # Change editor size
+        'width': '75%',
+        'height': '480',
+
+        'toolbar': [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'clear']],
+            ['link', ['link']],
+            ['misc', ['codeview', 'undo', 'redo']],
+        ],
+        'linkTargetBlank': False,
+        'styleTags': [
+            'p', 
+            {'tag': 'blockquote', 'title': 'Quotation'},
+            {'tag': 'h5', 'title': 'Section heading'}
+        ]
+    }
+}

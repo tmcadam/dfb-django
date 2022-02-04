@@ -3,3 +3,4 @@ wheel
 psycopg2
 django_compressor
 django-libsass
+django-summernote
