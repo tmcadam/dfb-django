@@ -24,3 +24,12 @@ class BiographyFactory(factory.django.DjangoModelFactory):
     secondary_country = None
     south_georgia = factory.Faker('pybool')
     featured= factory.Faker('pybool')
+
+
+class AuthorFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Author
+
+    first_name = factory.Faker('first_name')
+    last_name = factory.Faker('last_name')
+    biography = factory.Sequence(lambda n: 'Biography_%d' % n) 
