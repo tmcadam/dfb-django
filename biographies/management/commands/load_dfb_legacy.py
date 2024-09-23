@@ -64,3 +64,18 @@ class Command(BaseCommand):
                     author_position = biography_author["author_position"]
                 )
         self.stdout.write(self.style.SUCCESS('BiographyAuthors: loaded {} items'.format(length)))
+
+        # read comments
+        comments_data = self.read_file(os.path.join(folder_path, "_comments_.json"))
+        length = len(comments_data["comments"])
+        for comment in comments_data["comments"]:
+            bio = Biography.objects.filter(id=comment["biography_id"])
+            if bio:
+                Comment.objects.create(
+                    biography = bio[0],
+                    name = comment["name"],
+                    email = comment["email"],
+                    comment = comment["comment"]
+                )
+        self.stdout.write(self.style.SUCCESS('Comments: loaded {} items'.format(length)))
+
