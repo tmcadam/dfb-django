@@ -131,3 +131,5 @@ dmypy.json
 public/
 static/vendor/
 tmp/
+media/images/
+media/CACHE/

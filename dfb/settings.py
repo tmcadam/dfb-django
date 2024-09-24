@@ -40,8 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'biographies',
     'pages',
+    'images',
     'compressor',
-    'django_summernote'
+    'django_summernote',
+    'imagekit'
 ]
 
 MIDDLEWARE = [
@@ -144,6 +146,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'public')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

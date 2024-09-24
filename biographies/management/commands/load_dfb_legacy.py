@@ -1,6 +1,8 @@
 from django.core.management.base import BaseCommand, CommandError
 
 from biographies.models import *
+from images.models import *
+
 import json
 import os
 
@@ -72,6 +74,7 @@ class Command(BaseCommand):
             bio = Biography.objects.filter(id=comment["biography_id"])
             if bio:
                 Comment.objects.create(
+                    id=comment["id"],
                     biography = bio[0],
                     name = comment["name"],
                     email = comment["email"],
@@ -79,3 +82,18 @@ class Command(BaseCommand):
                 )
         self.stdout.write(self.style.SUCCESS('Comments: loaded {} items'.format(length)))
 
+        # read images
+        images_data = self.read_file(os.path.join(folder_path, "images.json"))
+        length = len(images_data["images"])
+        for img in images_data["images"]:
+            bio = Biography.objects.filter(id=img["biography_id"])
+            image_name = img["image_file_name"].replace(".png", ".jpg")
+            Image.objects.create(
+                id = img["id"],
+                biography = bio[0],
+                title = img["title"],
+                caption = img["caption"],
+                attribution = img["attribution"],
+                image = os.path.join("images", image_name)
+            )
+        self.stdout.write(self.style.SUCCESS('Images: loaded {} items'.format(length)))
