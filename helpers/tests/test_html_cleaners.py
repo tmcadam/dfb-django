@@ -5,7 +5,7 @@ from django.test import tag
 
 class ImageUnitTests(SimpleTestCase):
 
-    @tag("images")
+    @tag("helpers")
     def test_clean_urls_removes_protocol_and_host_from_string(self):
         test_strs = [   
             "before https://www.falklandsbiographies.org/test-url/biographies/12 after",
