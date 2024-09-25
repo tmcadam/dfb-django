@@ -15,7 +15,7 @@ class BiographyFactory(factory.django.DjangoModelFactory):
     title = factory.Sequence(lambda n: 'Biography_%d' % n) 
     slug = factory.Sequence(lambda n: 'slug-%d' % n) 
     lifespan = factory.Faker('year')
-    body = factory.Faker('paragraphs', nb=6)
+    body = factory.Faker('paragraph')
     authors = factory.Faker('name')
     revisions = factory.Faker('paragraph')
     external_links = factory.Faker('paragraph')
