@@ -131,6 +131,15 @@ class BiographyModelTests(TestCase):
         b = BiographyFactory.create(title="Fred Burns", lifespan=None)
         self.assertEqual(str(b), "Fred Burns")
 
+    def test_bio_save_cleans_urls_in_body(self):
+        bio = BiographyFactory(
+            body = "before https://www.falklandsbiographies.org/test-url/biographies/12 \
+middle https://www.falklandsbiographies.org/test-url/biographies/13 after",
+        )
+        bio.full_clean()
+        bio.save()
+        self.assertEqual(bio.body, "before /test-url/biographies/12 middle /test-url/biographies/13 after")
+
 
 class AuthorModelTests(TestCase):
 
