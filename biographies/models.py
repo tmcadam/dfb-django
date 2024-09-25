@@ -7,14 +7,14 @@ class Biography(models.Model):
 
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=50, db_index=True, unique=True)
-    lifespan = models.CharField(max_length=50, null=True)
+    lifespan = models.CharField(max_length=50, null=True, blank=True)
     body = models.TextField()
-    authors = models.CharField(max_length=250, null=True)
-    revisions = models.TextField(null=True)
-    external_links = models.TextField(null=True)
-    references = models.TextField(null=True)
-    primary_country = models.ForeignKey('Country', on_delete=models.PROTECT, null=True, related_name='+')
-    secondary_country = models.ForeignKey('Country', on_delete=models.PROTECT, null=True, related_name='+')
+    authors = models.CharField(max_length=250, null=True, blank=True)
+    revisions = models.TextField(null=True, blank=True)
+    external_links = models.TextField(null=True, blank=True)
+    references = models.TextField(null=True, blank=True)
+    primary_country = models.ForeignKey('Country', on_delete=models.PROTECT, null=True, blank=True, related_name='+')
+    secondary_country = models.ForeignKey('Country', on_delete=models.PROTECT, null=True, blank=True, related_name='+')
     south_georgia = models.BooleanField()
     featured = models.BooleanField()
     authors_connections = models.ManyToManyField('Author', through='BiographyAuthor', related_name="biographies")
@@ -24,6 +24,10 @@ class Biography(models.Model):
     class Meta:
         ordering = ["title"]
         verbose_name_plural = "Biographies"
+
+    def save(self, *args, **kwargs):
+        self.body = clean_urls(self.body)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         if self.lifespan:

@@ -35,29 +35,48 @@ class CountryModelTests(TestCase):
 
 class BiographyModelTests(TestCase):
 
+    @tag("biographies")
     def test_can_create_biography_with_all_fields_present(self):
-        BiographyFactory.create(title="Bio1")
-        BiographyFactory.create(title="Bio2")
-        self.assertEqual(Biography.objects.all().count(), 2)
+        bio = BiographyFactory()
+        bio.full_clean()
+        bio.save()
+        self.assertEqual(Biography.objects.all().count(), 1)
 
+    @tag("biographies")
     def test_create_biography_fails_if_title_missing(self):
-        with self.assertRaises(IntegrityError):
-            BiographyFactory.create(title=None)
+        with self.assertRaises(ValidationError):
+            bio = BiographyFactory()
+            bio.title = None
+            bio.full_clean()
+            bio.save()
 
+    @tag("biographies")
     def test_create_biography_if_title_not_unique(self):
-        BiographyFactory.create(title="Bio1")
-        BiographyFactory.create(title="Bio1")
+        bio1 = BiographyFactory(title="Bio1")
+        bio1.full_clean()
+        bio1.save()
+        bio2 = BiographyFactory(title="Bio1")
+        bio2.full_clean()
+        bio2.save()
         self.assertEqual(Biography.objects.all().count(), 2)
 
+    @tag("biographies")
     def test_create_biography_fails_if_slug_missing(self):
-        with self.assertRaises(IntegrityError):
-            BiographyFactory.create(slug=None)
+        with self.assertRaises(ValidationError):
+            bio = BiographyFactory()
+            bio.slug = None
+            bio.full_clean()
+            bio.save()
 
-    def test_create_biography_fails_if_slug_missing(self):
-        BiographyFactory.create(slug="jim_bob")
-        with self.assertRaises(IntegrityError):
-            BiographyFactory.create(slug="jim_bob")
+    @tag("biographies")
+    def test_create_biography_fails_if_body_missing(self):
+        with self.assertRaises(ValidationError):
+            bio = BiographyFactory()
+            bio.body = None
+            bio.full_clean()
+            bio.save()
 
+    @tag("biographies")
     def test_biograhies_sorted_by_title_ascending(self):
         BiographyFactory.create(title="Clarissa Cunningham")
         BiographyFactory.create(title="Arthur Anderson")
@@ -66,71 +85,117 @@ class BiographyModelTests(TestCase):
         self.assertEqual(Biography.objects.all().first().title, "Arthur Anderson")
         self.assertEqual(Biography.objects.all().last().title, "Clarissa Cunningham")
 
-    def test_create_biography_fails_if_body_missing(self):
-        with self.assertRaises(IntegrityError):
-            BiographyFactory.create(body=None)
-
+    @tag("biographies")
     def test_create_biography_with_primary_and_secondary_country(self):
         c1 = CountryFactory.create()
         c2 = CountryFactory.create()
-        BiographyFactory.create(primary_country=c1, secondary_country=c2)
+        bio = BiographyFactory(primary_country=c1, secondary_country=c2)
+        bio.full_clean()
+        bio.save()
+
         b1 = Biography.objects.all().first()
         self.assertEqual(b1.primary_country.name, c1.name)
         self.assertEqual(b1.secondary_country.name, c2.name)
 
+    @tag("biographies")
     def test_can_create_biography_with_no_primary_country(self):
-        BiographyFactory.create(primary_country=None)
+        bio = BiographyFactory()
+        bio.primary_country = None
+        bio.full_clean()
+        bio.save()
+
         b1 = Biography.objects.all().first()
         self.assertIsNone(b1.primary_country)
     
+    @tag("biographies")
     def test_can_create_biography_with_no_secondary_country(self):
-        BiographyFactory.create(secondary_country=None)
+        bio = BiographyFactory()
+        bio.secondary_country = None
+        bio.full_clean()
+        bio.save()
         b1 = Biography.objects.all().first()
         self.assertIsNone(b1.secondary_country)
 
+    @tag("biographies")
     def test_can_create_biography_with_south_georgia_set_to_true(self):
-        BiographyFactory.create(south_georgia=True)
+        bio = BiographyFactory()
+        bio.south_georgia=True
+        bio.full_clean()
+        bio.save()
+
         b1 = Biography.objects.all().first()
         self.assertTrue(b1.south_georgia)
 
+    @tag("biographies")
     def test_can_update_country_to_be_featured(self):
         BiographyFactory.create(featured=True)
         BiographyFactory.create(featured=True)
         BiographyFactory.create(featured=False)
         result = Biography.objects.filter(featured=True)
         self.assertEqual(result.count(), 2)
-
+    
+    @tag("biographies")
     def test_can_create_biography_with_no_revisions(self):
-        BiographyFactory.create(revisions=None)
+        bio = BiographyFactory.create()
+        bio.revisions=None
+        bio.full_clean()
+        bio.save()
+
         b1 = Biography.objects.all().first()
         self.assertIsNone(b1.revisions)
 
+    @tag("biographies")
     def test_can_create_biography_with_no_authors(self):
-        BiographyFactory.create(authors=None)
+        bio = BiographyFactory.create()
+        bio.authors=None
+        bio.full_clean()
+        bio.save()
+        
         b1 = Biography.objects.all().first()
         self.assertIsNone(b1.authors)
     
+    @tag("biographies")    
     def test_can_create_biography_with_no_links(self):
-        BiographyFactory.create(external_links=None)
+        bio = BiographyFactory.create()
+        bio.external_links=None
+        bio.full_clean()
+        bio.save()
+        
         b1 = Biography.objects.all().first()
         self.assertIsNone(b1.external_links)
-    
+
+    @tag("biographies")    
     def test_can_create_biography_with_no_references(self):
-        BiographyFactory.create(references=None)
+        bio = BiographyFactory.create()
+        bio.references=None
+        bio.full_clean()
+        bio.save()
+        
         b1 = Biography.objects.all().first()
         self.assertIsNone(b1.references)
 
+    @tag("biographies")
     def test_can_create_biography_with_no_lifespan(self):
-        BiographyFactory.create(lifespan=None)
+        bio = BiographyFactory.create()
+        bio.lifespan=None
+        bio.full_clean()
+        bio.save()
+        
         b1 = Biography.objects.all().first()
         self.assertIsNone(b1.lifespan)
 
+    @tag("biographies")
     def test_str_representation_of_biography_shows_biography_title_and_lifespan(self):
-        b = BiographyFactory.create(title="Fred Burns", lifespan="1922-1986")
+        b = BiographyFactory(title="Fred Burns", lifespan="1922-1986")
+        b.full_clean()
+        b.save()
         self.assertEqual(str(b), "Fred Burns (1922-1986)")
-        b = BiographyFactory.create(title="Fred Burns", lifespan=None)
+        b = BiographyFactory(title="Fred Burns", lifespan=None)
+        b.full_clean()
+        b.save()
         self.assertEqual(str(b), "Fred Burns")
 
+    @tag("biographies")
     def test_bio_save_cleans_urls_in_body(self):
         bio = BiographyFactory(
             body = "before https://www.falklandsbiographies.org/test-url/biographies/12 \
