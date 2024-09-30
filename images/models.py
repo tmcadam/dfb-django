@@ -22,7 +22,7 @@ class Image (models.Model):
     title = models.CharField()
     caption = models.TextField()
     attribution = models.CharField(null=True, blank=True)
-    biography = models.ForeignKey(Biography, on_delete=models.CASCADE)
+    biography = models.ForeignKey(Biography, on_delete=models.CASCADE, related_name="images")
     image = ProcessedImageField(upload_to='images',
                                            processors=[Downsize(800)],
                                            format='JPEG',
