@@ -8,3 +8,9 @@ def copyright_statement(request):
     return {
         "COPYRIGHT": f"2012-{year}",
     }
+
+def environment(request):
+
+    return {
+        "ENVIRONMENT": settings.ENVIRONMENT
+    }

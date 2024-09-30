@@ -11,7 +11,7 @@
 {% if env == 'production' %}
     <title>DFB</title>
 {% else %}
-    <title>DFB - {{env|title}} </title>
+    <title>DFB - {{ ENVIRONMENT|title }} </title>
 {% endif %}
 
 {% load compress %}
