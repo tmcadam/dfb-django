@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>
+  <strong>Biographies</strong>
+  {% include "biographies/_search.html" %}
+</h3>
+
+<table id="index" class="table">
+    {% for biography in page_obj %}
+    <tr>
+        <td>
+            <a href="{% url 'biographies:show' bio_slug=biography.slug %}">{{ biography.title }}</a>
+            {{ biography.lifespan }}
+            <br>
+            <span class="small">
+                {% if biography.primary_country %}
+                    <em>
+                    {{ biography.primary_country.name }}
+                    {% if biography.secondary_country %}
+                        (also {{ biography.secondary_country.name }})
+                    {% endif %}
+                    </em>
+                {% endif %}
+                {% if biography.south_georgia %}
+                    <button type="button" class="btn btn-outline-dark btn-sm ml-2 px-1" data-toggle="tooltip" data-placement="right" title="South Georgia">SG</button>
+                {% endif %}
+            </span>
+            {{ biography.body|safe|truncatechars_html:200 }}
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td>No results</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% if page_obj.object_list %}
+    {% include "biographies/_pagination.html" %}
+{% endif %}
+
+{% endblock %}
