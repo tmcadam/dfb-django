@@ -25,6 +25,10 @@ class Biography(models.Model):
         ordering = ["title"]
         verbose_name_plural = "Biographies"
 
+    @property
+    def featured_image_url(self):
+        return self.images.order_by("id").first().image300x300.url
+
     def save(self, *args, **kwargs):
         self.body = clean_urls(self.body)
         super().save(*args, **kwargs)

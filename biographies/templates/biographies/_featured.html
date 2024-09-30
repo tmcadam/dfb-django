@@ -1,0 +1,9 @@
+<a href="{% url 'biographies:show' bio_slug=biography.slug %}">
+    <img src="{{ biography.featured_image_url }}" alt="..." class="card-img-top">
+    <div class="card-body">
+        <h5 class="card-title"><strong>{{ biography.title }}</strong></h5>
+        <p class="card-text">
+            {{ biography.body|safe|truncatechars_html:100 }}
+        </p>
+    </div>
+</a>

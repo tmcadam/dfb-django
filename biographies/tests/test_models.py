@@ -1,8 +1,10 @@
-from django.test import TestCase, tag
+import tempfile
+from django.test import TestCase, tag, override_settings
 from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError
 
 from biographies.models import *
+from images.tests.utils import create_test_img
 from .factories import *
 
 class CountryModelTests(TestCase):
@@ -33,6 +35,7 @@ class CountryModelTests(TestCase):
         c = CountryFactory.create(name="Chile")
         self.assertEqual(str(c), "Chile")
 
+@override_settings(MEDIA_ROOT=tempfile.gettempdir())
 class BiographyModelTests(TestCase):
 
     @tag("biographies")
@@ -204,6 +207,16 @@ middle https://www.falklandsbiographies.org/test-url/biographies/13 after",
         bio.full_clean()
         bio.save()
         self.assertEqual(bio.body, "before /test-url/biographies/12 middle /test-url/biographies/13 after")
+
+
+    @tag("biographies")
+    def test_can_get_url_of_first_image_medium_size(self):
+
+        bio1 = BiographyFactory.create(title="Bio1")
+        img1 = create_test_img('test_image_2.tif', bio=bio1) #landscape
+        img2 = create_test_img('test_image_4.jpg', bio=bio1) #portrait
+        
+        self.assertEqual(bio1.featured_image_url, img1.image300x300.url)
 
 
 class AuthorModelTests(TestCase):
