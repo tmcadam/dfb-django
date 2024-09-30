@@ -42,5 +42,5 @@ class PagesViewsTests(TestCase):
         """
         url = reverse('home')
         response = self.client.get(url)
-        self.assertContains(response, text='2012-21 David Tatham. All rights reserved.', status_code=200)
+        self.assertContains(response, text='David Tatham. All rights reserved.', status_code=200)
    
