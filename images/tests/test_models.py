@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 import tempfile
 
 from django.test import TestCase, tag, override_settings
@@ -10,24 +9,10 @@ from django.conf import settings
 from images.models import Image
 from biographies.tests.factories import BiographyFactory
 
-BASE_DIR = Path(__file__).resolve().parent
+from .utils import create_test_img
 
 @override_settings(MEDIA_ROOT=tempfile.gettempdir())
 class ImageModelTests(TestCase):
-
-
-    def create_test_img(self, image_name):
-        with open(os.path.join(BASE_DIR,'files', image_name), 'rb') as f:
-            img = Image(
-                title = "Image Title",
-                biography = BiographyFactory.create(),
-                caption = "Image Caption",
-                attribution = "Image Attribution",
-                image = File(f, name=image_name)
-            )
-            img.full_clean()
-            img.save()
-            return img
 
     @tag("images")
     def test_create_image_with_all_fields(self):
@@ -116,7 +101,7 @@ class ImageModelTests(TestCase):
     @tag("images")
     def test_create_image_with_jpeg(self):
 
-        img = self.create_test_img('test_image_1.jpg')
+        img = create_test_img('test_image_1.jpg')
         self.assertEqual(Image.objects.count(), 1)
         self.assertTrue(os.path.exists(img.image.path))
         self.assertTrue(os.path.exists(img.image300x300.path))
@@ -125,7 +110,7 @@ class ImageModelTests(TestCase):
     @tag("images")
     def test_create_image_with_tif(self):
 
-        img = self.create_test_img('test_image_2.tif')
+        img = create_test_img('test_image_2.tif')
         self.assertTrue(os.path.exists(img.image.path))
         self.assertTrue(os.path.exists(img.image300x300.path))
         self.assertTrue(os.path.exists(img.image100x100.path))
@@ -133,7 +118,7 @@ class ImageModelTests(TestCase):
     @tag("images")
     def test_create_image_with_png(self):
 
-        img = self.create_test_img('test_image_3.png')
+        img = create_test_img('test_image_3.png')
         self.assertTrue(os.path.exists(img.image.path))
         self.assertTrue(os.path.exists(img.image300x300.path))
         self.assertTrue(os.path.exists(img.image100x100.path))
@@ -141,7 +126,7 @@ class ImageModelTests(TestCase):
     @tag("images")
     def test_large_images_downsized_correctly(self):
 
-        img = self.create_test_img('test_image_1.jpg')
+        img = create_test_img('test_image_1.jpg')
 
         self.assertEqual(img.image.height, 731)
         self.assertEqual(img.image.width, 800)
@@ -155,7 +140,7 @@ class ImageModelTests(TestCase):
     @tag("images")
     def test_small_images_not_resized(self):
 
-        img = self.create_test_img('test_image_3.png')
+        img = create_test_img('test_image_3.png')
 
         self.assertEqual(img.image.height, 86)
         self.assertEqual(img.image.width, 100)
@@ -168,13 +153,13 @@ class ImageModelTests(TestCase):
 
     @tag("images")
     def test_image_orientation(self):
-        img1 = self.create_test_img('test_image_1.jpg')
+        img1 = create_test_img('test_image_1.jpg')
         self.assertEqual(img1.orientation, "square")
 
-        img2 = self.create_test_img('test_image_2.tif')
+        img2 = create_test_img('test_image_2.tif')
         self.assertEqual(img2.orientation, "landscape")
 
-        img4 = self.create_test_img('test_image_4.jpg')
+        img4 = create_test_img('test_image_4.jpg')
         self.assertEqual(img4.orientation, "portrait")
 
     @tag("images")
@@ -190,3 +175,23 @@ class ImageModelTests(TestCase):
         img.full_clean()
         img.save()
         self.assertEqual(img.caption, "before /test-url/biographies/12 after")
+
+
+    @tag("images")
+    def test_can_get_images_from_biography(self):
+        bio1 = BiographyFactory()
+        img1 = Image.objects.create(
+            title = "Image Title1",
+            biography = bio1,
+            caption = "Image Caption",
+            attribution = "Image Attribution",
+            image = "some_image_path"
+        )
+        img2 = Image.objects.create(
+            title = "Image Title2",
+            biography = bio1,
+            caption = "Image Caption",
+            attribution = "Image Attribution",
+            image = "some_image_path"
+        )
+        self.assertEqual(bio1.images.count(), 2)
