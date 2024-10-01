@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{% include "favicon.html" %}
+{% include "./favicon.html" %}
 
 {% if env == 'production' %}
     <title>DFB</title>
@@ -33,19 +33,16 @@
 </head>
 <body>
 
-{% include "navbar.html" %}
+{% include "./navbar.html" %}
 
-<div class="container-flex" style="margin-top:72px">
-
-
-</div>
+<div class="container-flex" style="margin-top:72px"></div>
 
 {% block home_page %}{% endblock %}
 <div class="container py-3">
     {% block content %}{% endblock %}
 </div> 
 
-{% include "footer.html" %}
+{% include "./footer.html" %}
 
 </body>
 </html>
