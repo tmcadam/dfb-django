@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     ## DFB apps
     'common',
     'biographies',
+    'authors',
+    'comments',
     'pages',
     'images',
     ## Third party apps
