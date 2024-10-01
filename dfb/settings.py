@@ -38,9 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    ## DFB apps
+    'common',
     'biographies',
     'pages',
     'images',
+    ## Third party apps
     'compressor',
     'django_summernote',
     'imagekit'
