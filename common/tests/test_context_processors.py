@@ -4,7 +4,7 @@ from datetime import datetime as dt
 from django.template import RequestContext, Template
 from django.test import TestCase, tag, override_settings
 
-class GlobalContextTests(TestCase):
+class ContextProcessorTests(TestCase):
 
     @tag("global_context")
     def test_copyright_set_in_context(self):
