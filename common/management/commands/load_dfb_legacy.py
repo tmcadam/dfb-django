@@ -1,7 +1,9 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from biographies.models import *
-from images.models import *
+from biographies.models import Biography, Country
+from images.models import Image
+from authors.models import Author, BiographyAuthor
+from comments.models import Comment
 
 import json
 import os
