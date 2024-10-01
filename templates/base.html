@@ -15,6 +15,7 @@
 {% endif %}
 
 {% load compress %}
+
 {% compress css %}
     <link type="text/x-scss" href="{% static 'css/base.scss' %}" rel="stylesheet" media="screen">
 {% endcompress %}
@@ -33,6 +34,11 @@
 <body>
 
 {% include "navbar.html" %}
+
+<div class="container-flex" style="margin-top:72px">
+
+
+</div>
 
 {% block home_page %}{% endblock %}
 <div class="container py-3">

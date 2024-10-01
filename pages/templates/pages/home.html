@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block home_page %}
 
     <section class="jumbotron d-flex justify-content-center align-items-center mb-0" style="height:500px;">
@@ -21,22 +20,20 @@
 
     <!-- Render featured biographies -->
     {% if featured_bios.count >= 6  %}
-    <div id="featured" class="container-md px-5">
-        <p class="h4 text-center mb-5"><strong>Featured Biographies</strong></p>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-            {% for bio in featured_bios %}
-                <div class="col mb-4">
-                    <div class="card h-100 mx-auto">
-                    {% include "biographies/_featured.html" with biography=bio %}
+    <div class="container">
+        <div id="featured" class="container-md px-5">
+            <p class="h4 text-center mb-5"><strong>Featured Biographies</strong></p>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+                {% for bio in featured_bios %}
+                    <div class="col mb-4">
+                        <div class="card h-100 mx-auto">
+                        {% include "biographies/_featured.html" with biography=bio %}
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
     </div>
     {% endif %}
-
-    <!-- Modal image index -->
     {% include "pages/_modal_image_index.html" %}
-
-
 {% endblock %}
