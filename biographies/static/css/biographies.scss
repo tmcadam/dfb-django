@@ -1,0 +1,63 @@
+// Place all the styles related to the Biographies controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+/* Main biographies display */
+// .table th, .table td {
+//      border-top: none !important;
+//  }
+
+// .biography-img-right {
+//      float: right;
+//      margin: 5px 0px 10px 10px;
+// }
+
+// .biography-img-left {
+//      float: left;
+//      margin: 5px 10px 10px 0px;
+// }
+
+.authors {
+    clear: both;
+}
+
+div.biography_body h5 {
+    font-weight: bold;
+}
+
+
+div.biography_body blockquote.blockquote {
+    font: 14px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    padding-left: 15px;
+    border-left: 3px solid #ccc;
+  } 
+
+// #index div.btn-group {
+//     display: flex;
+// }
+
+// #edit_biography_1 div.row {
+//     margin-top: 5px;
+// }
+
+div.biography_body {
+    font-family:  "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 16px;
+    line-height: 1.4;
+    div.note-editable {
+        height: 500px;
+    }
+}
+
+div.biography_external_links, div.biography_authors, div.biography_references   {
+    div.note-editable {
+        height: 150px;
+    }
+}
+
+div.biography_authors_wrapper {
+    clear: both;
+}

@@ -43,22 +43,19 @@ $dropdown-item-padding-y:                 0.75rem;
 $dropdown-font-size:                      0.9rem;
 $dropdown-spacer:                         $navbar-padding-y + 1;
 
+$fa-font-path: "../vendor/fontawesome/webfonts";
+
 @import "vendor/bootstrap/bootstrap";
-@import "vendor/fontawesome/font-awesome";
+@import "./vendor/fontawesome/scss/fontawesome";
+@import "./vendor/fontawesome/scss/solid";
 
 html {
     font-size: 15px;
 }
 
-// @import "lightbox-bootstrap";
-// @import "biographies";
-// @import "authors";
-// @import "summernote-bs4";
-// @import "images";
+@import "css/biographies";
 @import "css/navbar"; 
-// @import "comments";
-// @import "lightbox";
-// @import "static_content";
+@import "css/pages";
 @import "css/home";
 
 html {
