@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 
-from helpers.html_cleaners import clean_urls
+from common.html_cleaners import clean_urls
 
 class Biography(models.Model):
 

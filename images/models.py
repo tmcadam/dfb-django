@@ -5,7 +5,7 @@ from imagekit.models import ProcessedImageField, ImageSpecField
 from imagekit.processors import ResizeToFit
 
 from biographies.models import Biography
-from helpers.html_cleaners import clean_urls
+from common.html_cleaners import clean_urls
 
 class Downsize:
 

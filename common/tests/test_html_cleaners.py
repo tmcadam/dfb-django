@@ -1,5 +1,5 @@
 from unittest import TestCase as SimpleTestCase
-from helpers.html_cleaners import *
+from common.html_cleaners import *
 
 from django.test import tag
 
