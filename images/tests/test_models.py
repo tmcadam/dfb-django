@@ -164,17 +164,17 @@ class ImageModelTests(TestCase):
 
     @tag("images")
     def test_img_save_cleans_urls_from_caption(self):
-
+        BiographyFactory.create(slug="some-bio")
         img = Image(
             title = "Image Title",
             biography = BiographyFactory.create(),
-            caption = "before https://www.falklandsbiographies.org/test-url/biographies/12 after",
+            caption = "<p>before <a href=\"https://www.falklandsbiographies.org/biographies/some-bio\">after</a></p>",
             attribution = "Image Attribution",
             image = "some_image_path"
         )
         img.full_clean()
         img.save()
-        self.assertEqual(img.caption, "before /test-url/biographies/12 after")
+        self.assertEqual(img.caption, "<p>before <a href=\"/biographies/some-bio\">after</a></p>")
 
 
     @tag("images")

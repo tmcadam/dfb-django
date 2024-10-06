@@ -201,12 +201,11 @@ class BiographyModelTests(TestCase):
     @tag("biographies")
     def test_bio_save_cleans_urls_in_body(self):
         bio = BiographyFactory(
-            body = "before https://www.falklandsbiographies.org/test-url/biographies/12 \
-middle https://www.falklandsbiographies.org/test-url/biographies/13 after",
+            body = "<p>before <a href=\"https://www.falklandsbiographies.org/biographies/some-bio\">after</a></p>",
         )
         bio.full_clean()
         bio.save()
-        self.assertEqual(bio.body, "before /test-url/biographies/12 middle /test-url/biographies/13 after")
+        self.assertEqual(bio.body, "<p>before <a href=\"/biographies/some-bio\">after</a></p>")
 
 
     @tag("biographies")
