@@ -29,6 +29,15 @@ class ImageModelTests(TestCase):
         self.assertEqual(Image.objects.count(), 1)
 
     @tag("images")
+    def test_field_alias_works_as_expected(self):
+
+        img = create_test_img('test_image_1.jpg')
+
+        self.assertEqual(img.image.url, img.original.url)
+        self.assertEqual(img.image300x300.url, img.medium.url)
+        self.assertEqual(img.image100x100.url, img.thumbnail.url)
+
+    @tag("images")
     def test_create_image_fails_without_title(self):
 
         with self.assertRaises(ValidationError):        

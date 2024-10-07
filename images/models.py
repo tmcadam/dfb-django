@@ -36,6 +36,18 @@ class Image (models.Model):
                                       format='JPEG',
                                       options={'quality': 90})
 
+    @property
+    def medium(self):
+        return self.image300x300
+
+    @property
+    def original(self):
+        return self.image
+
+    @property    
+    def thumbnail(self):
+        return self.image100x100
+
     def save(self, *args, **kwargs):
         self.caption = clean_urls(self.caption)
         super().save(*args, **kwargs)
