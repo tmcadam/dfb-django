@@ -24,6 +24,9 @@ class Biography(models.Model):
         ordering = ["title"]
         verbose_name_plural = "Biographies"
 
+    def get_ordered_authors(self):
+        return self.authors_connections.all().order_by('biographyauthor__author_position')
+
     @property
     def featured_image_url(self):
         return self.images.order_by("id").first().image300x300.url

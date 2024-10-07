@@ -132,11 +132,15 @@ class BiographyAuthorModelTests(TestCase):
 
     @tag("authors_models")
     def test_biographyauthor_ordering_by_position(self):
+        """
+        NB: This does not reflect ordering when returning the queryset of all authors on 
+        a biography. See 'get_ordered_authors' in biographies.models.
+        """
         author_1 = AuthorFactory.create()
         author_2 = AuthorFactory.create()
         bio_1 = BiographyFactory.create(title="Bio1")
-        BiographyAuthor.objects.create(biography=bio_1, author=author_2, author_position=1)
         BiographyAuthor.objects.create(biography=bio_1, author=author_1, author_position=2)
+        BiographyAuthor.objects.create(biography=bio_1, author=author_2, author_position=1)
         
         biography_authors = BiographyAuthor.objects.filter(biography=bio_1)
 

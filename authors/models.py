@@ -41,7 +41,7 @@ class BiographyAuthor(models.Model):
     class Meta:
         unique_together = [('biography', 'author'),
                            ('biography', 'author_position')]
-        ordering = ["biography", "author_position"]
+        ordering = ["author_position"]
 
     def __str__(self):
         return f"#{self.id}"

@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 
 from biographies.models import Biography, Country
 from biographies.tests.factories import BiographyFactory, CountryFactory
+from authors.tests.factories import AuthorFactory
 from images.tests.utils import create_test_img
 
 class CountryModelTests(TestCase):
@@ -216,3 +217,21 @@ class BiographyModelTests(TestCase):
         img2 = create_test_img('test_image_4.jpg', bio=bio1) #portrait
         
         self.assertEqual(bio1.featured_image_url, img1.image300x300.url)
+
+
+    @tag("biographies")
+    def test_get_ordered_authors_is_ordering_by_author_position_in_biographyauthor(self):
+
+        author_1 = AuthorFactory.create()
+        author_2 = AuthorFactory.create()
+        author_3 = AuthorFactory.create()
+        bio_1 = BiographyFactory.create(title="Bio1")
+        bio_1.authors_connections.add(author_1, through_defaults={"author_position":2})
+        bio_1.authors_connections.add(author_3, through_defaults={"author_position":3})
+        bio_1.authors_connections.add(author_2, through_defaults={"author_position":1})
+
+        ordered_authors = bio_1.get_ordered_authors()
+
+        self.assertEqual(ordered_authors[0], author_2)
+        self.assertEqual(ordered_authors[1], author_1)
+        self.assertEqual(ordered_authors[2], author_3)
