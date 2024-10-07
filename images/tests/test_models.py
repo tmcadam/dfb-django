@@ -177,13 +177,13 @@ class ImageModelTests(TestCase):
         img = Image(
             title = "Image Title",
             biography = BiographyFactory.create(),
-            caption = "<p>before <a href=\"https://www.falklandsbiographies.org/biographies/some-bio\">after</a></p>",
+            caption = """<p>before <a href="https://www.falklandsbiographies.org/biographies/some-bio">after</a></p>""",
             attribution = "Image Attribution",
             image = "some_image_path"
         )
         img.full_clean()
         img.save()
-        self.assertEqual(img.caption, "<p>before <a href=\"/biographies/some-bio\">after</a></p>")
+        self.assertEqual(img.caption, """<p>before <a href="/biographies/some-bio">after</a></p>""")
 
 
     @tag("images")
