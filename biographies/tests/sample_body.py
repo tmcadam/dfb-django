@@ -1,0 +1,10 @@
+sample_body_1 = """
+<p>Nulla viverra, ipsum ac pretium dignissim, ligula neque egestas orci, vel cursus ante nibh eu odio. Nullam nec consectetur erat. Nullam finibus tincidunt dui eu tristique. Donec varius ac sapien sit amet posuere. Proin luctus interdum est, eu vestibulum augue maximus eget. In pellentesque orci amet.</p>
+<h4>Section heading</h4>
+<p>Nulla viverra, ipsum ac pretium dignissim, ligula neque egestas orci, vel cursus ante nibh eu odio. Nullam nec consectetur erat. Nullam finibus tincidunt dui eu tristique. Donec varius ac sapien sit amet posuere. Proin luctus interdum est, eu vestibulum augue maximus eget. In pellentesque orci amet.</p>
+<blockquote>Some block quotation</blockquote>
+<p>Nulla viverra, ipsum ac pretium dignissim, ligula neque egestas orci, vel cursus ante nibh eu odio. Nullam nec consectetur erat. Nullam finibus tincidunt dui eu tristique. Donec varius ac sapien sit amet posuere. Proin luctus interdum est, eu vestibulum augue maximus eget. In pellentesque orci amet.</p>
+<p>Nulla viverra, ipsum ac pretium dignissim, ligula neque egestas orci, vel cursus ante nibh eu odio. Nullam nec consectetur erat. Nullam finibus tincidunt dui eu tristique. Donec varius ac sapien sit amet posuere. Proin luctus interdum est, eu vestibulum augue maximus eget. In pellentesque orci amet.</p>
+<p>Nulla viverra, ipsum ac pretium dignissim, ligula neque egestas orci, vel cursus ante nibh eu odio. Nullam nec consectetur erat. Nullam finibus tincidunt dui eu tristique. Donec varius ac sapien sit amet posuere. Proin luctus interdum est, eu vestibulum augue maximus eget. In pellentesque orci amet.</p>
+<p>Nulla viverra, ipsum ac pretium dignissim, ligula neque egestas orci, vel cursus ante nibh eu odio. Nullam nec consectetur erat. Nullam finibus tincidunt dui eu tristique. Donec varius ac sapien sit amet posuere. Proin luctus interdum est, eu vestibulum augue maximus eget. In pellentesque orci amet.</p>
+"""

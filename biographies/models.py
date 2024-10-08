@@ -1,6 +1,7 @@
 from django.db import models
 
 from common.html_cleaners import clean_urls
+from biographies.images_helper import interlace_images
 
 class Biography(models.Model):
 
@@ -23,6 +24,9 @@ class Biography(models.Model):
     class Meta:
         ordering = ["title"]
         verbose_name_plural = "Biographies"
+
+    def body_with_images(self):
+        return interlace_images(self) 
 
     def get_ordered_authors(self):
         return self.authors_connections.all().order_by('biographyauthor__author_position')
