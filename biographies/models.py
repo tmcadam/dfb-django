@@ -37,6 +37,14 @@ class Biography(models.Model):
 
     def save(self, *args, **kwargs):
         self.body = clean_urls(self.body)
+        if self.authors:
+            self.authors = self.authors.strip()
+        if self.external_links:
+            self.external_links = self.external_links.strip()
+        if self.references:
+            self.references = self.references.strip()
+        if self.revisions:
+            self.revisions = self.revisions.strip()
         super().save(*args, **kwargs)
 
     def __str__(self):

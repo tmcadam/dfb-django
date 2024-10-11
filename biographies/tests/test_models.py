@@ -121,6 +121,42 @@ class BiographyModelTests(TestCase):
         self.assertIsNone(b1.secondary_country)
 
     @tag("biographies")
+    def test_biography_revisions_have_white_space_cleaned_in_save(self):
+        bio = BiographyFactory()
+        bio.revisions = " "        
+        bio.full_clean()
+        bio.save()
+        b1 = Biography.objects.all().first()
+        self.assertEqual(b1.revisions, "")
+
+    @tag("biographies")
+    def test_biography_references_have_white_space_cleaned_in_save(self):
+        bio = BiographyFactory()
+        bio.references = " "        
+        bio.full_clean()
+        bio.save()
+        b1 = Biography.objects.all().first()
+        self.assertEqual(b1.references, "")
+
+    @tag("biographies")
+    def test_external_links_have_white_space_cleaned_in_save(self):
+        bio = BiographyFactory()
+        bio.external_links = " "        
+        bio.full_clean()
+        bio.save()
+        b1 = Biography.objects.all().first()
+        self.assertEqual(b1.external_links, "")
+
+    @tag("biographies")
+    def test_authors_have_white_space_cleaned_in_save(self):
+        bio = BiographyFactory()
+        bio.authors = " "        
+        bio.full_clean()
+        bio.save()
+        b1 = Biography.objects.all().first()
+        self.assertEqual(b1.authors, "")
+
+    @tag("biographies")
     def test_can_create_biography_with_south_georgia_set_to_true(self):
         bio = BiographyFactory()
         bio.south_georgia=True
