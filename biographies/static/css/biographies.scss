@@ -2,20 +2,9 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-/* Main biographies display */
-// .table th, .table td {
-//      border-top: none !important;
-//  }
-
-// .biography-img-right {
-//      float: right;
-//      margin: 5px 0px 10px 10px;
-// }
-
-// .biography-img-left {
-//      float: left;
-//      margin: 5px 10px 10px 0px;
-// }
+.pull-right {
+    float:right;
+  }
 
 .authors {
     clear: both;
@@ -26,7 +15,7 @@ div.biography_body h5 {
 }
 
 
-div.biography_body blockquote.blockquote {
+div.biography_body blockquote {
     font: 14px;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -35,13 +24,6 @@ div.biography_body blockquote.blockquote {
     border-left: 3px solid #ccc;
   } 
 
-// #index div.btn-group {
-//     display: flex;
-// }
-
-// #edit_biography_1 div.row {
-//     margin-top: 5px;
-// }
 
 div.biography_body {
     font-family:  "Helvetica Neue",Helvetica,Arial,sans-serif;
