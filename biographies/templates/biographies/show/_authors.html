@@ -1,0 +1,10 @@
+{% if biography.authors %}
+    <div class="biography_authors_wrapper row-fluid" style="clear:both;">
+        <hr>
+        <h4><strong>Authors</strong></h4>
+        <div class="biography_authors ml-3 mb-2">
+            {{ biography.authors }}
+            <button type="button" class="btn btn-outline-dark btn-sm ml-3" data-toggle="modal" data-target="#authors-info">Author Info</button>
+        </div>
+    </div>
+{% endif %}

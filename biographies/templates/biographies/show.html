@@ -31,7 +31,20 @@
         {% endif %}
     </span>
 </h4>
+<br>
+<div class="biography_body">
+    {{ biography.body_with_images|safe }}
+</div>
 
-{{ biography.body|safe }}
+{% include "biographies/show/_authors.html" with biography=biography %}
+{% include "biographies/show/_external_links.html" with biography=biography %}
+{% include "biographies/show/_references.html" with biography=biography %}
+<!-- TODO: COMMENTS IN HERE -->
+{% include "biographies/show/_revisions.html" with biography=biography %}
+
+<!-- Hidden content for modal popups -->
+{% include "authors/_authors_modal.html" with authors=biography.get_ordered_authors %}
+<!-- <%= render partial: 'comments/new', locals: { biography: @biography } %> -->
+
 
 {% endblock %}

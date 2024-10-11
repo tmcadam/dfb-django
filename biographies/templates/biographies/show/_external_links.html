@@ -1,0 +1,6 @@
+{% if biography.external_links %}
+    <h4><strong>External links</strong></h4>
+    <div class="biography_external_links ml-3 mb-2">
+        {{ biography.external_links|safe }}
+    </div>
+{% endif %}
