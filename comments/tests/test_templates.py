@@ -69,7 +69,7 @@ class CommentTemplateTests(TestCase):
         comment1 = bio1.comments.create(
             name="Sam", 
             email="sam@blah.com", 
-            comment=""""<script>document.getElementById("demo").innerHTML = "Hello JavaScript!";</script>"""
+            comment="""<script>document.getElementById("demo").innerHTML = "Hello JavaScript!";</script>"""
             )
 
         comment1.approved=True
