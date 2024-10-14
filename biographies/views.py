@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 from .models import Biography
 from .pagination_helper import generate_pagination_links
+from comments.forms import SubmitCommentForm
 
 # Create your views here
 def index(request):
@@ -23,4 +24,5 @@ def index(request):
 
 def show(request, bio_slug):
     biography = get_object_or_404(Biography, slug=bio_slug)
-    return render(request, 'biographies/show.html', {'biography': biography})
+    comments_form = SubmitCommentForm(initial={"biography": biography.id})
+    return render(request, 'biographies/show.html', {'biography': biography, 'comments_form': comments_form})

@@ -4,6 +4,8 @@ from django.urls import reverse
 from biographies.models import *
 from .factories import *
 
+from comments.forms import SubmitCommentForm
+
 class BiographyViewsTests(TestCase):
 
     @tag("biographies_views")
@@ -86,3 +88,14 @@ class BiographyViewsTests(TestCase):
         url = reverse('biographies:show', args=["bio1"]) 
         response = self.client.get(url)
         self.assertContains(response, text="Bio1", status_code=200)
+
+    @tag("biographies_views")
+    def  test_biography_view_has_partially_filled_comment_form_in_context(self):
+
+        bio1 = BiographyFactory.create(title="Bio1", slug="bio1")
+        url = reverse('biographies:show', args=["bio1"]) 
+        response = self.client.get(url)
+        self.assertContains(response, text="Bio1", status_code=200)
+        self.assertEqual(type(response.context["comments_form"]), SubmitCommentForm)
+        self.assertEqual(response.context["comments_form"].initial["biography"], bio1.id)
+
