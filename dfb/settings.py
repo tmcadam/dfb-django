@@ -48,7 +48,9 @@ INSTALLED_APPS = [
     ## Third party apps
     'compressor',
     'django_summernote',
-    'imagekit'
+    'imagekit',
+    'crispy_forms',
+    'crispy_bootstrap4'
 ]
 
 MIDDLEWARE = [
@@ -181,3 +183,5 @@ SUMMERNOTE_CONFIG = {
         ]
     }
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

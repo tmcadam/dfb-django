@@ -6,3 +6,5 @@ django-libsass
 django-summernote
 Pillow
 django-imagekit
+django-crispy-forms
+crispy-bootstrap4
