@@ -31,6 +31,9 @@ class Biography(models.Model):
     def get_ordered_authors(self):
         return self.authors_connections.all().order_by('biographyauthor__author_position')
 
+    def approved_comments(self):
+        return self.comments.filter(approved=True).order_by('created_at')
+    
     @property
     def featured_image_url(self):
         return self.images.order_by("id").first().image300x300.url

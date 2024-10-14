@@ -1,4 +1,6 @@
 import tempfile
+from datetime import datetime as dt, timedelta as td, timezone as tz
+
 from django.test import TestCase, tag, override_settings
 from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError
@@ -271,3 +273,25 @@ class BiographyModelTests(TestCase):
         self.assertEqual(ordered_authors[0], author_2)
         self.assertEqual(ordered_authors[1], author_1)
         self.assertEqual(ordered_authors[2], author_3)
+
+    @tag("biographies")
+    def test_approved_comments_filters_and_orders_comments_for_display(self):
+        
+        bio1 = BiographyFactory.create(title="Bio1")
+        comment1 = bio1.comments.create(name="Joe", email="joe@blah.com", comment="Comment 1")
+        comment2 = bio1.comments.create(name="Tom", email="tom@blah.com", comment="Comment 2")
+        comment3 = bio1.comments.create(name="Sam", email="sam@blah.com", comment="Comment 3")
+
+        comment1.approved=True
+        comment3.created_at = dt.now(tz.utc) - td(days=3)
+        comment1.save()
+        comment3.approved=True
+        comment3.created_at = dt.now(tz.utc) - td(days=7)
+        comment3.save()
+
+        self.assertEqual(bio1.comments.all().count(), 3)
+        self.assertEqual(bio1.approved_comments().count(), 2)
+        # Sam's comment is older so should be displayed first
+        self.assertEqual(bio1.approved_comments()[0].name, "Sam")
+        self.assertEqual(bio1.approved_comments()[1].name, "Joe")
+
