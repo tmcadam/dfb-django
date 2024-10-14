@@ -96,6 +96,8 @@ class Command(BaseCommand):
                 title = img["title"],
                 caption = img["caption"],
                 attribution = img["attribution"],
-                image = os.path.join("images", image_name)
+                image = os.path.join("images", image_name),
+                updated_at = img["updated_at"],
+                created_at = img["created_at"]
             )
         self.stdout.write(self.style.SUCCESS('Images: loaded {} items'.format(length)))

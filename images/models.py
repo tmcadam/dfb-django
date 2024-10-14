@@ -35,6 +35,8 @@ class Image (models.Model):
                                       processors=[Downsize(100)],
                                       format='JPEG',
                                       options={'quality': 90})
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     @property
     def medium(self):
