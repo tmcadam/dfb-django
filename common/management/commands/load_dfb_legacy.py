@@ -65,7 +65,9 @@ class Command(BaseCommand):
                 BiographyAuthor.objects.create(
                     biography = bio[0],
                     author = Author.objects.get(id=biography_author["author_id"]),
-                    author_position = biography_author["author_position"]
+                    author_position = biography_author["author_position"],
+                    updated_at = biography_author["updated_at"],
+                    created_at = biography_author["created_at"]
                 )
         self.stdout.write(self.style.SUCCESS('BiographyAuthors: loaded {} items'.format(length)))
 
@@ -80,7 +82,10 @@ class Command(BaseCommand):
                     biography = bio[0],
                     name = comment["name"],
                     email = comment["email"],
-                    comment = comment["comment"]
+                    comment = comment["comment"],
+                    approved = comment["approved"],
+                    updated_at = comment["updated_at"],
+                    created_at = comment["created_at"]
                 )
         self.stdout.write(self.style.SUCCESS('Comments: loaded {} items'.format(length)))
 
