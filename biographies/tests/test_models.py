@@ -283,7 +283,7 @@ class BiographyModelTests(TestCase):
         comment3 = bio1.comments.create(name="Sam", email="sam@blah.com", comment="Comment 3")
 
         comment1.approved=True
-        comment3.created_at = dt.now(tz.utc) - td(days=3)
+        comment1.created_at = dt.now(tz.utc) - td(days=3)
         comment1.save()
         comment3.approved=True
         comment3.created_at = dt.now(tz.utc) - td(days=7)
