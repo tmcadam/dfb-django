@@ -8,3 +8,4 @@ Pillow
 django-imagekit
 django-crispy-forms
 crispy-bootstrap4
+beautifulsoup4
