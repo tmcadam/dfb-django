@@ -133,5 +133,8 @@ static/vendor/
 tmp/
 media/images/
 media/CACHE/
+secrets/
+staticfiles/
+mediafiles/
 .secrets
 .vars
