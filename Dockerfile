@@ -1,5 +1,7 @@
 FROM python:3.13.0-bookworm
 
+EXPOSE 8000
+
 WORKDIR /app
 
 # Set environment variables
@@ -31,3 +33,8 @@ ADD ./manage.py         .
 
 # Clean up apt cache
 RUN rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
+
+RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
+USER appuser
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "dfb.wsgi:application"]
