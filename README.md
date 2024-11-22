@@ -1,40 +1,78 @@
 # DFB V2(Django)
 
-## Prerequisites
+## Local Development Prerequisites
 
-`sudo apt install libpq-dev` (needed to install psycopg2)
+### Secrets/Environment Variables
 
+Two secrets files are required and can be placed in the `./secrets` directory of the project. in production these can located anywhre and the paths updated in the relevant docker-compose file. 
 
-## Environment Variables
+`postgres.env` (only needed for initial database creation script)
 
-Run this is in the shell to set environment variables from .env
+- `POSTGRES_PASSWORD=[anything]` 
+- `POSTGRES_USER=postgres` (generally `postgres` or other superuser for a local installation)
+- `POSTGRES_DATABASE=postgres` (generally `postgres` for local installation)
 
-`export $(egrep -v '^#' .env | xargs)`
+`dfb-django-local.env`
 
-Dotenv needs the following variables
+- `APP_DB_NAME=dfb_django`
+- `APP_DB_USER=django_user`
+- `APP_DB_PASSWORD=django_user_password`
+- `APP_DB_HOST=localhost`
+- `APP_DB_PORT=5432`
+- `DJANGO_ENV=local` environment level for debug etc. 
+- `ALLOWED_HOSTS=localhost` comma seperated list of ALLOWED_HOSTS
+- `ADMIN_PASSWORD=some-password` initial user for the Django admin
 
-  - ENVIRONMENT [development, staging, production]
-  - DB_NAME
-  - DB_HOST
-  - DB_PORT
-  - DB_USER
-  - DB_PASS
+Load as environment variables:
 
+`export $(egrep -v '^#' ./secrets/postgres.env | xargs)`
+`export $(egrep -v '^#' ./secrets/dfb-django-local.env | xargs)`
 
-## Database Settings
+### Postgresql 16 Server and Client Libraries 
 
-Create a database for the project, create a role and modify with the following. 
+NB. Make sure the environment variables have been set before running.
 
-```CREATE ROLE some_user with PASSWORD 'very-strong-password' LOGIN;
-ALTER ROLE some_user SET client_encoding TO 'utf8';
-ALTER ROLE some_user SET default_transaction_isolation TO 'read committed';
-ALTER ROLE some_user SET timezone TO 'UTC';
-GRANT ALL PRIVILEGES ON DATABASE some_database TO some_user;
-GRANT CREATE ON SCHEMA public TO some_user;
+```
+sudo apt install postgresql-common -y
+sudo apt update
+sudo apt install postgresql-16
+sudo -u  postgres psql -c "ALTER USER postgres WITH ENCRYPTED PASSWORD '$POSTGRES_PASSWORD';"
+sudo service postgresql restart
 ```
 
-For running tests need
-`ALTER ROLE some_user NOSUPERUSER CREATEDB NOCREATEROLE NOINHERIT LOGIN;`
+`bash ./scripts/database_setup.sh`
+or
+`docker compose run --rm  --build dfb-staging-setup bash ./scripts/database_setup.sh`
+
+### Virtual Envionment and Install Dependencies
+```
+sudo apt install libpq-dev
+python3 -m venv venv
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+```
+
+
+## Running Tests
+
+We need to grant the db user createdb permissions.
+
+`sudo -u  postgres psql -c "ALTER ROLE $APP_DB_USER CREATEDB;"`
+
+The tests are configured to use pytest (but look like unittest)
+
+The Vscode test discovery and GUI tools are configured
+
+Run tests:
+`pytest` (runs the full suite)
+`pytest biographies/tests/test_models.py`
+`pytest -m biographies`
+
+
+## Loading Historical Data
+
+TODO
+
 
 ## CI/CD
 
