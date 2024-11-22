@@ -61,7 +61,7 @@ class BiographyTemplateTests(TestCase):
         soup = BeautifulSoup(rendered, "html.parser")
 
         revisions_div = soup.find('div', class_="biography_revsions")
-        revisions_h4 = soup.find('h4', text="Revisions")
+        revisions_h4 = soup.find('h4', string="Revisions")
 
         self.assertIsNotNone(revisions_h4)
         self.assertIsNotNone(revisions_div)
@@ -77,7 +77,7 @@ class BiographyTemplateTests(TestCase):
         soup = BeautifulSoup(rendered, "html.parser")
 
         revisions_div = soup.find('div', class_="biography_revsions")
-        revisions_h4 = soup.find('h4', text="Revisions")
+        revisions_h4 = soup.find('h4', string="Revisions")
 
         self.assertIsNone(revisions_h4)
         self.assertIsNone(revisions_div)
@@ -95,7 +95,7 @@ class BiographyTemplateTests(TestCase):
         soup = BeautifulSoup(rendered, "html.parser")
 
         revisions_div = soup.find('div', class_="biography_revsions")
-        revisions_h4 = soup.find('h4', text="Revisions")
+        revisions_h4 = soup.find('h4', string="Revisions")
 
         self.assertIsNone(revisions_h4)
         self.assertIsNone(revisions_div)
@@ -112,7 +112,7 @@ class BiographyTemplateTests(TestCase):
         soup = BeautifulSoup(rendered, "html.parser")
 
         references_div = soup.find('div', class_="biography_references")
-        references_h4 = soup.find('h4', text="References")
+        references_h4 = soup.find('h4', string="References")
 
         self.assertIsNotNone(references_h4)
         self.assertIsNotNone(references_div)
@@ -127,7 +127,7 @@ class BiographyTemplateTests(TestCase):
         soup = BeautifulSoup(rendered, "html.parser")
 
         references_div = soup.find('div', class_="biography_references")
-        references_h4 = soup.find('h4', text="References")
+        references_h4 = soup.find('h4', string="References")
 
         self.assertIsNone(references_h4)
         self.assertIsNone(references_div)
@@ -144,7 +144,7 @@ class BiographyTemplateTests(TestCase):
         soup = BeautifulSoup(rendered, "html.parser")
 
         references_div = soup.find('div', class_="biography_references")
-        references_h4 = soup.find('h4', text="References")
+        references_h4 = soup.find('h4', string="References")
 
         self.assertIsNone(references_h4)
         self.assertIsNone(references_div)
@@ -161,7 +161,7 @@ class BiographyTemplateTests(TestCase):
         soup = BeautifulSoup(rendered, "html.parser")
 
         external_links_div = soup.find('div', class_="biography_external_links")
-        external_links_h4 = soup.find('h4', text="External links")
+        external_links_h4 = soup.find('h4', string="External links")
 
         self.assertIsNotNone(external_links_h4)
         self.assertIsNotNone(external_links_div)
@@ -176,7 +176,7 @@ class BiographyTemplateTests(TestCase):
         soup = BeautifulSoup(rendered, "html.parser")
 
         external_links_div = soup.find('div', class_="biography_external_links")
-        external_links_h4 = soup.find('h4', text="External links")
+        external_links_h4 = soup.find('h4', string="External links")
 
         self.assertIsNone(external_links_h4)
         self.assertIsNone(external_links_div)
@@ -191,7 +191,7 @@ class BiographyTemplateTests(TestCase):
         soup = BeautifulSoup(rendered, "html.parser")
 
         external_links_div = soup.find('div', class_="biography_external_links")
-        external_links_h4 = soup.find('h4', text="External links")
+        external_links_h4 = soup.find('h4', string="External links")
 
         self.assertIsNone(external_links_h4)
         self.assertIsNone(external_links_div)
@@ -208,7 +208,7 @@ class BiographyTemplateTests(TestCase):
         soup = BeautifulSoup(rendered, "html.parser")
 
         authors_div = soup.find('div', class_="biography_authors")
-        authors_h4 = soup.find('h4', text="Authors")
+        authors_h4 = soup.find('h4', string="Authors")
 
         self.assertIsNotNone(authors_h4)
         self.assertIsNotNone(authors_div)
@@ -223,7 +223,7 @@ class BiographyTemplateTests(TestCase):
         soup = BeautifulSoup(rendered, "html.parser")
 
         authors_div = soup.find('div', class_="biography_authors")
-        authors_h4 = soup.find('h4', text="Authors")
+        authors_h4 = soup.find('h4', string="Authors")
 
         self.assertIsNone(authors_h4)
         self.assertIsNone(authors_div)
@@ -238,7 +238,7 @@ class BiographyTemplateTests(TestCase):
         soup = BeautifulSoup(rendered, "html.parser")
 
         authors_div = soup.find('div', class_="biography_authors")
-        authors_h4 = soup.find('h4', text="Authors")
+        authors_h4 = soup.find('h4', string="Authors")
 
         self.assertIsNone(authors_h4)
         self.assertIsNone(authors_div)

@@ -39,10 +39,10 @@ class CommentTemplateTests(TestCase):
         comment_titles = comments_div.find_all('h5', class_="card-title")
         self.assertEqual(len(comment_titles), 2)
 
-        self.assertIsNotNone(comments_div.find('h5', class_="card-title", text="Joe"))
-        self.assertIsNotNone(comments_div.find('h5', class_="card-title", text="Sam"))
+        self.assertIsNotNone(comments_div.find('h5', class_="card-title", string="Joe"))
+        self.assertIsNotNone(comments_div.find('h5', class_="card-title", string="Sam"))
         # Tom's comment shouldn't be displayed, as not approved
-        self.assertIsNone(comments_div.find('h5', class_="card-title", text="Tom"))
+        self.assertIsNone(comments_div.find('h5', class_="card-title", string="Tom"))
 
         # ordering
         self.assertEqual(comment_titles[0].text, "Sam")
@@ -59,7 +59,7 @@ class CommentTemplateTests(TestCase):
         
         comments_div = soup.find('div', class_="biography_comments_wrapper")
         self.assertIsNotNone(comments_div)
-        self.assertIsNotNone(comments_div.find('h4', text="Comments"))
+        self.assertIsNotNone(comments_div.find('h4', string="Comments"))
         self.assertIsNotNone(comments_div.find('button'))
                              
     @tag("comments_template")
