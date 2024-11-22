@@ -14,7 +14,7 @@
                 "runserver"
             ],
             "django": true,
-            "envFile": "${workspaceFolder}/.env",
+            "envFile": "${workspaceFolder}/secrets/dfb-django-local.env",
             "justMyCode": false
         }
     ]
