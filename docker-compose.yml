@@ -4,11 +4,8 @@ services:
     image: postgres:16
     env_file: 
       - ./secrets/postgres.env
-    expose:
-      - 15432
     volumes:
     - ./volumes/pg_data:/var/lib/postgresql/data
-    command: -p 15432
 
   dfb-staging:
     build: .
@@ -27,7 +24,6 @@ services:
     env_file: 
       - ./secrets/dfb-django-local.env
     environment:
-      - APP_DB_PORT=15432
       - APP_DB_HOST=postgres
 
   dfb-staging-setup:
