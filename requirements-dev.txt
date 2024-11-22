@@ -1,3 +1,4 @@
 factory_boy
 pytest-django
+pytest-dotenv
 beautifulsoup4
