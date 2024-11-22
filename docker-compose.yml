@@ -3,11 +3,12 @@ services:
   postgres:
     image: postgres:16
     env_file: 
-      - /secrets/postgres.env
-    ports:
-    - '5432:5432'
+      - ./secrets/postgres.env
+    expose:
+      - 15432
     volumes:
-    - /volumes/staging/pg_data:/var/lib/postgresql/data
+    - ./volumes/pg_data:/var/lib/postgresql/data
+    command: -p 15432
 
   dfb-staging:
     build: .
@@ -21,15 +22,21 @@ services:
     ports:
       - '8000:8000'
     volumes:
-      - /volumes/staging/dfb/staticfiles:/app/staticfiles
-      - /volumes/staging/dfb/mediafiles:/app/mediafiles
+      - ./volumes/staticfiles:/app/staticfiles
+      - ./volumes/mediafiles:/app/mediafiles
     env_file: 
-      - /secrets/todo-app.env
+      - ./secrets/dfb-django-local.env
+    environment:
+      - APP_DB_PORT=15432
+      - APP_DB_HOST=postgres
 
   dfb-staging-setup:
     extends: dfb-staging
     env_file: 
-      - /secrets/todo-app.env
-      - /secrets/postgres.env
-    profiles: 
+      - ./secrets/dfb-django-local.env
+      - ./secrets/postgres.env
+
+    command: >
+      sh -c "bash ./scripts/database_setup.sh"
+    profiles:
       - donotstart
