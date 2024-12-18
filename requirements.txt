@@ -1,7 +1,6 @@
 gunicorn==23.0.0
-Django==4.2.3
-wheel
-psycopg2-binary
+Django==5.1.4
+psycopg==3.2.3
 django_compressor
 django-libsass
 django-summernote
