@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -92,16 +93,12 @@ WSGI_APPLICATION = 'dfb.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('APP_DB_NAME'),
-        'USER': os.getenv('APP_DB_USER'),
-        'PASSWORD': os.getenv('APP_DB_PASSWORD'),
-        'HOST': os.getenv('APP_DB_HOST'),
-        'PORT': os.getenv('APP_DB_PORT'),
-    }
+    'default': dj_database_url.config(
+        default=os.environ['APP_DB_URL'],
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
