@@ -48,7 +48,7 @@ class AuthorModelTests(TestCase):
         Author.objects.create(first_name="Simon", last_name="Clifton", biography="A great author")
         Author.objects.create(first_name="Joe", last_name="Black", biography="A great author")
         Author.objects.create(first_name="Simon", last_name="Dodds", biography="A great author")
-        
+
         authors_list = Author.objects.all()
 
         self.assertEqual(authors_list[0].first_name, "Joe")
@@ -69,7 +69,7 @@ class AuthorModelTests(TestCase):
     def test_name_joins_first_name_and_last_name_present(self):
         auth = Author.objects.create(first_name="Mark", last_name="Black")
         self.assertEqual(auth.name, "Mark Black")
-    
+
     @tag("authors_models")
     def test_name_returns_lastname_if_no_first_name_present(self):
         auth = Author.objects.create(first_name=None, last_name="Black")
@@ -96,6 +96,23 @@ class AuthorModelTests(TestCase):
 
         auth3 = Author.objects.create(first_name="Bob", last_name="Author 1^")
         self.assertEqual(auth3.simple_slug, "bob-author-1")
+
+    @tag("authors_models")
+    def test_short_biography_returns_first_100_chars(self):
+        auth = Author.objects.create(first_name="Mark", last_name="Black", biography="This is a short biography.")
+        self.assertEqual(auth.short_biography, "This is a short biography.")
+
+        long_bio = "This is a very long biography that exceeds one hundred characters. " \
+                   "It should be truncated to fit the requirements of the short biography property."
+
+        truncated_long_bio = "This is a very long biography that exceeds one hundred characters. " \
+                   "It should be truncated to fit the..."
+        auth.biography = long_bio
+        self.assertEqual(auth.short_biography, truncated_long_bio)
+
+    def test_short_biography_returns_default_if_no_biography(self):
+        auth = Author.objects.create(first_name="Mark", last_name="Black", biography=None)
+        self.assertEqual(auth.short_biography, "No biography available.")
 
 
 class BiographyAuthorModelTests(TestCase):
@@ -133,7 +150,7 @@ class BiographyAuthorModelTests(TestCase):
     @tag("authors_models")
     def test_biographyauthor_ordering_by_position(self):
         """
-        NB: This does not reflect ordering when returning the queryset of all authors on 
+        NB: This does not reflect ordering when returning the queryset of all authors on
         a biography. See 'get_ordered_authors' in biographies.models.
         """
         author_1 = AuthorFactory.create()
@@ -141,7 +158,7 @@ class BiographyAuthorModelTests(TestCase):
         bio_1 = BiographyFactory.create(title="Bio1")
         BiographyAuthor.objects.create(biography=bio_1, author=author_1, author_position=2)
         BiographyAuthor.objects.create(biography=bio_1, author=author_2, author_position=1)
-        
+
         biography_authors = BiographyAuthor.objects.filter(biography=bio_1)
 
         self.assertEqual(biography_authors[0].author, author_2)
@@ -182,7 +199,7 @@ class BiographyAuthorModelTests(TestCase):
         BiographyAuthor.objects.create(biography=bio_1, author=author_1, author_position=1)
 
         self.assertEqual(BiographyAuthor.objects.filter(biography=bio_1).count(), 1)
-        
+
         author_1.delete()
         self.assertEqual(Author.objects.filter(last_name="Auth1").count(), 0)
         self.assertEqual(BiographyAuthor.objects.filter(biography=bio_1).count(), 0)
@@ -195,7 +212,7 @@ class BiographyAuthorModelTests(TestCase):
         BiographyAuthor.objects.create(biography=bio_1, author=author_1, author_position=1)
 
         self.assertEqual(BiographyAuthor.objects.filter(biography=bio_1).count(), 1)
-        
+
         bio_1.delete()
         self.assertEqual(Biography.objects.filter(title="Bio1").count(), 0)
         self.assertEqual(BiographyAuthor.objects.filter(author=author_1).count(), 0)
@@ -211,6 +228,6 @@ class BiographyAuthorModelTests(TestCase):
 
         link_1.delete()
         self.assertEqual(BiographyAuthor.objects.filter(biography=bio_1).count(), 0)
-        
+
         self.assertEqual(Biography.objects.filter(title="Bio1").count(), 1)
         self.assertEqual(Author.objects.filter(last_name="Auth1").count(), 1)

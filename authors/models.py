@@ -20,7 +20,7 @@ class Author(models.Model):
     def name(self):
         formatted_first_name = f"{self.first_name} " if self.first_name else ""
         return formatted_first_name + self.last_name
-    
+
     @property
     def simple_slug(self):
         return slugify(self.name)
@@ -29,9 +29,19 @@ class Author(models.Model):
         formatted_first_name = f", {self.first_name}" if self.first_name else ""
         return self.last_name + formatted_first_name
 
+    @property
+    def short_biography(self):
+        if not self.biography:
+            return "No biography available."
+
+        if len(self.biography) > 100:
+            return self.biography[:100] + "..."
+        return self.biography
+
+
 
 class BiographyAuthor(models.Model):
-    
+
     biography = models.ForeignKey(Biography, on_delete=models.CASCADE)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     author_position = models.IntegerField()
