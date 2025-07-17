@@ -19,6 +19,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
+
+admin.site.site_title = "DFB Admin"
+admin.site.site_header = "DFB Admin"
+
 urlpatterns = [
     path('', include('pages.urls'), name="pages"),
     path('biographies/', include('biographies.urls')),
