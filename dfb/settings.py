@@ -162,23 +162,28 @@ SUMMERNOTE_CONFIG = {
     # You can put custom Summernote settings
     'summernote': {
 
+        'iframe': False,
+
         # Change editor size
-        'width': '75%',
+        'width': '650',
         'height': '480',
 
         'toolbar': [
             ['style', ['style']],
-            ['font', ['bold', 'italic', 'clear']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
             ['link', ['link']],
             ['misc', ['codeview', 'undo', 'redo']],
         ],
         'linkTargetBlank': False,
         'styleTags': [
-            'p', 
+            'p',
             {'tag': 'blockquote', 'title': 'Quotation'},
             {'tag': 'h5', 'title': 'Section heading'}
-        ]
-    }
+        ],
+    },
+        # You can completely disable the attachment feature.
+    'disable_attachment': True,
 }
+
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

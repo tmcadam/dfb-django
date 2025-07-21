@@ -18,6 +18,7 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django_summernote.views import SummernoteUploadAttachment
 
 
 admin.site.site_title = "DFB Admin"
@@ -31,6 +32,9 @@ urlpatterns = [
     path('authors/', include('authors.urls')),
     path('comments/', include('comments.urls')),
     path('admin/', admin.site.urls),
+    # dirty fix, needed for django-summernote to work with attachments disabled
+    path('summernote/upload_attachment/', SummernoteUploadAttachment.as_view(), name='django_summernote-upload_attachment'),
+
 ]
 
 if settings.DEBUG:
