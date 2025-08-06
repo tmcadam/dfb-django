@@ -17,7 +17,7 @@ class CommentFormTests(TestCase):
     def test_comments_form_has_crsf_token_field(self):
 
         bio1 = BiographyFactory.create(title="Bio1", slug="bio1")
-        url = reverse('biographies:show', args=["bio1"]) 
+        url = reverse('biographies:show', args=["bio1"])
         response = self.client.get(url)
 
         soup = BeautifulSoup(response.content, "html.parser")
@@ -28,7 +28,7 @@ class CommentFormTests(TestCase):
         form = comments_div.find('form')
         self.assertIsNotNone(form)
 
-        crsf_input = form.find('input', {"name": "csrfmiddlewaretoken", "type": "hidden"}) 
+        crsf_input = form.find('input', {"name": "csrfmiddlewaretoken", "type": "hidden"})
         self.assertIsNotNone(crsf_input)
 
 
@@ -36,7 +36,7 @@ class CommentFormTests(TestCase):
     def test_comments_form_has_name_input_field(self):
 
         bio1 = BiographyFactory.create(title="Bio1", slug="bio1")
-        url = reverse('biographies:show', args=["bio1"]) 
+        url = reverse('biographies:show', args=["bio1"])
         response = self.client.get(url)
 
         soup = BeautifulSoup(response.content, "html.parser")
@@ -51,7 +51,7 @@ class CommentFormTests(TestCase):
         self.assertEqual(name_label.text.strip(), "Name*")
         name_input = form.find('input', {"id": "id_name", "type": "text"})
         self.assertIsNotNone(name_input)
-        name_helper = form.find('small', {"id": "hint_id_name"})
+        name_helper = form.find('small', {"id": "id_name_helptext"})
         self.assertEqual(name_helper.text.strip(), "Name displayed with the comment (required).")
 
 
@@ -59,7 +59,7 @@ class CommentFormTests(TestCase):
     def test_comments_form_has_email_input_field(self):
 
         bio1 = BiographyFactory.create(title="Bio1", slug="bio1")
-        url = reverse('biographies:show', args=["bio1"]) 
+        url = reverse('biographies:show', args=["bio1"])
         response = self.client.get(url)
 
         soup = BeautifulSoup(response.content, "html.parser")
@@ -74,7 +74,7 @@ class CommentFormTests(TestCase):
         self.assertEqual(email_label.text.strip(), "Email*")
         email_input = form.find('input', {"id": "id_email", "type": "email"})
         self.assertIsNotNone(email_input)
-        email_helper = form.find('small', {"id": "hint_id_email"})
+        email_helper = form.find('small', {"id": "id_email_helptext"})
         self.assertEqual(email_helper.text.strip(), "This will not be displayed publically (required).")
 
 
@@ -82,7 +82,7 @@ class CommentFormTests(TestCase):
     def test_comments_form_has_comment_input_field(self):
 
         bio1 = BiographyFactory.create(title="Bio1", slug="bio1")
-        url = reverse('biographies:show', args=["bio1"]) 
+        url = reverse('biographies:show', args=["bio1"])
         response = self.client.get(url)
 
         soup = BeautifulSoup(response.content, "html.parser")
@@ -103,7 +103,7 @@ class CommentFormTests(TestCase):
     def test_comments_form_has_hidden_biography_field(self):
 
         bio1 = BiographyFactory.create(title="Bio1", slug="bio1")
-        url = reverse('biographies:show', args=["bio1"]) 
+        url = reverse('biographies:show', args=["bio1"])
         response = self.client.get(url)
 
         soup = BeautifulSoup(response.content, "html.parser")
@@ -114,7 +114,7 @@ class CommentFormTests(TestCase):
         form = comments_div.find('form')
         self.assertIsNotNone(form)
 
-        biography_input = form.find('input', {"name": "biography", "type": "hidden"}) 
+        biography_input = form.find('input', {"name": "biography", "type": "hidden"})
         self.assertIsNotNone(biography_input)
         self.assertEqual(biography_input["value"], str(bio1.id))
 
@@ -122,7 +122,7 @@ class CommentFormTests(TestCase):
     def test_comments_form_has_hidden_url_field(self):
 
         bio1 = BiographyFactory.create(title="Bio1", slug="bio1")
-        url = reverse('biographies:show', args=["bio1"]) 
+        url = reverse('biographies:show', args=["bio1"])
         response = self.client.get(url)
 
         soup = BeautifulSoup(response.content, "html.parser")
@@ -134,8 +134,8 @@ class CommentFormTests(TestCase):
         self.assertIsNotNone(form)
 
         # this is the id that is refrenced in css to hide this field
-        wrapper_div = form.find('div', {"id": "div_id_url", "class": "form-group"}) 
+        wrapper_div = form.find('div', {"id": "div_id_url", "class": "form-group"})
         self.assertIsNotNone(wrapper_div)
-        url_input = wrapper_div.find('input', {"id": "id_url", "type": "text"}) 
+        url_input = wrapper_div.find('input', {"id": "id_url", "type": "text"})
         self.assertIsNotNone(url_input)
         self.assertNotIn("value", url_input.attrs)

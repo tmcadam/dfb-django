@@ -64,9 +64,9 @@ class AdminTests(TestCase):
 
         # Need an object to create the change page!
         bio = BiographyFactory.create(title="Bio1", slug="bio1")
-        Comment.objects.create(biography=bio, name="Bob", email="bob@bob.com", comment="This is a comment.")
+        comment = Comment.objects.create(biography=bio, name="Bob", email="bob@bob.com", comment="This is a comment.")
 
-        url = reverse("admin:comments_comment_change", args=(1,))
+        url = reverse("admin:comments_comment_change", args=(comment.id,))
         response = self.client.get(url)
         self.assertContains(response, text="Change comment", status_code=200)
         # check for the form fields
