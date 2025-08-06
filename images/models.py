@@ -46,7 +46,7 @@ class Image (models.Model):
     def original(self):
         return self.image
 
-    @property    
+    @property
     def thumbnail(self):
         return self.image100x100
 
@@ -60,11 +60,14 @@ class Image (models.Model):
         if ratio > 0.65 and ratio <= 0.85:
             return "portrait"
         elif ratio >= 1.15:
-            return "landscape" 
-        elif ratio > 0.85 and ratio < 1.15:   
+            return "landscape"
+        elif ratio > 0.85 and ratio < 1.15:
             return "square"
         else:
             return "other"
+
+    class Meta:
+        ordering = ['biography__title', 'id']
 
     def __str__(self):
         return self.title

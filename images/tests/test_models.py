@@ -16,7 +16,7 @@ class ImageModelTests(TestCase):
 
     @tag("images")
     def test_create_image_with_all_fields(self):
-        
+
         img = Image(
             title = "Image Title",
             biography = BiographyFactory.create(),
@@ -40,7 +40,7 @@ class ImageModelTests(TestCase):
     @tag("images")
     def test_create_image_fails_without_title(self):
 
-        with self.assertRaises(ValidationError):        
+        with self.assertRaises(ValidationError):
             img = Image(
                 title = None,
                 biography = BiographyFactory.create(),
@@ -54,7 +54,7 @@ class ImageModelTests(TestCase):
     @tag("images")
     def test_create_image_fails_without_image(self):
 
-        with self.assertRaises(ValidationError):        
+        with self.assertRaises(ValidationError):
             img = Image(
                 title = "Title",
                 biography = BiographyFactory.create(),
@@ -68,7 +68,7 @@ class ImageModelTests(TestCase):
     @tag("images")
     def test_create_image_fails_without_caption(self):
 
-        with self.assertRaises(ValidationError):        
+        with self.assertRaises(ValidationError):
             img = Image(
                 title = "title",
                 biography = BiographyFactory.create(),
@@ -82,7 +82,7 @@ class ImageModelTests(TestCase):
     @tag("images")
     def test_create_image_fails_without_biography(self):
 
-        with self.assertRaises(ValidationError):        
+        with self.assertRaises(ValidationError):
             img = Image(
                 title = "title",
                 biography = None,
@@ -95,7 +95,7 @@ class ImageModelTests(TestCase):
 
     @tag("images")
     def test_create_image_okay_without_attribution(self):
-  
+
         img = Image(
             title = "title",
             biography = BiographyFactory.create(),
@@ -185,7 +185,6 @@ class ImageModelTests(TestCase):
         img.save()
         self.assertEqual(img.caption, """<p>before <a href="/biographies/some-bio">after</a></p>""")
 
-
     @tag("images")
     def test_can_get_images_from_biography(self):
         bio1 = BiographyFactory()
@@ -204,3 +203,4 @@ class ImageModelTests(TestCase):
             image = "some_image_path"
         )
         self.assertEqual(bio1.images.count(), 2)
+
