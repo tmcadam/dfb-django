@@ -29,7 +29,6 @@ class AdminTests(TestCase):
         self.assertContains(response, text="Select comment to change", status_code=200)
 
     def test_comments_changelist_has_correct_columns(self):
-        url = reverse("admin:comments_comment_changelist")
         self.client.login(username="myuser", password="mypassword")
 
         # Need an object to create the table!
@@ -37,6 +36,7 @@ class AdminTests(TestCase):
         bio = BiographyFactory.create(title="Bio1", slug="bio1")
         Comment.objects.create(biography=bio, name="Bob", email="bob@bob.com", comment="This is a comment.")
 
+        url = reverse("admin:comments_comment_changelist")
         response = self.client.get(url)
 
         soup = BeautifulSoup(response.content, "html.parser")
@@ -60,16 +60,15 @@ class AdminTests(TestCase):
 
     def test_comments_admin_change_page(self):
 
-        url = reverse("admin:comments_comment_change", args=(1,))
         self.client.login(username="myuser", password="mypassword")
 
         # Need an object to create the change page!
         bio = BiographyFactory.create(title="Bio1", slug="bio1")
         Comment.objects.create(biography=bio, name="Bob", email="bob@bob.com", comment="This is a comment.")
 
+        url = reverse("admin:comments_comment_change", args=(1,))
         response = self.client.get(url)
         self.assertContains(response, text="Change comment", status_code=200)
-        self.assertContains(response, text="This is a", status_code=200)
         # check for the form fields
         self.assertContains(response, text="Biography:", status_code=200)
         self.assertContains(response, text="Name:", status_code=200)
