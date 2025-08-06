@@ -2,7 +2,7 @@ services:
 
   postgres:
     image: postgres:16
-    environment: 
+    environment:
       POSTGRES_DB: django-test
       POSTGRES_USER: django-test
       POSTGRES_PASSWORD: django-test-password
@@ -12,14 +12,14 @@ services:
     working_dir: /app
     command: >
       sh -c "
-             pip install -r requirements-dev.txt
+             pip install -r requirements-dev-locked.txt
              python manage.py migrate &&
              python manage.py collectstatic --no-input &&
              python manage.py test"
     depends_on:
       - postgres
     volumes:
-      - ./requirements-dev.txt:/app/requirements-dev.txt
+      - ./requirements-dev.txt:/app/requirements-dev-locked.txt
       - staticfiles:/app/staticfiles
       - mediafiles:/app/mediafiles
     environment:

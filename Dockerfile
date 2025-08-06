@@ -16,9 +16,9 @@ RUN apt update
 RUN apt install postgresql-client-16 -y
 
 # install Python dependencies
-ADD ./requirements.txt  .
+ADD ./requirements-locked.txt  .
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install -r requirements-locked.txt
 
 # Copy app folders
 ADD ./authors           ./authors
