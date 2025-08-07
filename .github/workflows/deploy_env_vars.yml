@@ -32,7 +32,7 @@ jobs:
           DJANGO_ENV: ${{ inputs.environment_name }}
           DJANGO_PORT: ${{ vars.DJANGO_PORT }}
           DJANGO_DEBUG: ${{ vars.DJANGO_DEBUG }}
-          DJANGO_CRSF_TRUSTED_ORIGINS: ${{ vars.DJANGO_CRSF_TRUSTED_ORIGINS }}
+          DJANGO_CSRF_TRUSTED_ORIGINS: ${{ vars.DJANGO_CSRF_TRUSTED_ORIGINS }}
           DJANGO_ALLOWED_HOSTS: ${{ vars.DJANGO_ALLOWED_HOSTS }}
           DJANGO_SETTINGS_MODULE: ${{ vars.DJANGO_SETTINGS_MODULE }}
           DJANGO_LOG_LEVEL: ${{ vars.DJANGO_LOG_LEVEL }}
