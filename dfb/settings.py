@@ -16,20 +16,20 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENVIRONMENT = os.getenv('ENVIRONMENT','production')
+ENVIRONMENT = os.getenv('DJANGO_ENV','production')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", 'django-insecure-69k-#kmlre&rb4uhf2*d5foi+1ee)wsck_%9z*--wbit3_dk9e')
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", 'django-insecure-69k-#kmlre&rb4uhf2*d5foi+1ee)wsck_%9z*--wbit3_dk9e')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.environ.get("DJANGO_ENV", "local") in ["local", "testing"] else False
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", 'localhost').split(",")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", 'localhost').split(",")
 
-CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS]
+CSRF_TRUSTED_ORIGINS = os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", 'localhost').split(",")
 
 
 # Application definition
@@ -94,7 +94,7 @@ WSGI_APPLICATION = 'dfb.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ['APP_DB_URL'],
+        default=os.environ['DJANGO_DB_URL'],
         conn_max_age=600,
         conn_health_checks=True,
     )
