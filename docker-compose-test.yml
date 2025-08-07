@@ -23,7 +23,7 @@ services:
       - staticfiles:/app/staticfiles
       - mediafiles:/app/mediafiles
     environment:
-      APP_DB_URL: postgres://django-test:django-test-password@postgres:5432/django-test
+      DJANGO_DB_URL: postgres://django-test:django-test-password@postgres:5432/django-test
 
 volumes:
   mediafiles:
