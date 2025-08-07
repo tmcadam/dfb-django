@@ -6,6 +6,8 @@ on:
       - development
   workflow_dispatch:
 
+permissions:
+  packages: write
 
 jobs:
 
