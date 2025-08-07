@@ -6,8 +6,6 @@ on:
       - development
   workflow_dispatch:
 
-permissions:
-  packages: write
 
 jobs:
 
@@ -29,6 +27,9 @@ jobs:
   build-push:
     needs: build-test
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+
 
     steps:
       - name: Checkout code
