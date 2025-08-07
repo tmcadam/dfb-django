@@ -29,8 +29,7 @@ DEBUG = True if os.environ.get("DJANGO_ENV", "local") in ["local", "testing"] el
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", 'localhost').split(",")
 
-CSRF_TRUSTED_ORIGINS = os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", 'localhost').split(",")
-
+CSRF_TRUSTED_ORIGINS = os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", 'http://localhost').split(",")
 
 # Application definition
 
