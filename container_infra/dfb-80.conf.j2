@@ -1,0 +1,15 @@
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name {{ env['NGINX_SERVER_HOST'] }};
+    server_tokens off;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 301 https://{{ env['NGINX_SERVER_HOST'] }}$request_uri;
+    }
+}
