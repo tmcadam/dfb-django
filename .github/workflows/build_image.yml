@@ -4,8 +4,12 @@ on:
   push:
     branches:
       - development
+    paths-ignore:
+      - '**/README.md'
+      - '.github/**'
+      - '.vscode/**'
+      - 'container_infra/**'
   workflow_dispatch:
-
 
 jobs:
 
