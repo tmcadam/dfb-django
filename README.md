@@ -4,11 +4,11 @@
 
 ### Secrets/Environment Variables
 
-Two secrets files are required and can be placed in the `./secrets` directory of the project. in production these can located anywhre and the paths updated in the relevant docker-compose file. 
+Two secrets files are required and can be placed in the `./secrets` directory of the project. in production these can located anywhre and the paths updated in the relevant docker-compose file.
 
 `postgres.env` (only needed for initial database creation script)
 
-- `POSTGRES_PASSWORD=[anything]` 
+- `POSTGRES_PASSWORD=[anything]`
 - `POSTGRES_USER=postgres` (generally `postgres` or other superuser for a local installation)
 - `POSTGRES_DATABASE=postgres` (generally `postgres` for local installation)
 
@@ -19,7 +19,7 @@ Two secrets files are required and can be placed in the `./secrets` directory of
 - `APP_DB_PASSWORD=django_user_password`
 - `APP_DB_HOST=localhost`
 - `APP_DB_PORT=5432`
-- `DJANGO_ENV=local` environment level for debug etc. 
+- `DJANGO_ENV=local` environment level for debug etc.
 - `ALLOWED_HOSTS=localhost` comma seperated list of ALLOWED_HOSTS
 - `ADMIN_PASSWORD=some-password` initial user for the Django admin
 
@@ -28,7 +28,7 @@ Load as environment variables:
 `export $(egrep -v '^#' ./secrets/postgres.env | xargs)`
 `export $(egrep -v '^#' ./secrets/dfb-django-local.env | xargs)`
 
-### Postgresql 16 Server and Client Libraries 
+### Postgresql 16 Server and Client Libraries
 
 NB. Make sure the environment variables have been set before running.
 
@@ -78,18 +78,18 @@ TODO
 
 ### Initial Deployment
 
-This should take you to the point of an empty site without content. 
+This should take you to the point of an empty site without content.
 
   - One off step
   - The database is initalised with the correct user
   - Media folder is ready for use
   - Static content has been copied
-  - Migrations applied 
+  - Migrations applied
   - Initial admin user created
 
 ### Data Loading
 
-This may suit semi-manual running, it is DFB specific, rather than application 
+This may suit semi-manual running, it is DFB specific, rather than application
 
   - One off step
   - Run through a series of steps to preload data and media
@@ -97,13 +97,26 @@ This may suit semi-manual running, it is DFB specific, rather than application
 
 ### Continious Deployment
 
-This will be run on push/merge to develop (staging environment) or main (production) branches. 
+This will be run on push/merge to develop (staging environment) or main (production) branches.
 
   - Rebuild images, push to Dockerhub
   - Trigger a restart of the container, with a force pull
   - Collect static files
   - Run migrations
-  
+
+## Installing Docker
+
+```
+sudo snap install docker
+sudo groupadd docker
+sudo usermod -aG docker $USER
+```
+
+Test with
+```
+docker run hello-world
+```
+
 ## TODO
 
   - Tag/Version images
