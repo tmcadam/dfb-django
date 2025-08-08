@@ -21,17 +21,21 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements-locked.txt
 
 # Copy app folders
-ADD ./authors           ./authors
-ADD ./biographies       ./biographies
-ADD ./comments          ./comments
-ADD ./common            ./common
-ADD ./dfb               ./dfb
-ADD ./images            ./images
-ADD ./pages             ./pages
-ADD ./scripts           ./scripts
-ADD ./manage.py         .
+ADD ./authors               ./authors
+ADD ./biographies           ./biographies
+ADD ./comments              ./comments
+ADD ./common                ./common
+ADD ./dfb                   ./dfb
+ADD ./images                ./images
+ADD ./pages                 ./pages
+ADD ./scripts               ./scripts
+ADD ./manage.py             ./manage.py
+ADD ./gunicorn_config.py    ./gunicorn_config.py
 
 # Clean up apt cache
 RUN rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "dfb.wsgi:application"]
+# Run the Django application at container start
+CMD python manage.py collectstatic --noinput --clear \
+    && python manage.py migrate \
+    && gunicorn -c gunicorn_config.py config.wsgi:application
