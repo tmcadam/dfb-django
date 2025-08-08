@@ -14,7 +14,7 @@ on:
 
 jobs:
 
-  deploy-django-secrets:
+  deploy-django-env:
 
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment_name }}
@@ -23,7 +23,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Generated dfb-django.env
+      - name: Generate dfb-django.env
         uses: cuchi/jinja2-action@v1.3.0
         with:
           template: dfb-django.env.j2
@@ -48,9 +48,41 @@ jobs:
           chmod 0600 ~/.ssh/deploy.key
           ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy secrets to server
+      - name: Deploy environment to server
         run: |
           scp -P ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key dfb-django.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/dfb-django-${{ inputs.environment_name }}.env
           ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
             sudo mv /home/${{ secrets.SSH_USER }}/dfb-django-${{ inputs.environment_name }}.env /secrets/dfb-django-${{ inputs.environment_name }}.env
+          EOF
+
+  deploy-nginx-env:
+
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment_name }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate dfb-nginx.env
+        uses: cuchi/jinja2-action@v1.3.0
+        with:
+          template: dfb-nginx.env.j2
+          output_file: dfb-nginx.env
+        env:
+          CERTBOT_EMAIL: ${{ vars.NGINX_CERTBOT_EMAIL }}
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 0700 ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy.key
+          chmod 0600 ~/.ssh/deploy.key
+          ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy environment to server
+        run: |
+          scp -P ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key dfb-nginx.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/dfb-nginx-${{ inputs.environment_name }}.env
+          ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
+            sudo mv /home/${{ secrets.SSH_USER }}/dfb-nginx-${{ inputs.environment_name }}.env /secrets/dfb-nginx-${{ inputs.environment_name }}.env
           EOF
