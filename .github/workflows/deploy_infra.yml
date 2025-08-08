@@ -54,7 +54,9 @@ jobs:
       - name: Deploy infra to server
         run: |
           eval $(ssh-agent -s) && ssh-add ~/.ssh/deploy.key
-          mkdir -p $INFRA_DIR/nginx/sites
+          ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
+            mkdir -p $INFRA_DIR/nginx/sites
+          EOF
           scp -P ${{ secrets.SSH_PORT }} container_infra/dfb-80.conf ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$INFRA_DIR/nginx/sites/dfb-80.conf
           scp -P ${{ secrets.SSH_PORT }} container_infra/dfb-443.conf ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$INFRA_DIR/nginx/sites/dfb-443.conf
 
