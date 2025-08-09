@@ -38,4 +38,4 @@ RUN rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 # Run the Django application at container start
 CMD python manage.py collectstatic --noinput --clear \
     && python manage.py migrate \
-    && gunicorn -c gunicorn_config.py config.wsgi:application
+    && gunicorn -c gunicorn_config.py dfb.wsgi:application
