@@ -101,9 +101,9 @@ jobs:
           template: dfb-postgres.env.j2
           output_file: dfb-postgres.env
         env:
-          POSTGRES_DB={{ vars.POSTGRES_DB }}
-          POSTGRES_USER={{ vars.POSTGRES_USER }}
-          POSTGRES_PASSWORD={{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB=${{ vars.POSTGRES_DB }}
+          POSTGRES_USER=${{ vars.POSTGRES_USER }}
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
 
       - name: Setup SSH
         run: |
