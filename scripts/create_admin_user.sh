@@ -16,5 +16,6 @@ python manage.py shell <<EOF
 from django.contrib.auth.models import User
 u = User.objects.get(username="admin")
 u.set_password("$DJANGO_ADMIN_PASSWORD")
+u.save()
 EOF
 fi
