@@ -50,6 +50,9 @@ jobs:
 
       - name: Deploy environment to server
         run: |
+          ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
+            sudo mkdir /secrets
+          EOF
           scp -P ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key dfb-django.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/dfb-django-${{ inputs.environment_name }}.env
           ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
             sudo mv /home/${{ secrets.SSH_USER }}/dfb-django-${{ inputs.environment_name }}.env /secrets/dfb-django-${{ inputs.environment_name }}.env
