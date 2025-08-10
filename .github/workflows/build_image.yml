@@ -96,5 +96,5 @@ jobs:
             cd $INFRA_DIR
             docker compose down --remove-orphans dfb-django
             docker compose up dfb-django -d --force-recreate
-            docker compose restart nginx-staging
+            docker compose restart web-server
           EOF
