@@ -50,11 +50,9 @@ jobs:
 
       - name: Deploy environment to server
         run: |
-          ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
-            sudo mkdir /secrets
-          EOF
           scp -P ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key dfb-django.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/dfb-django-${{ inputs.environment_name }}.env
           ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
+            sudo mkdir /secrets
             sudo mv /home/${{ secrets.SSH_USER }}/dfb-django-${{ inputs.environment_name }}.env /secrets/dfb-django-${{ inputs.environment_name }}.env
           EOF
 
@@ -87,6 +85,7 @@ jobs:
         run: |
           scp -P ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key dfb-nginx.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/dfb-nginx-${{ inputs.environment_name }}.env
           ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
+            sudo mkdir /secrets
             sudo mv /home/${{ secrets.SSH_USER }}/dfb-nginx-${{ inputs.environment_name }}.env /secrets/dfb-nginx-${{ inputs.environment_name }}.env
           EOF
 
@@ -120,5 +119,6 @@ jobs:
         run: |
           scp -P ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key dfb-postgres.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/dfb-postgres-${{ inputs.environment_name }}.env
           ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
+            sudo mkdir /secrets
             sudo mv /home/${{ secrets.SSH_USER }}/dfb-postgres-${{ inputs.environment_name }}.env /secrets/dfb-postgres-${{ inputs.environment_name }}.env
           EOF
