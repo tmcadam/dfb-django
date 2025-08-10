@@ -46,7 +46,7 @@ jobs:
           chmod 0700 ~/.ssh
           echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy.key
           chmod 0600 ~/.ssh/deploy.key
-          ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy environment to server
         run: |
@@ -80,7 +80,7 @@ jobs:
           chmod 0700 ~/.ssh
           echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy.key
           chmod 0600 ~/.ssh/deploy.key
-          ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy environment to server
         run: |
@@ -115,7 +115,7 @@ jobs:
           chmod 0700 ~/.ssh
           echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy.key
           chmod 0600 ~/.ssh/deploy.key
-          ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy environment to server
         run: |
