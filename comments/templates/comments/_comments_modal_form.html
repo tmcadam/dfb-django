@@ -1,0 +1,37 @@
+{%load crispy_forms_tags %} 
+
+<script type="text/javascript">
+    var commentSubmitUrl = "{% url 'comments:submit_comment' %}";
+</script>
+
+<div id="comments-form-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Comment</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="comment_form" method="POST">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input type="submit" value="Leave Comment" class="btn btn-outline-dark">
+                </form>
+                <div id="comment_success">
+                    <h3>Submitted</h3>
+                    <p>Please note, comments are reviewed by the web editor before appearing on the site.
+                        This process may take up to 3 days. Email <a target="_blank" href="mailto:webeditor@falklandsbiographies.org">
+                        webeditor@falklandsbiographies.org</a> for further information.
+                    </p>
+                </div>
+                <div id="comment_failure">
+                    <h3>Error</h3>
+                    <p>Comment submission failed. Please try again or contact <a target="_blank" href="mailto:webeditor@falklandsbiographies.org">
+                       webeditor@falklandsbiographies.org</a> for assistance.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

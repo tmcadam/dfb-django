@@ -1,0 +1,38 @@
+services:
+
+  postgres:
+    image: postgres:16
+    env_file: 
+      - ./secrets/postgres.env
+    volumes:
+    - ./volumes/pg_data:/var/lib/postgresql/data
+
+  dfb-staging:
+    build: .
+    working_dir: /app
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --no-input &&
+             python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - postgres
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./volumes/staticfiles:/app/staticfiles
+      - ./volumes/mediafiles:/app/mediafiles
+    env_file: 
+      - ./secrets/dfb-django-local.env
+    environment:
+      - APP_DB_HOST=postgres
+
+  dfb-staging-setup:
+    extends: dfb-staging
+    env_file: 
+      - ./secrets/dfb-django-local.env
+      - ./secrets/postgres.env
+
+    command: >
+      sh -c "bash ./scripts/database_setup.sh"
+    profiles:
+      - donotstart

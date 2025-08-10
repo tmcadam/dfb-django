@@ -1,0 +1,65 @@
+services:
+
+  web-server:
+    image: jonasal/nginx-certbot:6.0.0
+    restart: unless-stopped
+    env_file:
+      - /secrets/dfb-nginx-{{ env['ENVIRONMENT_NAME'] }}.env
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - nginx_secrets:/etc/letsencrypt
+      - ./nginx/sites:/etc/nginx/user_conf.d
+      - staticfiles:/app/staticfiles/:ro
+      - mediafiles:/app/mediafiles/:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"   # number of files or file count
+        max-size: "10m" # file size
+    depends_on:
+      - dfb-django
+
+  dfb-django:
+    image: ghcr.io/tmcadam/dfb-django:{{ env['ENVIRONMENT_NAME'] }}
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    volumes:
+      - staticfiles:/app/staticfiles
+      - mediafiles:/app/mediafiles
+    env_file: /secrets/dfb-django-{{ env['ENVIRONMENT_NAME'] }}.env
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"   # number of files or file count
+        max-size: "10m" # file size
+
+  dfb-django-init:
+    image: ghcr.io/tmcadam/dfb-django:{{ env['ENVIRONMENT_NAME'] }}
+    command: bash -c "
+        bash scripts/database_setup.sh &&
+        python manage.py migrate &&
+        bash scripts/create_admin_user.sh"
+    env_file:
+      - /secrets/dfb-django-{{ env['ENVIRONMENT_NAME'] }}.env
+      - /secrets/dfb-postgres-{{ env['ENVIRONMENT_NAME'] }}.env
+    depends_on:
+      - postgres
+    profiles:
+      - donotstart
+
+  postgres:
+    image: postgres:17
+    env_file: /secrets/dfb-postgres-{{ env['ENVIRONMENT_NAME'] }}.env
+    ports:
+    - 5432:5432
+    volumes:
+    - pg_data:/var/lib/postgresql/data
+
+volumes:
+  nginx_secrets:
+  staticfiles:
+  mediafiles:
+  pg_data:

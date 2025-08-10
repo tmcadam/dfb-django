@@ -1,0 +1,23 @@
+div.static_content_body h5 {
+    font-weight: bold;
+}
+
+div.static_content_body li {
+    margin-bottom: 10px;
+}
+
+img.static-img-right {
+    float: right;
+    margin-left: 15px;
+    margin-bottom: 10px;
+}
+/* Swapping in the shorter titles for small screens */
+
+@media screen and (max-width: 550px) {
+    img.static-img-right {
+        float: none;
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-bottom: 10px;
+    }
+}

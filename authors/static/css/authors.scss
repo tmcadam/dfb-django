@@ -1,0 +1,20 @@
+.author-link:hover {
+    cursor:pointer;
+    color: lightgray;
+}
+
+@include media-breakpoint-down(md) {     
+    .card-columns.custom-columns {
+        column-count: 1;
+    } 
+}
+@include media-breakpoint-up(md) {
+    .card-columns.custom-columns {
+        column-count: 2;
+    }
+}
+@include media-breakpoint-up(lg) {
+    .card-columns.custom-columns {
+        column-count: 3;
+    }
+}

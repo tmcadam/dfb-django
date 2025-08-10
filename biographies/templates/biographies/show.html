@@ -1,0 +1,50 @@
+{% extends "common/base.html" %}
+{% load static %}
+{% block app_css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" integrity="sha512-Velp0ebMKjcd9RiCoaHhLXkR1sFoCCWXNp6w4zj1hfMifYB5441C+sKeBl/T/Ka6NjBiRfBBQRaQq65ekYz3UQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endblock %}
+{% block app_js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js" integrity="sha512-Y2IiVZeaBwXG1wSV7f13plqlmFOx8MdjuHyYFVoYzhyRr3nH/NMDjTBSswijzADdNzMyWNetbLMfOpIPl6Cv9g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{% static 'js/biographies.js' %}"></script>
+    <script src="{% static 'js/lightbox.js' %}"></script>
+    <script src="{% static 'js/comments.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<h3>
+    <strong>{{ biography.title }}</strong>
+</h3>
+
+<h4>
+    {{ biography.lifespan }}
+    <span class="pull-right">
+        {% if biography.primary_country %}
+            <em><small>
+                from {{ biography.primary_country.name }}
+                {% if biography.secondary_country %}
+                    (also {{ biography.secondary_country.name }})
+                {% endif %}
+            </small></em>
+        {% endif %}
+        {% if biography.south_georgia %}
+            <button type="button" class="btn btn-outline-dark btn-sm ml-3 px-1" data-toggle="tooltip" data-placement="left" title="South Georgia">SG</button>
+        {% endif %}
+    </span>
+</h4>
+<br>
+<div class="biography_body">
+    {{ biography.body_with_images|safe }}
+</div>
+
+{% include "biographies/show/_authors.html" with biography=biography %}
+{% include "biographies/show/_external_links.html" with biography=biography %}
+{% include "biographies/show/_references.html" with biography=biography %}
+{% include "comments/_comments.html" with biography=biography %}
+{% include "biographies/show/_revisions.html" with biography=biography %}
+
+<!-- Hidden content for modal popups -->
+{% include "authors/_authors_modal.html" with authors=biography.get_ordered_authors %}
+{% include "comments/_comments_modal_form.html" with biography=biography form=comments_form %}
+
+{% endblock %}

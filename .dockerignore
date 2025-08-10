@@ -1,0 +1,5 @@
+.env
+.gitignore
+.vscode
+.vars
+.secrets

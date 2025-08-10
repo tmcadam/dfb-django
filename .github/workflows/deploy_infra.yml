@@ -19,7 +19,43 @@ jobs:
 
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment_name }}
+    env:
+      INFRA_DIR: ${{ vars.INFRA_DIR }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 0700 ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy.key
+          chmod 0600 ~/.ssh/deploy.key
+          ssh-keyscan ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Generate dfb-443.conf
+        uses: cuchi/jinja2-action@v1.3.0
+        with:
+          template: container_infra/dfb-443.conf.j2
+          output_file: container_infra/dfb-443.conf
+        env:
+          NGINX_SERVER_HOST: ${{ vars.NGINX_SERVER_HOST }}
+          NGINX_PROXY_PASS:  ${{ vars.NGINX_PROXY_PASS }}
+
+      - name: Generate docker-compose.yml
+        uses: cuchi/jinja2-action@v1.3.0
+        with:
+          template: container_infra/docker-compose.yml.j2
+          output_file: container_infra/docker-compose.yml
+        env:
+          ENVIRONMENT_NAME: ${{ inputs.environment_name }}
+
+      - name: Deploy infra to server
+        run: |
+          eval $(ssh-agent -s) && ssh-add ~/.ssh/deploy.key
+          ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
+            mkdir -p $INFRA_DIR/nginx/sites
+          EOF
+          scp -P ${{ vars.SSH_PORT }} container_infra/dfb-443.conf ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:$INFRA_DIR/nginx/sites/dfb-443.conf
+          scp -P ${{ vars.SSH_PORT }} container_infra/docker-compose.yml ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:$INFRA_DIR/docker-compose.yml

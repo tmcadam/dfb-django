@@ -1,0 +1,49 @@
+<header>
+  <nav class="navbar navbar-expand-md bg-primary navbar-dark fixed-top">
+    <div class="container">
+      <!-- Brand -->
+
+      <a class="navbar-brand d-none d-lg-block" href="#">Dictionary of Falklands Biography</a>
+      <a class="navbar-brand d-block d-sm-block d-lg-none" href="#">Falklands Biography</a>
+
+      <!-- Toggler/collapsibe Button -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <i class="fa fa-bars"></i>
+      </button>
+
+      <!-- Menu -->
+      <div class="collapse navbar-collapse  justify-content-end" id="collapsibleNavbar">
+        <ul class="navbar-nav text-uppercase">
+
+          <!--Home-->
+          <li class="nav-item"><a href="/" class="nav-link" %>Home</a></li>
+
+          <!--Biographies-->
+          <li class="nav-item"><a href="{% url 'biographies:index' %}" class="nav-link" %>Biographies</a></li>
+          
+          <!--About Menu-->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" id="navbardrop" href="#">About</a>
+            <div class="dropdown-menu shadow">
+              <a  href="#" class="dropdown-item">About DFB</a>
+              <a  href="#" class="dropdown-item">The Falklands Story</a>
+              <a  href="{% url 'authors:index' %}" class="dropdown-item">Authors</a>
+              <a  href="#" class="dropdown-item">Jane Cameron - Obituary</a>
+              <div class="dropdown-divider"></div>
+              <a  href="#" class="dropdown-item">Foreword</a>
+              <a  href="#" class="dropdown-item">Introduction</a>
+              <a  href="#" class="dropdown-item">Acknowledgements</a>
+              <a  href="#" class="dropdown-item">David Tatham</a>
+              <a  href="#" class="dropdown-item">Reviews</a>
+              <a  href="#" class="dropdown-item">How to buy</a>
+            </div>
+          </li>
+          
+          <!--Contacts-->
+          <li class="nav-item"><a href="/" class="nav-link" %>Contacts</a></li>
+
+        </ul>
+      </div>
+    </div><!--container-->
+  </nav> 
+</header>

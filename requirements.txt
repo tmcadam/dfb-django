@@ -1,0 +1,12 @@
+gunicorn==23.0.0
+Django==5.1.4
+psycopg[binary]==3.2.3
+django_compressor
+django-libsass
+django-summernote
+Pillow
+django-imagekit
+django-crispy-forms
+crispy-bootstrap4
+beautifulsoup4
+dj-database-url

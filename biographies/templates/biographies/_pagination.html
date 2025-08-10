@@ -1,0 +1,46 @@
+
+<div class="row">
+  <div class="mx-auto">
+    <div class="text-center mx-auto">
+      <ul class="pagination">
+        {% for li in page_obj.pagination_links %}
+            {% if li.link_type == "nav_first" %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1&search={{ search_term }}">«</a>
+                </li>
+            {% elif li.link_type == "nav_prev" %}
+                <li class="page-item">
+                    <a rel="prev" class="page-link" href="?page={{ li.link_number }}&search={{ search_term }}">‹</a>
+                </li>
+            {% elif li.link_type == "epsilon" %}
+                <li class="disabled d-none d-sm-inline page-item">
+                    <a class="page-link">…</a></li>
+            {% elif li.link_type == "curr" %}
+                <li class="active d-none d-sm-inline page-item">
+                    <a remote="false" class="page-link">{{ li.link_number }}</a>
+                </li>
+            {% elif li.link_type == "prev" %}
+                <li class="d-none d-sm-inline page-item">
+                    <a rel="prev" class="page-link" href="?page={{ li.link_number }}&search={{ search_term }}">{{ li.link_number }}</a>
+                </li>
+            {% elif li.link_type == "next" %}
+                <li class="d-none d-sm-inline page-item">
+                    <a rel="next" class="page-link" href="?page={{ li.link_number }}&search={{ search_term }}">{{ li.link_number }}</a>
+                </li>
+            {% elif li.link_type == "nav_next" %}
+                <li class="page-item">
+                    <a rel="next" class="page-link" href="?page={{ li.link_number }}&search={{ search_term }}">›</a>
+                </li>
+            {% elif li.link_type == "nav_last" %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ li.link_number }}&search={{ search_term }}">»</a>
+                </li>
+            {% else %}
+                <li class="d-none d-sm-inline page-item">
+                    <a class="page-link" href="?page={{ li.link_number }}&search={{ search_term }}">{{ li.link_number }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>

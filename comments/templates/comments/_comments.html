@@ -1,0 +1,17 @@
+<div class="biography_comments_wrapper">
+    <h4><strong>Comments</strong></h4>
+    {% if biography.approved_comments %}
+        {% for comment in biography.approved_comments %}
+            <div class="card ml-3 mb-3">
+                <div class="card-body bg-light">
+                    <h5 class="card-title">{{ comment.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ comment.created_at }}</h6>
+                    <p class="card-text"> {{ comment.comment|linebreaksbr }}</p>
+                </div>
+            </div>    
+        {% endfor %}
+    {% endif %}
+    <button id="comment_button" type="button" class="btn btn-outline-dark ml-3 mb-2" data-toggle="modal" data-target="#comments-form-modal">
+        Add comment
+    </button>
+</div>

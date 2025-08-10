@@ -127,3 +127,15 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+public/
+static/vendor/
+tmp/
+media/images/
+media/CACHE/
+secrets/
+staticfiles/
+mediafiles/
+volumes/
+.secrets
+.vars

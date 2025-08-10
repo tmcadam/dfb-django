@@ -1,0 +1,47 @@
+<!-- Authors modal -->
+<div id="authors-info" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Authors</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+        {% for author in authors %}
+            <h4><strong>{{ author.name }}</strong></h4>
+            {% if author.biography %}
+                <p>{{ author.biography }}</p>
+            {% endif %}
+            <small><ul>
+            {% for biography in author.biographies.all|slice:":3" %}
+                <li>
+                    <a href="{% url 'biographies:show' bio_slug=biography.slug %}" >{{ biography.title }}</a>
+                    {% if biography.get_authors.count > 1 %}
+                        <ul class="other-authors-list">
+                            {% for other_author in biography.get_authors %}
+                                {% if other_author != author %}
+                                <li class="other-authors-list-item">with
+                                    <a class="font-italic" href="{% url 'authors:index' %}#{{author.simple_slug}}">
+                                        {{ other_author.name }}
+                                    </a>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            {% if author.biographies.all.count > 3 %}
+                <li class="more-link"><a href="{% url 'authors:index' %}#{{ author.simple_slug }}" class="more-link">more...</a></li>
+            {% endif %}
+            </ul></small>
+            {% if author != biography.get_authors.last %}
+                <hr>
+            {% endif %}
+        {% endfor %}
+        </div>
+        </div>
+    </div>
+</div>

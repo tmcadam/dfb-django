@@ -1,0 +1,17 @@
+<div class="figure {{class}} my-2 text-center float-xs-none mx-xs-auto d-block" >
+
+    <a href="{{ img.image.url }}" 
+        data-toggle="lightbox" 
+        data-gallery="multiimages"
+        data-footer="{{img.caption|escape|safe}}
+                        <div class=&quot;w-100 mb-0 clearfix&quot;>
+                        <p class=&quot;float-left mb-0&quot;><strong>{{img.id}}</strong></p>
+                        <p class=&quot;small float-right mb-0&quot;>{{img.attribution}}</p>
+                        </div>"
+    >
+        <img class="figure-img img-fluid rounded" src="{{ img.image300x300.url }}">
+    </a>
+    <figcaption class="figcaption small text-sm-left">
+        <b>{{ img.id }} </b>{{ img.caption|safe|truncatechars_html:40 }}
+    </figcaption>
+</div>

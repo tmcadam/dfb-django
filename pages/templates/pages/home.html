@@ -1,0 +1,39 @@
+{% extends "common/base.html" %}
+{% block home_page %}
+
+    <section class="jumbotron d-flex justify-content-center align-items-center mb-0" style="height:500px;">
+        <div class="container d-inline-block text-center shadow" style="width:auto;height:auto;">
+            <h1 class="jumbotron-heading">The Dictionary of Falklands Biography</h1>
+            <p class="jumbotron-sub-heading h3">including South Georgia</p>
+        </div>
+    </section>
+
+    <div class="container-flex m-0 p-0">
+        <p class="text-right small mr-2" ><a href="#" data-toggle="modal" data-target="#headerModal">IMAGE INDEX</a></p>
+    </div>
+
+    <div class="container">
+        <p class="h5 text-center mt-4 mb-5">The Dictionary of Falklands Biography describes people concerned with the history of the Falkland Islands and South Georgia.</p>
+        {% include "biographies/_search.html" %}
+        <hr>
+    </div>
+
+    <!-- Render featured biographies -->
+    {% if featured_bios.count >= 6  %}
+    <div class="container">
+        <div id="featured" class="container-md px-5">
+            <p class="h4 text-center mb-5"><strong>Featured Biographies</strong></p>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+                {% for bio in featured_bios %}
+                    <div class="col mb-4">
+                        <div class="card h-100 mx-auto">
+                        {% include "biographies/_featured.html" with biography=bio %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% include "pages/_modal_image_index.html" %}
+{% endblock %}

@@ -14,7 +14,7 @@ on:
 
 jobs:
 
-  deploy-django-secrets:
+  deploy-django-env:
 
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment_name }}
@@ -23,7 +23,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Generated dfb-django.env
+      - name: Generate dfb-django.env
         uses: cuchi/jinja2-action@v1.3.0
         with:
           template: dfb-django.env.j2
@@ -32,7 +32,7 @@ jobs:
           DJANGO_ENV: ${{ inputs.environment_name }}
           DJANGO_PORT: ${{ vars.DJANGO_PORT }}
           DJANGO_DEBUG: ${{ vars.DJANGO_DEBUG }}
-          DJANGO_CRSF_TRUSTED_ORIGINS: ${{ vars.DJANGO_CRSF_TRUSTED_ORIGINS }}
+          DJANGO_CSRF_TRUSTED_ORIGINS: ${{ vars.DJANGO_CSRF_TRUSTED_ORIGINS }}
           DJANGO_ALLOWED_HOSTS: ${{ vars.DJANGO_ALLOWED_HOSTS }}
           DJANGO_SETTINGS_MODULE: ${{ vars.DJANGO_SETTINGS_MODULE }}
           DJANGO_LOG_LEVEL: ${{ vars.DJANGO_LOG_LEVEL }}
@@ -44,10 +44,84 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           chmod 0700 ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy_key
-          chmod 0600 ~/.ssh/deploy_key
-          ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy.key
+          chmod 0600 ~/.ssh/deploy.key
+          ssh-keyscan ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy secrets to server
+      - name: Deploy environment to server
         run: |
-          scp -P ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy_key dfb-django.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/secrets/dfb-${{ inputs.environment_name }}.env
+          eval $(ssh-agent -s) && ssh-add ~/.ssh/deploy.key
+          scp -P ${{ vars.SSH_PORT }} dfb-django.env ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:/home/${{ vars.SSH_USER }}/dfb-django-${{ inputs.environment_name }}.env
+          ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
+            sudo mkdir /secrets
+            sudo mv /home/${{ vars.SSH_USER }}/dfb-django-${{ inputs.environment_name }}.env /secrets/dfb-django-${{ inputs.environment_name }}.env
+          EOF
+
+  deploy-nginx-env:
+
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment_name }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate dfb-nginx.env
+        uses: cuchi/jinja2-action@v1.3.0
+        with:
+          template: dfb-nginx.env.j2
+          output_file: dfb-nginx.env
+        env:
+          CERTBOT_EMAIL: ${{ vars.NGINX_CERTBOT_EMAIL }}
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 0700 ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy.key
+          chmod 0600 ~/.ssh/deploy.key
+          ssh-keyscan ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy environment to server
+        run: |
+          eval $(ssh-agent -s) && ssh-add ~/.ssh/deploy.key
+          scp -P ${{ vars.SSH_PORT }} dfb-nginx.env ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:/home/${{ vars.SSH_USER }}/dfb-nginx-${{ inputs.environment_name }}.env
+          ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
+            sudo mkdir /secrets
+            sudo mv /home/${{ vars.SSH_USER }}/dfb-nginx-${{ inputs.environment_name }}.env /secrets/dfb-nginx-${{ inputs.environment_name }}.env
+          EOF
+
+  deploy-postgres-env:
+
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment_name }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate dfb-postgres.env
+        uses: cuchi/jinja2-action@v1.3.0
+        with:
+          template: dfb-postgres.env.j2
+          output_file: dfb-postgres.env
+        env:
+          POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+          POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 0700 ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy.key
+          chmod 0600 ~/.ssh/deploy.key
+          ssh-keyscan ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy environment to server
+        run: |
+          eval $(ssh-agent -s) && ssh-add ~/.ssh/deploy.key
+          scp -P ${{ vars.SSH_PORT }} dfb-postgres.env ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:/home/${{ vars.SSH_USER }}/dfb-postgres-${{ inputs.environment_name }}.env
+          ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
+            sudo mkdir /secrets
+            sudo mv /home/${{ vars.SSH_USER }}/dfb-postgres-${{ inputs.environment_name }}.env /secrets/dfb-postgres-${{ inputs.environment_name }}.env
+          EOF

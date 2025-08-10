@@ -1,0 +1,18 @@
+<div class="my-5 col-xl-8 offset-xl-2">
+    <!-- <%= form_tag biographies_path, :method => 'get' do %> -->
+    <form role="search" method="get" action="{% url 'biographies:index' %}">
+        <div class="input-group" class="width">
+            <input 
+                type="text" 
+                id="search" 
+                name="search" 
+                placeholder="Search biographies" 
+                class="form-control form-control-lg"
+                {% if search_term %}value="{{ search_term }}"{% endif %}
+            >
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+    </form>
+</div>
