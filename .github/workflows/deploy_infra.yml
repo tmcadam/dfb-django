@@ -32,7 +32,7 @@ jobs:
           chmod 0700 ~/.ssh
           echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy.key
           chmod 0600 ~/.ssh/deploy.key
-          ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Generate dfb-443.conf
         uses: cuchi/jinja2-action@v1.3.0
@@ -54,8 +54,8 @@ jobs:
       - name: Deploy infra to server
         run: |
           eval $(ssh-agent -s) && ssh-add ~/.ssh/deploy.key
-          ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
+          ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
             mkdir -p $INFRA_DIR/nginx/sites
           EOF
-          scp -P ${{ secrets.SSH_PORT }} container_infra/dfb-443.conf ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$INFRA_DIR/nginx/sites/dfb-443.conf
-          scp -P ${{ secrets.SSH_PORT }} container_infra/docker-compose.yml ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$INFRA_DIR/docker-compose.yml
+          scp -P ${{ vars.SSH_PORT }} container_infra/dfb-443.conf ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:$INFRA_DIR/nginx/sites/dfb-443.conf
+          scp -P ${{ vars.SSH_PORT }} container_infra/docker-compose.yml ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:$INFRA_DIR/docker-compose.yml
