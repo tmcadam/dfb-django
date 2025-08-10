@@ -31,9 +31,10 @@ jobs:
   build-push:
     needs: build-test
     runs-on: ubuntu-latest
+    env:
+      DEPLOYMENT_ENV: ${{ (github.head_ref || github.ref_name) == 'main' && 'production' || 'staging' }}
     permissions:
       packages: write
-
 
     steps:
       - name: Checkout code
@@ -56,7 +57,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags:  ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ github.head_ref || github.ref_name }}
+          tags:  ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ env.DEPLOYMENT_ENV }}
 
 
   deploy:
