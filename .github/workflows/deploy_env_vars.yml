@@ -50,10 +50,11 @@ jobs:
 
       - name: Deploy environment to server
         run: |
-          scp -P ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key dfb-django.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/dfb-django-${{ inputs.environment_name }}.env
-          ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
+          eval $(ssh-agent -s) && ssh-add ~/.ssh/deploy.key
+          scp -P ${{ vars.SSH_PORT }} dfb-django.env ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:/home/${{ vars.SSH_USER }}/dfb-django-${{ inputs.environment_name }}.env
+          ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
             sudo mkdir /secrets
-            sudo mv /home/${{ secrets.SSH_USER }}/dfb-django-${{ inputs.environment_name }}.env /secrets/dfb-django-${{ inputs.environment_name }}.env
+            sudo mv /home/${{ vars.SSH_USER }}/dfb-django-${{ inputs.environment_name }}.env /secrets/dfb-django-${{ inputs.environment_name }}.env
           EOF
 
   deploy-nginx-env:
@@ -83,10 +84,11 @@ jobs:
 
       - name: Deploy environment to server
         run: |
-          scp -P ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key dfb-nginx.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/dfb-nginx-${{ inputs.environment_name }}.env
-          ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
+          eval $(ssh-agent -s) && ssh-add ~/.ssh/deploy.key
+          scp -P ${{ vars.SSH_PORT }} dfb-nginx.env ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:/home/${{ vars.SSH_USER }}/dfb-nginx-${{ inputs.environment_name }}.env
+          ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
             sudo mkdir /secrets
-            sudo mv /home/${{ secrets.SSH_USER }}/dfb-nginx-${{ inputs.environment_name }}.env /secrets/dfb-nginx-${{ inputs.environment_name }}.env
+            sudo mv /home/${{ vars.SSH_USER }}/dfb-nginx-${{ inputs.environment_name }}.env /secrets/dfb-nginx-${{ inputs.environment_name }}.env
           EOF
 
   deploy-postgres-env:
@@ -117,8 +119,9 @@ jobs:
 
       - name: Deploy environment to server
         run: |
-          scp -P ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key dfb-postgres.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/dfb-postgres-${{ inputs.environment_name }}.env
-          ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/deploy.key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<EOF
+          eval $(ssh-agent -s) && ssh-add ~/.ssh/deploy.key
+          scp -P ${{ vars.SSH_PORT }} dfb-postgres.env ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:/home/${{ vars.SSH_USER }}/dfb-postgres-${{ inputs.environment_name }}.env
+          ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
             sudo mkdir /secrets
-            sudo mv /home/${{ secrets.SSH_USER }}/dfb-postgres-${{ inputs.environment_name }}.env /secrets/dfb-postgres-${{ inputs.environment_name }}.env
+            sudo mv /home/${{ vars.SSH_USER }}/dfb-postgres-${{ inputs.environment_name }}.env /secrets/dfb-postgres-${{ inputs.environment_name }}.env
           EOF
