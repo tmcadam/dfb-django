@@ -1,6 +1,6 @@
 gunicorn==23.0.0
-Django==5.1.4
-psycopg[binary]==3.2.3
+Django==5.2.5
+psycopg[binary]==3.2.9
 django_compressor
 django-libsass
 django-summernote
