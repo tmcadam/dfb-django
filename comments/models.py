@@ -5,7 +5,7 @@ from biographies.models import Biography
 class Comment(models.Model):
 
     biography = models.ForeignKey(Biography, on_delete=models.CASCADE, related_name="comments")
-    name = models.CharField(max_length=80, help_text="Name displayed with the comment (required).")
+    name = models.CharField(help_text="Name displayed with the comment (required).")
     email = models.EmailField(null=False, help_text="This will not be displayed publically (required).")
     comment = models.TextField(null=False)
     approved = models.BooleanField(default=False)

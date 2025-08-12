@@ -5,11 +5,11 @@ from biographies.images_helper import interlace_images
 
 class Biography(models.Model):
 
-    title = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=50, db_index=True, unique=True)
-    lifespan = models.CharField(max_length=50, null=True, blank=True)
+    title = models.CharField()
+    slug = models.SlugField(db_index=True, unique=True)
+    lifespan = models.CharField(null=True, blank=True)
     body = models.TextField()
-    authors = models.CharField(max_length=250, null=True, blank=True)
+    authors = models.CharField(null=True, blank=True)
     revisions = models.TextField(null=True, blank=True)
     external_links = models.TextField(null=True, blank=True)
     references = models.TextField(null=True, blank=True)
@@ -26,14 +26,14 @@ class Biography(models.Model):
         verbose_name_plural = "Biographies"
 
     def body_with_images(self):
-        return interlace_images(self) 
+        return interlace_images(self)
 
     def get_ordered_authors(self):
         return self.authors_connections.all().order_by('biographyauthor__author_position')
 
     def approved_comments(self):
         return self.comments.filter(approved=True).order_by('created_at')
-    
+
     @property
     def featured_image_url(self):
         return self.images.order_by("id").first().image300x300.url
@@ -58,7 +58,7 @@ class Biography(models.Model):
 
 class Country(models.Model):
 
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -68,5 +68,5 @@ class Country(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 

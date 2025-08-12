@@ -6,8 +6,8 @@ from common.html_cleaners import clean_urls
 
 class Author(models.Model):
 
-    first_name = models.CharField(max_length=50, null=True)
-    last_name = models.CharField(max_length=50)
+    first_name = models.CharField(null=True)
+    last_name = models.CharField()
     biography = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
