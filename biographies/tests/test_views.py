@@ -80,20 +80,28 @@ class BiographyViewsTests(TestCase):
         self.assertEqual(response.context["page_obj"].paginator.num_pages, 2)
         self.assertEqual(len(response.context["page_obj"]), 25)
 
-
     @tag("biographies_views")
-    def test_routing_for_show_biography(self):
+    def test_routing_for_show_biography_by_slug(self):
 
         BiographyFactory.create(title="Bio1", slug="bio1")
-        url = reverse('biographies:show', args=["bio1"]) 
+        url = reverse('biographies:show', args=["bio1"])
         response = self.client.get(url)
         self.assertContains(response, text="Bio1", status_code=200)
+
+    @tag("biographies_views")
+    def test_routing_for_show_biography_by_id(self):
+
+        biography = BiographyFactory.create(title="Bio1", slug="bio1")
+        url = reverse('biographies:show_by_id', args=[biography.id])
+        response = self.client.get(url)
+        self.assertRedirects(response, '/biographies/bio1', status_code=302,
+            target_status_code=200, fetch_redirect_response=True)
 
     @tag("biographies_views")
     def  test_biography_view_has_partially_filled_comment_form_in_context(self):
 
         bio1 = BiographyFactory.create(title="Bio1", slug="bio1")
-        url = reverse('biographies:show', args=["bio1"]) 
+        url = reverse('biographies:show', args=["bio1"])
         response = self.client.get(url)
         self.assertContains(response, text="Bio1", status_code=200)
         self.assertEqual(type(response.context["comments_form"]), SubmitCommentForm)
