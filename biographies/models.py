@@ -5,7 +5,7 @@ from biographies.images_helper import interlace_images
 
 class Biography(models.Model):
 
-    title = models.CharField()
+    title = models.CharField(db_index=True)
     slug = models.SlugField(db_index=True, unique=True)
     lifespan = models.CharField(null=True, blank=True)
     body = models.TextField()
