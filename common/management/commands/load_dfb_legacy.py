@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 from biographies.models import Biography, Country
 from images.models import Image
@@ -28,6 +28,8 @@ class Command(BaseCommand):
         Country.objects.all().delete()
         Author.objects.all().delete()
         BiographyAuthor.objects.all().delete()
+        Comment.objects.all().delete()
+        Image.objects.all().delete()
 
         # read countries
         countries_data = self.read_file(os.path.join(folder_path, "countries.json"))
@@ -36,14 +38,11 @@ class Command(BaseCommand):
             Country.objects.create(**country)
         self.stdout.write(self.style.SUCCESS('Countries: loaded {} items'.format(length)))
 
-
         # read biograhies
         biographies_data = self.read_file(os.path.join(folder_path, "biographies.json"))
         length = len(biographies_data["biographies"])
         for biography in biographies_data["biographies"]:
             Biography.objects.create(**biography)
-            if biography["id"]==510:
-                print(biography)
         self.stdout.write(self.style.SUCCESS('Biographies: loaded {} items'.format(length)))
 
 
