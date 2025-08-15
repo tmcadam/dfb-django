@@ -15,10 +15,10 @@ from biographies import views
 from images.models import Image
 
 class Command(BaseCommand):
-    help = 'Resets featured bios on home page'
+    help = 'Checks all the internal links in all biographies and produces a report'
 
     def handle(self, *args, **options):
-        
+
         updated = 0
         count = Biography.objects.all().count()
 
@@ -49,6 +49,6 @@ class Command(BaseCommand):
                     errors.append(f"SELF_REF: Bio:{bio.title}({bio.slug}) Lnk: {title}({slug})")
 
         [print(e) for e in errors]
-            
+
         self.stdout.write(self.style.SUCCESS(f"Slug fields updated: {updated} / {count}"))
 
