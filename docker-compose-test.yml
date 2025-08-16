@@ -19,7 +19,7 @@ services:
     depends_on:
       - postgres
     volumes:
-      - ./requirements-dev.txt:/app/requirements-dev-locked.txt
+      - ./requirements-dev-locked.txt:/app/requirements-dev-locked.txt
       - staticfiles:/app/staticfiles
       - mediafiles:/app/mediafiles
     environment:
