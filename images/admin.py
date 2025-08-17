@@ -14,5 +14,4 @@ class ImageAdmin(SummernoteModelAdmin):
     admin_thumbnail = AdminThumbnail(image_field="image100x100")
 
 
-
 admin.site.register(Image, ImageAdmin)
