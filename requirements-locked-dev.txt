@@ -96,6 +96,8 @@ rcssmin==1.1.2
     # via django-compressor
 rjsmin==1.2.2
     # via django-compressor
+ruff==0.12.9
+    # via -r requirements-dev.txt
 soupsieve==2.7
     # via beautifulsoup4
 sqlparse==0.5.3
