@@ -13,6 +13,7 @@ services:
     command: >
       sh -c "
              pip install -r requirements-dev-locked.txt
+             python manage.py makemigrations django_summernote
              ruff check &&
              ruff format --check &&
              python manage.py migrate &&
