@@ -36,6 +36,8 @@ ADD ./gunicorn_config.py    ./gunicorn_config.py
 RUN rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
 # Run the Django application at container start
+# Summernote has a missing migration
 CMD python manage.py collectstatic --noinput --clear \
+    && python manage.py makemigrations django_summernote \
     && python manage.py migrate \
     && gunicorn -c gunicorn_config.py dfb.wsgi:application
