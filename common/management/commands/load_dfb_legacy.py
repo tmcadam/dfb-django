@@ -4,6 +4,7 @@ from biographies.models import Biography, Country
 from images.models import Image
 from authors.models import Author, BiographyAuthor
 from comments.models import Comment
+from pages.models import Page
 
 import json
 import os
@@ -30,6 +31,7 @@ class Command(BaseCommand):
         BiographyAuthor.objects.all().delete()
         Comment.objects.all().delete()
         Image.objects.all().delete()
+        Page.objects.all().delete()
 
         # read countries
         countries_data = self.read_file(os.path.join(folder_path, "countries.json"))
@@ -105,3 +107,11 @@ class Command(BaseCommand):
                 created_at = img["created_at"]
             )
         self.stdout.write(self.style.SUCCESS('Images: loaded {} items'.format(length)))
+
+
+        #read pages
+        pages_data = self.read_file(os.path.join(folder_path, "static_contents.json"))
+        length = len(pages_data["static_contents"])
+        for page in pages_data["static_contents"]:
+            Page.objects.create(**page)
+        self.stdout.write(self.style.SUCCESS('Pages: loaded {} items'.format(length)))
