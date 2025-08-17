@@ -3,8 +3,8 @@ from django.db import models
 from common.html_cleaners import clean_urls
 from biographies.images_helper import interlace_images
 
-class Biography(models.Model):
 
+class Biography(models.Model):
     title = models.CharField(db_index=True)
     slug = models.SlugField(db_index=True, unique=True)
     lifespan = models.CharField(null=True, blank=True)
@@ -13,11 +13,17 @@ class Biography(models.Model):
     revisions = models.TextField(null=True, blank=True)
     external_links = models.TextField(null=True, blank=True)
     references = models.TextField(null=True, blank=True)
-    primary_country = models.ForeignKey('Country', on_delete=models.PROTECT, null=True, blank=True, related_name='+')
-    secondary_country = models.ForeignKey('Country', on_delete=models.PROTECT, null=True, blank=True, related_name='+')
+    primary_country = models.ForeignKey(
+        "Country", on_delete=models.PROTECT, null=True, blank=True, related_name="+"
+    )
+    secondary_country = models.ForeignKey(
+        "Country", on_delete=models.PROTECT, null=True, blank=True, related_name="+"
+    )
     south_georgia = models.BooleanField()
     featured = models.BooleanField()
-    authors_connections = models.ManyToManyField('authors.Author', through='authors.BiographyAuthor', related_name="biographies")
+    authors_connections = models.ManyToManyField(
+        "authors.Author", through="authors.BiographyAuthor", related_name="biographies"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -29,10 +35,12 @@ class Biography(models.Model):
         return interlace_images(self)
 
     def get_ordered_authors(self):
-        return self.authors_connections.all().order_by('biographyauthor__author_position')
+        return self.authors_connections.all().order_by(
+            "biographyauthor__author_position"
+        )
 
     def approved_comments(self):
-        return self.comments.filter(approved=True).order_by('created_at')
+        return self.comments.filter(approved=True).order_by("created_at")
 
     @property
     def featured_image_url(self):
@@ -57,7 +65,6 @@ class Biography(models.Model):
 
 
 class Country(models.Model):
-
     name = models.CharField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -68,5 +75,3 @@ class Country(models.Model):
 
     def __str__(self):
         return self.name
-
-

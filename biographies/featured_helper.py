@@ -1,17 +1,22 @@
 import random
 from biographies.models import Biography
 
+
 def set_featured(bios):
     bios.update(featured=True)
+
 
 def clear_featured():
     Biography.objects.all().update(featured=False)
 
+
 def with_images(bios):
     return bios.filter(images__isnull=False)
 
+
 def with_lifespan_author(bios):
     return bios.filter(lifespan__isnull=False).filter(authors__isnull=False)
+
 
 def with_first_image_orientated(bios, orientation):
     orientated_bios = []
@@ -20,12 +25,15 @@ def with_first_image_orientated(bios, orientation):
             orientated_bios.append(bio)
     return orientated_bios
 
+
 def get_random_from_list(bios, count):
     return random.sample(bios, count)
+
 
 def get_queryset_from_list(bios_list):
     bio_ids = [bio.id for bio in bios_list]
     return Biography.objects.filter(id__in=bio_ids)
+
 
 def reset_featured_bios():
     clear_featured()

@@ -4,10 +4,10 @@ from .models import Biography
 from .pagination_helper import generate_pagination_links
 from comments.forms import SubmitCommentForm
 
+
 # Create your views here
 def index(request):
-
-    search_term = request.GET.get('search', None)
+    search_term = request.GET.get("search", None)
     page_number = request.GET.get("page")
 
     if search_term:
@@ -18,18 +18,27 @@ def index(request):
 
     paginator = Paginator(biographies, 25)
     page_obj = paginator.get_page(page_number)
-    page_obj.pagination_links = generate_pagination_links(page_obj.number, paginator.num_pages)
+    page_obj.pagination_links = generate_pagination_links(
+        page_obj.number, paginator.num_pages
+    )
 
-    return render(request, 'biographies/index.html', {"page_obj": page_obj, "search_term": search_term})
+    return render(
+        request,
+        "biographies/index.html",
+        {"page_obj": page_obj, "search_term": search_term},
+    )
+
 
 def show_by_slug(request, bio_slug):
-
     biography = get_object_or_404(Biography, slug=bio_slug)
     comments_form = SubmitCommentForm(initial={"biography": biography.id})
-    return render(request, 'biographies/show.html', {'biography': biography, 'comments_form': comments_form})
+    return render(
+        request,
+        "biographies/show.html",
+        {"biography": biography, "comments_form": comments_form},
+    )
 
 
 def show_by_id(request, bio_id):
-
     biography = get_object_or_404(Biography, id=bio_id)
-    return redirect('biographies:show', bio_slug=biography.slug)
+    return redirect("biographies:show", bio_slug=biography.slug)

@@ -2,10 +2,9 @@ from django.db import models
 from django.utils.text import slugify
 
 from biographies.models import Biography
-from common.html_cleaners import clean_urls
+
 
 class Author(models.Model):
-
     first_name = models.CharField(blank=True, null=True)
     last_name = models.CharField()
     biography = models.TextField(blank=True, null=True)
@@ -13,7 +12,7 @@ class Author(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ('first_name', 'last_name')
+        unique_together = ("first_name", "last_name")
         ordering = ["last_name", "first_name"]
 
     @property
@@ -39,9 +38,7 @@ class Author(models.Model):
         return self.biography
 
 
-
 class BiographyAuthor(models.Model):
-
     biography = models.ForeignKey(Biography, on_delete=models.CASCADE)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     author_position = models.IntegerField()
@@ -49,8 +46,7 @@ class BiographyAuthor(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = [('biography', 'author'),
-                           ('biography', 'author_position')]
+        unique_together = [("biography", "author"), ("biography", "author_position")]
         ordering = ["author_position"]
 
     def __str__(self):

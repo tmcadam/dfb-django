@@ -2,6 +2,7 @@ from itertools import cycle
 from bs4 import BeautifulSoup
 from django.template import loader
 
+
 def generate_image_tags(images):
     tags = []
     after_para = 1
@@ -12,9 +13,10 @@ def generate_image_tags(images):
     for image in images:
         pos_class = next(class_toggle)
         tag = template.render({"img": image, "class": pos_class})
-        tags.append( {"tag":tag, "after_para":after_para} )
+        tags.append({"tag": tag, "after_para": after_para})
         after_para += 2
     return tags
+
 
 def insert_image(p, images):
     for img in images:
@@ -22,9 +24,11 @@ def insert_image(p, images):
             return img["tag"]
     return ""
 
+
 def get_body_elements(body):
     soup = BeautifulSoup(body, "html.parser")
     return soup.find_all(True, recursive=False)
+
 
 def interlace_images(biography):
     output = ""

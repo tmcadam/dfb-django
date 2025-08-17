@@ -1,5 +1,3 @@
-import re
-
 from django.db import models
 from imagekit.models import ProcessedImageField, ImageSpecField
 from imagekit.processors import ResizeToFit
@@ -7,8 +5,8 @@ from imagekit.processors import ResizeToFit
 from biographies.models import Biography
 from common.html_cleaners import clean_urls
 
-class Downsize:
 
+class Downsize:
     def __init__(self, size):
         self.size = size
 
@@ -17,24 +15,32 @@ class Downsize:
             return ResizeToFit(self.size, self.size).process(image)
         return image
 
-class Image (models.Model):
 
+class Image(models.Model):
     title = models.CharField()
     caption = models.TextField()
     attribution = models.CharField(null=True, blank=True)
-    biography = models.ForeignKey(Biography, on_delete=models.CASCADE, related_name="images")
-    image = ProcessedImageField(upload_to='images',
-                                           processors=[Downsize(800)],
-                                           format='JPEG',
-                                           options={'quality': 90})
-    image300x300 = ImageSpecField(source='image',
-                                      processors=[Downsize(300)],
-                                      format='JPEG',
-                                      options={'quality': 90})
-    image100x100 = ImageSpecField(source='image',
-                                      processors=[Downsize(100)],
-                                      format='JPEG',
-                                      options={'quality': 90})
+    biography = models.ForeignKey(
+        Biography, on_delete=models.CASCADE, related_name="images"
+    )
+    image = ProcessedImageField(
+        upload_to="images",
+        processors=[Downsize(800)],
+        format="JPEG",
+        options={"quality": 90},
+    )
+    image300x300 = ImageSpecField(
+        source="image",
+        processors=[Downsize(300)],
+        format="JPEG",
+        options={"quality": 90},
+    )
+    image100x100 = ImageSpecField(
+        source="image",
+        processors=[Downsize(100)],
+        format="JPEG",
+        options={"quality": 90},
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -67,7 +73,7 @@ class Image (models.Model):
             return "other"
 
     class Meta:
-        ordering = ['biography__title', 'id']
+        ordering = ["biography__title", "id"]
 
     def __str__(self):
         return self.title
