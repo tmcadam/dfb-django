@@ -13,6 +13,8 @@ services:
     command: >
       sh -c "
              pip install -r requirements-dev-locked.txt
+             ruff check &&
+             ruff format --check &&
              python manage.py migrate &&
              python manage.py collectstatic --no-input &&
              python manage.py test"
@@ -20,6 +22,7 @@ services:
       - postgres
     volumes:
       - ./requirements-dev-locked.txt:/app/requirements-dev-locked.txt
+      - ./ruff.toml:/app/ruff.toml
       - staticfiles:/app/staticfiles
       - mediafiles:/app/mediafiles
     environment:
