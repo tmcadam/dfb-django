@@ -1,0 +1,5 @@
+exclude = [
+    "*/tests/*",
+    "*/migrations/*",
+    "test_*.py"
+]
