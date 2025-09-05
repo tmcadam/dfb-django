@@ -39,6 +39,13 @@ jobs:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           DJANGO_DB_URL: ${{ secrets.DJANGO_DB_URL }}
           DJANGO_ADMIN_PASSWORD: ${{ secrets.DJANGO_ADMIN_PASSWORD }}
+          DJANGO_EMAIL_HOST: ${{ vars.DJANGO_EMAIL_HOST }}
+          DJANGO_EMAIL_PORT: ${{ vars.DJANGO_EMAIL_PORT }}
+          DJANGO_EMAIL_HOST_USER: ${{ vars.DJANGO_EMAIL_HOST_USER }}
+          DJANGO_EMAIL_HOST_PASSWORD: ${{ secrets.DJANGO_EMAIL_HOST_PASSWORD }}
+          DJANGO_EMAIL_USE_SSL: ${{ vars.DJANGO_EMAIL_USE_SSL }}
+          DJANGO_COMMENT_EMAIL_RECIPIENTS: ${{ vars.DJANGO_COMMENT_EMAIL_RECIPIENTS }}
+          DJANGO_COMMENT_EMAIL_FROM: ${{ vars.DJANGO_COMMENT_EMAIL_FROM }}
 
       - name: Setup SSH
         run: |
