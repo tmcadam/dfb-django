@@ -22,4 +22,3 @@ CELERY_EAGER_PROPAGATES = True
 
 COMMENT_EMAIL_FROM = "test@test.com"
 COMMENT_EMAIL_RECIPIENTS = "joe@joe.com"
-
