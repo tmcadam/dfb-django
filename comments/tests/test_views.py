@@ -1,5 +1,5 @@
 import re
-from django.test import TransactionTestCase, tag, override_settings
+from django.test import TransactionTestCase, tag
 from django.urls import reverse
 from django.core import mail
 
