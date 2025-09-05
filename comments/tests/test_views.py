@@ -1,5 +1,5 @@
 import re
-from django.test import TransactionTestCase, tag
+from django.test import TransactionTestCase, tag, override_settings
 from django.urls import reverse
 from django.core import mail
 
@@ -29,7 +29,11 @@ class CommentsViewsTests(TransactionTestCase):
         self.assertEqual(response_data["status"], "success")
         self.assertEqual(bio1.comments.count(), 1)
 
-
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True,
+                       CELERY_EAGER_PROPAGATES=True,
+                       EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+                       COMMENT_EMAIL_FROM="test@test.com",
+                       COMMENT_EMAIL_RECIPIENTS="joe@joe.com")
     def  test_submit_comment_sends_email_to_end_user(self):
         bio1 = BiographyFactory.create(title="Bio 1")
         url = reverse('comments:submit_comment')
@@ -54,6 +58,7 @@ class CommentsViewsTests(TransactionTestCase):
         self.assertIn("Dear Tom,", message1.body)
         self.assertEqual(message1.to, ["tom@blah.com"])
         self.assertEqual(message1.subject, "New comment received")
+        self.assertEqual(message1.from_email, "test@test.com")
         self.assertIn("Thank you for submitting a comment to the Dictionary of Falklands Biography.", message1.body)
         self.assertIn("Bio 1", message1.body)
         self.assertIn("A test comment", message1.body)
@@ -66,7 +71,11 @@ class CommentsViewsTests(TransactionTestCase):
         self.assertIsNotNone(soup.find("h4", string="Bio 1"))
         self.assertIsNotNone(soup.find("p", string=re.compile("A test comment")))
 
-
+    @override_settings(CELERY_TASK_ALWAYS_EAGER=True,
+                       CELERY_EAGER_PROPAGATES=True,
+                       EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+                       COMMENT_EMAIL_FROM="test@test.com",
+                       COMMENT_EMAIL_RECIPIENTS="joe@joe.com")
     def  test_submit_comment_sends_email_to_admins(self):
         bio1 = BiographyFactory.create(title="Bio 1")
         url = reverse('comments:submit_comment')
@@ -86,6 +95,9 @@ class CommentsViewsTests(TransactionTestCase):
 
         # get the second email from the outbox
         message2 = mail.outbox[1]
+        self.assertEqual(message2.to, ["joe@joe.com"])
+        self.assertEqual(message2.from_email, "test@test.com")
+        self.assertEqual(message2.subject, "New comment received")
 
         # check the email sent to admins
         self.assertIn("Dear DFB Admin,", message2.body)
