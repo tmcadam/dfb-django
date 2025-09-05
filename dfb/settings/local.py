@@ -22,7 +22,7 @@ EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = BASE_DIR / "emails"  # change this to a proper location
 
 CELERY_TASK_ALWAYS_EAGER = True
-CELERY_EAGER_PROPAGATES = True
+CELERY_TASK_EAGER_PROPAGATES = True
 
 COMMENT_EMAIL_FROM = "test@test.com"
 COMMENT_EMAIL_RECIPIENTS = "joe@joe.com"

@@ -30,4 +30,4 @@ COMMENT_EMAIL_FROM = os.environ["DJANGO_COMMENT_EMAIL_FROM"]
 
 # These will be removed when the queue and workers are fully configured
 CELERY_TASK_ALWAYS_EAGER = True
-CELERY_EAGER_PROPAGATES = True
+CELERY_TASK_EAGER_PROPAGATES = True
