@@ -29,8 +29,7 @@ class CommentsViewsTests(TransactionTestCase):
         self.assertEqual(response_data["status"], "success")
         self.assertEqual(bio1.comments.count(), 1)
 
-    @override_settings(COMMENT_EMAIL_FROM="test@test.com",
-                       COMMENT_EMAIL_RECIPIENTS="joe@joe.com")
+
     def  test_submit_comment_sends_email_to_end_user(self):
         bio1 = BiographyFactory.create(title="Bio 1")
         url = reverse('comments:submit_comment')
@@ -68,8 +67,7 @@ class CommentsViewsTests(TransactionTestCase):
         self.assertIsNotNone(soup.find("h4", string="Bio 1"))
         self.assertIsNotNone(soup.find("p", string=re.compile("A test comment")))
 
-    @override_settings(COMMENT_EMAIL_FROM="test@test.com",
-                       COMMENT_EMAIL_RECIPIENTS="joe@joe.com")
+
     def  test_submit_comment_sends_email_to_admins(self):
         bio1 = BiographyFactory.create(title="Bio 1")
         url = reverse('comments:submit_comment')
