@@ -1,0 +1,10 @@
+Dear DFB Admin,
+
+A new comment has been received on the Dictionary of Falklands Biographies web site.
+
+Please go to the admin site to approve the comment.
+
+{{ comment.biography.title }}
+{{ comment.name }} / {{ comment.email }}
+
+{{ comment.comment }}

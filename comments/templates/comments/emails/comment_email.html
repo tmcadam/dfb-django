@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>Dear {{ comment.name }},</p>
+    <p>Thank you for submitting a comment to the Dictionary of Falklands Biography. It will be
+      reviewed by the web editor before being displayed publically, this may take upto 3 days.</p>
+
+    <p>Please contact David Tatham for further information -
+      <a href="mailto:webeditor@falklandsbiographies.org">webeditor@falklandsbiographies.org</a></p>
+
+    <p>Kind regards,<br>The DFB Team</p>
+
+    <div style="margin-left: 20px;color:DarkBlue">
+        <h4>{{ comment.biography.title }}</h4>
+        <p>{{ comment.comment|linebreaks }}</p>
+    </div>
+
+  </body>
+</html>

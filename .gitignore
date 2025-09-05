@@ -139,4 +139,4 @@ mediafiles/
 volumes/
 .secrets
 .vars
-emails/
+/emails/
