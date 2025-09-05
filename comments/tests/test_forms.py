@@ -139,3 +139,4 @@ class CommentFormTests(TestCase):
         url_input = wrapper_div.find('input', {"id": "id_url", "type": "text"})
         self.assertIsNotNone(url_input)
         self.assertNotIn("value", url_input.attrs)
+

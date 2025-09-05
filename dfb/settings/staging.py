@@ -16,3 +16,18 @@ DATABASES = {
         conn_health_checks=True,
     )
 }
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = os.environ["DJANGO_EMAIL_HOST"]
+EMAIL_PORT = os.environ["DJANGO_EMAIL_PORT"]
+EMAIL_USE_SSL = os.environ["DJANGO_EMAIL_USE_SSL"]
+EMAIL_HOST_USER = os.environ["DJANGO_EMAIL_HOST_USER"]
+EMAIL_HOST_PASSWORD = os.environ["DJANGO_EMAIL_HOST_PASSWORD"]
+
+COMMENT_EMAIL_RECIPIENTS = os.environ["DJANGO_COMMENT_EMAIL_RECIPIENTS"]
+COMMENT_EMAIL_FROM = os.environ["DJANGO_COMMENT_EMAIL_FROM"]
+
+# These will be removed when the queue and workers are fully configured
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_EAGER_PROPAGATES = True
