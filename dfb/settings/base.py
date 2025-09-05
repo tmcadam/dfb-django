@@ -15,27 +15,7 @@ from pathlib import Path
 import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-ENVIRONMENT = os.getenv("DJANGO_ENV", "production")
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get(
-    "DJANGO_SECRET_KEY",
-    "django-insecure-69k-#kmlre&rb4uhf2*d5foi+1ee)wsck_%9z*--wbit3_dk9e",
-)
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if os.environ.get("DJANGO_ENV", "local") in ["local", "testing"] else False
-
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost").split(",")
-
-CSRF_TRUSTED_ORIGINS = os.environ.get(
-    "DJANGO_CSRF_TRUSTED_ORIGINS", "http://localhost"
-).split(",")
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Application definition
 
@@ -76,7 +56,7 @@ ROOT_URLCONF = "dfb.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -92,18 +72,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "dfb.wsgi.application"
-
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ["DJANGO_DB_URL"],
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -139,24 +107,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = "/static/"
-
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = []
-
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
     "compressor.finders.CompressorFinder",
 ]
-
 COMPRESS_PRECOMPILERS = (("text/x-scss", "django_libsass.SassCompiler"),)
 
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "mediafiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -183,6 +147,5 @@ SUMMERNOTE_CONFIG = {
     # You can completely disable the attachment feature.
     "disable_attachment": True,
 }
-
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
