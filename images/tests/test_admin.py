@@ -50,7 +50,7 @@ class ImageAdminTests(TestCase):
         self.assertTrue(soup.find("input", {"value": "Search"}))
 
         # Check for the columns in the table
-        self.assertTrue("Biography  title" in table.find("thead").findAll("th")[1].text.strip())
+        self.assertTrue("Biography  title" in table.find("thead").find_all("th")[1].text.strip())
         self.assertTrue("Title" in table.find("thead").find_all("th")[2].text.strip())
         self.assertTrue("Thumbnail" in table.find("thead").find_all("th")[3].text.strip())
 
