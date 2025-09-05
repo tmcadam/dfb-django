@@ -1,5 +1,8 @@
 # ruff : noqa: F405
+import os
+import dj_database_url
 from .base import *  # noqa
+
 
 ENVIRONMENT = "local"
 DEBUG = True
