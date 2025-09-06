@@ -1,13 +1,15 @@
+import json
+import os
+
 from django.core.management.base import BaseCommand
+from django.core.management.color import no_style
+from django.db import connection
 
 from biographies.models import Biography, Country
 from images.models import Image
 from authors.models import Author, BiographyAuthor
 from comments.models import Comment
 from pages.models import Page
-
-import json
-import os
 
 
 class Command(BaseCommand):
@@ -123,3 +125,10 @@ class Command(BaseCommand):
         for page in pages_data["static_contents"]:
             Page.objects.create(**page)
         self.stdout.write(self.style.SUCCESS("Pages: loaded {} items".format(length)))
+
+
+        sequence_sql = connection.ops.sequence_reset_sql(no_style(), [Biography, Country, Author, BiographyAuthor, Comment, Image, Page])
+        with connection.cursor() as cursor:
+            for sql in sequence_sql:
+                cursor.execute(sql)
+        self.stdout.write(self.style.SUCCESS("Reset sequences"))
