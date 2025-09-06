@@ -54,7 +54,7 @@ class CommentsViewsTests(TransactionTestCase):
         self.assertIn("Dear Tom,", message1.body)
         self.assertEqual(message1.to, ["tom@blah.com"])
         self.assertEqual(message1.subject, "New comment received")
-        self.assertEqual(message1.from_email, "test@test.com")
+        self.assertEqual(message1.from_email, "Test <test@test.com>")
         self.assertIn("Thank you for submitting a comment to the Dictionary of Falklands Biography.", message1.body)
         self.assertIn("Bio 1", message1.body)
         self.assertIn("A test comment", message1.body)
@@ -88,7 +88,7 @@ class CommentsViewsTests(TransactionTestCase):
         # get the second email from the outbox
         message2 = mail.outbox[1]
         self.assertEqual(message2.to, ["joe@joe.com"])
-        self.assertEqual(message2.from_email, "test@test.com")
+        self.assertEqual(message2.from_email, "Test <test@test.com>")
         self.assertEqual(message2.subject, "New comment received")
 
         # check the email sent to admins

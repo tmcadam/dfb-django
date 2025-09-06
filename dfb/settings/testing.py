@@ -21,5 +21,5 @@ DATABASES = {
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 CELERY_TASK_ALWAYS_EAGER = True
 CELERY_TASK_EAGER_PROPAGATES = True
-COMMENT_EMAIL_FROM = "test@test.com"
+COMMENT_EMAIL_FROM = "Test <test@test.com>"
 COMMENT_EMAIL_RECIPIENTS = "joe@joe.com"
