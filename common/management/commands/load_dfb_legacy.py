@@ -126,8 +126,10 @@ class Command(BaseCommand):
             Page.objects.create(**page)
         self.stdout.write(self.style.SUCCESS("Pages: loaded {} items".format(length)))
 
-
-        sequence_sql = connection.ops.sequence_reset_sql(no_style(), [Biography, Country, Author, BiographyAuthor, Comment, Image, Page])
+        sequence_sql = connection.ops.sequence_reset_sql(
+            no_style(),
+            [Biography, Country, Author, BiographyAuthor, Comment, Image, Page],
+        )
         with connection.cursor() as cursor:
             for sql in sequence_sql:
                 cursor.execute(sql)
