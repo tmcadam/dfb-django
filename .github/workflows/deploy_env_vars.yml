@@ -26,7 +26,7 @@ jobs:
       - name: Generate dfb-django.env
         uses: cuchi/jinja2-action@v1.3.0
         with:
-          template: dfb-django.env.j2
+          template: container_infra/env_templates/dfb-django.env.j2
           output_file: dfb-django.env
         env:
           DJANGO_ENV: ${{ inputs.environment_name }}
@@ -77,7 +77,7 @@ jobs:
       - name: Generate dfb-nginx.env
         uses: cuchi/jinja2-action@v1.3.0
         with:
-          template: dfb-nginx.env.j2
+          template: container_infra/env_templates/dfb-nginx.env.j2
           output_file: dfb-nginx.env
         env:
           CERTBOT_EMAIL: ${{ vars.NGINX_CERTBOT_EMAIL }}
@@ -110,7 +110,7 @@ jobs:
       - name: Generate dfb-postgres.env
         uses: cuchi/jinja2-action@v1.3.0
         with:
-          template: dfb-postgres.env.j2
+          template: container_infra/env_templates/dfb-postgres.env.j2
           output_file: dfb-postgres.env
         env:
           POSTGRES_DB: ${{ vars.POSTGRES_DB }}
@@ -146,7 +146,7 @@ jobs:
       - name: Generate dfb-postgres.env
         uses: cuchi/jinja2-action@v1.3.0
         with:
-          template: dfb-rabbitmq.env.j2
+          template: container_infra/env_templates/dfb-rabbitmq.env.j2
           output_file: dfb-rabbitmq.env
         env:
           RABBITMQ_DEFAULT_USER: ${{ vars.RABBITMQ_DEFAULT_USER }}
