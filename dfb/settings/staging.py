@@ -28,10 +28,6 @@ EMAIL_HOST_PASSWORD = os.environ["DJANGO_EMAIL_HOST_PASSWORD"]
 COMMENT_EMAIL_RECIPIENTS = os.environ["DJANGO_COMMENT_EMAIL_RECIPIENTS"]
 COMMENT_EMAIL_FROM = os.environ["DJANGO_COMMENT_EMAIL_FROM"]
 
-# These will be removed when the queue and workers are fully configured
-CELERY_TASK_ALWAYS_EAGER = True
-CELERY_TASK_EAGER_PROPAGATES = True
-
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
