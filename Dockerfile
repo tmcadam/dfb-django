@@ -32,12 +32,15 @@ ADD ./scripts               ./scripts
 ADD ./manage.py             ./manage.py
 ADD ./gunicorn_config.py    ./gunicorn_config.py
 
+RUN chmod +x ./scripts/wait-for-it.sh
+
 # Clean up apt cache
 RUN rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
 # Run the Django application at container start
 # Summernote has a missing migration
-CMD python manage.py collectstatic --noinput --clear \
+CMD ./scripts/wait-for-it.sh rabbitmq:5672 -t 30 \
+    && python manage.py collectstatic --noinput --clear \
     && python manage.py makemigrations django_summernote \
     && python manage.py migrate \
     && gunicorn -c gunicorn_config.py dfb.wsgi:application
