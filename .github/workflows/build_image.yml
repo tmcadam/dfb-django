@@ -88,6 +88,8 @@ jobs:
           ssh -p ${{ vars.SSH_PORT }} -i ~/.ssh/deploy.key ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
             cd $INFRA_DIR
             docker compose pull dfb-django
+            docker compose pull dfb-celery
+            docker compose pull dfb-django-init
           EOF
 
       - name: Restart service
@@ -95,6 +97,9 @@ jobs:
           ssh -p ${{ vars.SSH_PORT }} -i ~/.ssh/deploy.key ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
             cd $INFRA_DIR
             docker compose down --remove-orphans dfb-django
+            docker compose down --remove-orphans dfb-celery
             docker compose up dfb-django -d --force-recreate
+            docker compose up dfb-celery -d --force-recreate
             docker compose restart web-server
+            docker image prune -f
           EOF
