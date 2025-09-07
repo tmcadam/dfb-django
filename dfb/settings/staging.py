@@ -28,6 +28,8 @@ EMAIL_HOST_PASSWORD = os.environ["DJANGO_EMAIL_HOST_PASSWORD"]
 COMMENT_EMAIL_RECIPIENTS = os.environ["DJANGO_COMMENT_EMAIL_RECIPIENTS"]
 COMMENT_EMAIL_FROM = os.environ["DJANGO_COMMENT_EMAIL_FROM"]
 
+CELERY_BROKER_URL = os.environ["CELERY_BROKER_URL"]
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
