@@ -1,0 +1,27 @@
+name: Autocommit
+on:
+
+  schedule:
+    - cron: "42 0 1 * *" # Runs at 00:42 UTC on the first day of every month
+  workflow_dispatch:
+jobs:
+  autocommit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+    - name: Add or update .autocommit
+      run: echo $(date +'%s') > .autocommit
+    - name: Commit .autocommit
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+        if [ -n "$(git status --porcelain)" ]; then
+          git add .
+          git commit -m "Autocommit on $(date +'%B %d, %Y %T (%Z)')"
+          git push origin $(git branch --show-current)
+        else
+          echo "Oops, seems the autocommit failed!"
+          exit 1
+        fi
