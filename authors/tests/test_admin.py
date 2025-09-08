@@ -47,8 +47,8 @@ class AdminTests(TestCase):
         self.assertTrue(soup.find("input", {"value": "Search"}))
 
         # Check for the columns in the table
-        self.assertTrue("Author" in table.find("thead").findAll("th")[1].text.strip())
-        self.assertTrue("Short biography" in table.find("thead").findAll("th")[2].text.strip())
+        self.assertTrue("Author" in table.find("thead").find_all("th")[1].text.strip())
+        self.assertTrue("Short biography" in table.find("thead").find_all("th")[2].text.strip())
 
 
     def test_authors_admin_change_page(self):

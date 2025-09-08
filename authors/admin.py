@@ -1,14 +1,15 @@
 from django.contrib import admin
-from django.template.defaultfilters import truncatechars
 
-from .models import Author, BiographyAuthor
+from .models import Author
 # Register your models here.
 
 
 class AuthorAdmin(admin.ModelAdmin):
+    search_fields = ["first_name", "last_name"]
+    list_display = (
+        "__str__",
+        "short_biography",
+    )
 
-    search_fields = ['first_name', 'last_name']
-    list_display = ('__str__', 'short_biography',)
 
 admin.site.register(Author, AuthorAdmin)
-

@@ -1,0 +1,13 @@
+Dear {{ comment.name }},
+
+Thank you for submitting a comment to the Dictionary of Falklands Biography. It will
+be reviewed by the web editor before being displayed publically,this may take upto 3 days.
+
+Please contact David Tatham for further information - webeditor@falklandsbiographies.org
+
+Kind regards,
+The DFB Team
+
+{{ comment.biography.title }}
+
+{{ comment.comment }}

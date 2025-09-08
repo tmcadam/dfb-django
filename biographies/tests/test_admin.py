@@ -45,7 +45,7 @@ class CountryAdminViewsTests(TestCase):
         self.assertIsNotNone(table)
 
         # Check for the columns in the table
-        self.assertTrue('Country' in table.find('thead').findAll('th')[1].text.strip())
+        self.assertTrue('Country' in table.find('thead').find_all('th')[1].text.strip())
 
 
     def test_countries_admin_change_page(self):

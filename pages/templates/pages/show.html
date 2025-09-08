@@ -1,0 +1,9 @@
+{% extends "common/base.html" %}
+{% block home_page %}
+
+    <div class="container w-80 pt-3">
+    <h3>{{ page.title }}</h3>
+        <p>{{ page.body|safe }}</p>
+    </div>
+
+{% endblock %}

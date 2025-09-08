@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
@@ -25,16 +26,19 @@ admin.site.site_title = "DFB Admin"
 admin.site.site_header = "DFB Admin"
 
 urlpatterns = [
-    path('', include('pages.urls'), name="pages"),
-    path('biographies/', include('biographies.urls')),
-    path('summernote/', include('django_summernote.urls')),
-    path('images/', include('images.urls')),
-    path('authors/', include('authors.urls')),
-    path('comments/', include('comments.urls')),
-    path('admin/', admin.site.urls),
+    path("", include("pages.urls"), name="pages"),
+    path("biographies/", include("biographies.urls")),
+    path("summernote/", include("django_summernote.urls")),
+    path("images/", include("images.urls")),
+    path("authors/", include("authors.urls")),
+    path("comments/", include("comments.urls")),
+    path("admin/", admin.site.urls),
     # dirty fix, needed for django-summernote to work with attachments disabled
-    path('summernote/upload_attachment/', SummernoteUploadAttachment.as_view(), name='django_summernote-upload_attachment'),
-
+    path(
+        "summernote/upload_attachment/",
+        SummernoteUploadAttachment.as_view(),
+        name="django_summernote-upload_attachment",
+    ),
 ]
 
 if settings.DEBUG:

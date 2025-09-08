@@ -26,7 +26,7 @@ jobs:
       - name: Generate dfb-django.env
         uses: cuchi/jinja2-action@v1.3.0
         with:
-          template: dfb-django.env.j2
+          template: container_infra/env_templates/dfb-django.env.j2
           output_file: dfb-django.env
         env:
           DJANGO_ENV: ${{ inputs.environment_name }}
@@ -39,6 +39,14 @@ jobs:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           DJANGO_DB_URL: ${{ secrets.DJANGO_DB_URL }}
           DJANGO_ADMIN_PASSWORD: ${{ secrets.DJANGO_ADMIN_PASSWORD }}
+          DJANGO_EMAIL_HOST: ${{ vars.DJANGO_EMAIL_HOST }}
+          DJANGO_EMAIL_PORT: ${{ vars.DJANGO_EMAIL_PORT }}
+          DJANGO_EMAIL_HOST_USER: ${{ vars.DJANGO_EMAIL_HOST_USER }}
+          DJANGO_EMAIL_HOST_PASSWORD: ${{ secrets.DJANGO_EMAIL_HOST_PASSWORD }}
+          DJANGO_EMAIL_USE_SSL: ${{ vars.DJANGO_EMAIL_USE_SSL }}
+          DJANGO_COMMENT_EMAIL_RECIPIENTS: ${{ vars.DJANGO_COMMENT_EMAIL_RECIPIENTS }}
+          DJANGO_COMMENT_EMAIL_FROM: ${{ vars.DJANGO_COMMENT_EMAIL_FROM }}
+          DJANGO_CELERY_BROKER_URL: ${{ secrets.DJANGO_CELERY_BROKER_URL }}
 
       - name: Setup SSH
         run: |
@@ -69,7 +77,7 @@ jobs:
       - name: Generate dfb-nginx.env
         uses: cuchi/jinja2-action@v1.3.0
         with:
-          template: dfb-nginx.env.j2
+          template: container_infra/env_templates/dfb-nginx.env.j2
           output_file: dfb-nginx.env
         env:
           CERTBOT_EMAIL: ${{ vars.NGINX_CERTBOT_EMAIL }}
@@ -102,7 +110,7 @@ jobs:
       - name: Generate dfb-postgres.env
         uses: cuchi/jinja2-action@v1.3.0
         with:
-          template: dfb-postgres.env.j2
+          template: container_infra/env_templates/dfb-postgres.env.j2
           output_file: dfb-postgres.env
         env:
           POSTGRES_DB: ${{ vars.POSTGRES_DB }}
@@ -124,4 +132,39 @@ jobs:
           ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
             sudo mkdir /secrets
             sudo mv /home/${{ vars.SSH_USER }}/dfb-postgres-${{ inputs.environment_name }}.env /secrets/dfb-postgres-${{ inputs.environment_name }}.env
+          EOF
+
+
+  deploy-rabbitmq-env:
+
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment_name }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate dfb-postgres.env
+        uses: cuchi/jinja2-action@v1.3.0
+        with:
+          template: container_infra/env_templates/dfb-rabbitmq.env.j2
+          output_file: dfb-rabbitmq.env
+        env:
+          RABBITMQ_DEFAULT_USER: ${{ vars.RABBITMQ_DEFAULT_USER }}
+          RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_DEFAULT_PASS }}
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 0700 ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy.key
+          chmod 0600 ~/.ssh/deploy.key
+          ssh-keyscan ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy environment to server
+        run: |
+          eval $(ssh-agent -s) && ssh-add ~/.ssh/deploy.key
+          scp -P ${{ vars.SSH_PORT }} dfb-rabbitmq.env ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:/home/${{ vars.SSH_USER }}/dfb-rabbitmq-${{ inputs.environment_name }}.env
+          ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
+            sudo mkdir /secrets
+            sudo mv /home/${{ vars.SSH_USER }}/dfb-rabbitmq-${{ inputs.environment_name }}.env /secrets/dfb-rabbitmq-${{ inputs.environment_name }}.env
           EOF

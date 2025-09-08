@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>Dear DFB Admin,</p>
+    <p>A new comment has been received on the Dictionary of Falklands Biographies web site.</p>
+    <p>Please go to the admin site to approve the comment, or use the button below.</p>
+    <div style="margin-left: 40px;color:DarkBlue">
+        <h4>{{ comment.biography.title }}</h4>
+        <h5> {{ comment.name }} / {{ comment.email }}</h5>
+        <p>{{ comment.comment|linebreaks }} </p>
+    </div>
+    <p>
+      {% include "comments/emails/_button.html" with approve_link=approve_link %}
+    </p>
+  </body>
+</html>

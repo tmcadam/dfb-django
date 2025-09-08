@@ -58,6 +58,32 @@ services:
     volumes:
     - pg_data:/var/lib/postgresql/data
 
+
+  dfb-celery:
+    image: ghcr.io/tmcadam/dfb-django:{{ env['ENVIRONMENT_NAME'] }}
+    working_dir: /app
+    command: >
+      sh -c "
+            ./scripts/wait-for-it.sh rabbitmq:5672 -t 0 &&
+            celery -A dfb worker -l INFO"
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+      - 8091:8091
+    volumes:
+      - staticfiles:/app/staticfiles
+      - mediafiles:/app/mediafiles
+    env_file: /secrets/dfb-django-{{ env['ENVIRONMENT_NAME'] }}.env
+
+  rabbitmq:
+    image: rabbitmq
+    env_file: /secrets/dfb-rabbitmq-{{ env['ENVIRONMENT_NAME'] }}.env
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+
 volumes:
   nginx_secrets:
   staticfiles:

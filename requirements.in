@@ -10,3 +10,4 @@ django-crispy-forms
 crispy-bootstrap4
 beautifulsoup4
 dj-database-url
+celery[ramq]==5.5.3

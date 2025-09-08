@@ -20,30 +20,30 @@
 
           <!--Biographies-->
           <li class="nav-item"><a href="{% url 'biographies:index' %}" class="nav-link" %>Biographies</a></li>
-          
+
           <!--About Menu-->
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" id="navbardrop" href="#">About</a>
             <div class="dropdown-menu shadow">
-              <a  href="#" class="dropdown-item">About DFB</a>
-              <a  href="#" class="dropdown-item">The Falklands Story</a>
+              <a  href="{% url 'pages:show' 'about' %}" class="dropdown-item">About DFB</a>
+              <a  href="{% url 'pages:show' 'falklands_story' %}" class="dropdown-item">The Falklands Story</a>
               <a  href="{% url 'authors:index' %}" class="dropdown-item">Authors</a>
-              <a  href="#" class="dropdown-item">Jane Cameron - Obituary</a>
+              <a  href="{% url 'pages:show' 'jane_cameron' %}" class="dropdown-item">Jane Cameron - Obituary</a>
               <div class="dropdown-divider"></div>
-              <a  href="#" class="dropdown-item">Foreword</a>
-              <a  href="#" class="dropdown-item">Introduction</a>
-              <a  href="#" class="dropdown-item">Acknowledgements</a>
-              <a  href="#" class="dropdown-item">David Tatham</a>
-              <a  href="#" class="dropdown-item">Reviews</a>
-              <a  href="#" class="dropdown-item">How to buy</a>
+              <a  href="{% url 'pages:show' 'book_foreword' %}" class="dropdown-item">Foreword</a>
+              <a  href="{% url 'pages:show' 'book_introduction' %}" class="dropdown-item">Introduction</a>
+              <a  href="{% url 'pages:show' 'book_acknowledgements' %}" class="dropdown-item">Acknowledgements</a>
+              <a  href="{% url 'pages:show' 'book_david_tatham' %}" class="dropdown-item">David Tatham</a>
+              <a  href="{% url 'pages:show' 'book_reviews' %}" class="dropdown-item">Reviews</a>
+              <a  href="{% url 'pages:show' 'book_purchase' %}" class="dropdown-item">How to buy</a>
             </div>
           </li>
-          
+
           <!--Contacts-->
-          <li class="nav-item"><a href="/" class="nav-link" %>Contacts</a></li>
+          <li class="nav-item"><a href="{% url 'pages:show' 'contacts' %}" class="nav-link" %>Contacts</a></li>
 
         </ul>
       </div>
     </div><!--container-->
-  </nav> 
+  </nav>
 </header>
