@@ -75,6 +75,11 @@ services:
       - staticfiles:/app/staticfiles
       - mediafiles:/app/mediafiles
     env_file: /secrets/dfb-django-{{ env['ENVIRONMENT_NAME'] }}.env
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"   # number of files or file count
+        max-size: "10m" # file size
 
   rabbitmq:
     image: rabbitmq
