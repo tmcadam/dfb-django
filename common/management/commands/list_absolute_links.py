@@ -7,9 +7,11 @@ from bs4 import BeautifulSoup
 
 
 class Command(BaseCommand):
-    help = ("Checks all the absolute links in all biographies and images and produces a report. "
-            "It doesn't check if the links are valid, just if they are absolute. It also doesn't "
-            "check the links in the external_links field of biographies.")
+    help = (
+        "Checks all the absolute links in all biographies and images and produces a report. "
+        "It doesn't check if the links are valid, just if they are absolute. It also doesn't "
+        "check the links in the external_links field of biographies."
+    )
 
     def handle(self, *args, **options):
         self.stdout.write("\n\nChecking Biographies")
