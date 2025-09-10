@@ -11,15 +11,15 @@ class HtmlCleanerTests(TestCase):
         test_strs = [
             "<p>before <a href=\"https://www.falklandsbiographies.org/biographies/some-bio\">after</a></p>",
             "<p>before <a href=\"https://falklandsbiographies.org/biographies/some-bio\">after</a></p>",
-            "<p>before <a href=\"https://dfb.ukfit.webfactional.com/biographies/some-bio\">after</a></p>",
-            "<p>before <a href=\"http://dfb-staging.ukfit.webfactional.com/biographies/some-bio\">after</a></p>",
-            "<p>before <a href=\"http://0.0.0.0:3000/biographies/some-bio\">after</a></p>"
+            "<p>before <a href=\"/biographies/some-bio\">after</a></p>"
             ]
         for test_str in test_strs:
             self.assertEqual(clean_urls(test_str), "<p>before <a href=\"/biographies/some-bio\">after</a></p>")
 
-    @skip("Skip until fixed")
+    #@skip("Skip until fixed")
     @tag("helpers")
     def test_clean_urls_ignores_any_external_urls(self):
-        test_str = "<p>before <a href=\"http://www.wikipedia.com/test-url\">after</a></p>"
-        self.assertEqual(clean_urls(test_str), test_str)
+        test_strs = ["<p>before <a href=\"http://www.wikipedia.com/test-url\">after</a></p>",
+                     "<p>before <a href=\"http://www.some-webpage.com/biographies/test-url\">after</a></p>"]
+        for test_str in test_strs:
+            self.assertEqual(clean_urls(test_str), test_str)
