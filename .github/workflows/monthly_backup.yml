@@ -32,9 +32,38 @@ jobs:
           rclone_config: ${{ secrets.RCLONE_CONFIG }}
           version: v1.71.0
 
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 0700 ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy.key
+          chmod 0600 ~/.ssh/deploy.key
+          ssh-keyscan ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
+
       - name: Test Rclone
         run: |
           echo "hello Tom" | rclone rcat onedrive:SWB_Backups/test2.txt
+
+      - name: Create a backup
+        run: |
+
+          eval $(ssh-agent -s) && ssh-add ~/.ssh/deploy.key
+
+          ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
+            cd $INFRA_DIR
+            docker compose exec dfb-django tar  --exclude='CACHE' -czf - /app/mediafiles > backup_imgs.tar.gz
+            docker compose exec dfb-django python manage.py dumpdata > backup_data.json
+          EOF
+
+          scp -P ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:$INFRA_DIR/backup_imgs.tar.gz ./$(date +'%Y%m%d')_backup_imgs.tar.gz
+          scp -P ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:$INFRA_DIR/backup_data.json ./$(date +'%Y%m%d')_backup_data.json
+
+          ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
+            cd $INFRA_DIR
+            rm backup_imgs.tar.gz
+            rm backup_data.json
+          EOF
+
 
       - name: Update Rclone config
         uses: AnimMouse/setup-rclone/update-config@0d99fa3878a334d3e307c1a8372ad55550fdaea7
