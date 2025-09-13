@@ -26,12 +26,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Rclone binary
+      - name: Install Rclone
         run: |
           set -e
           wget  "https://github.com/rclone/rclone/releases/download/v1.71.0/rclone-v1.71.0-linux-amd64.deb"
           echo "53e35eac5cb5e6e4a9cc04ffe28d5ace695fd335a156f8d17b11df37739b725f rclone-v1.71.0-linux-amd64.deb" | sha256sum --check --status
-          dpkg -i rclone-v1.71.0-linux-amd64.deb
+          sudo dpkg -i rclone-v1.71.0-linux-amd64.deb
 
       - name: Setup Rclone config
         run: |
