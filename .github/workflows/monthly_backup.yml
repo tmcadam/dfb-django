@@ -1,0 +1,43 @@
+name: Backup DFB - Monthly
+description: Backup DFB Django application data and configuration.
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment_name:
+        description: 'Environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+
+jobs:
+
+  backup-dfb:
+
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment_name }}
+    env:
+      INFRA_DIR: ${{ vars.INFRA_DIR }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rclone binary
+        run: |
+          set -e
+          wget  "https://github.com/rclone/rclone/releases/download/v1.71.0/rclone-v1.71.0-linux-amd64.deb"
+          echo "53e35eac5cb5e6e4a9cc04ffe28d5ace695fd335a156f8d17b11df37739b725f rclone-v1.71.0-linux-amd64.deb" | sha256sum --check --status
+          dpkg -i rclone-v1.71.0-linux-amd64.deb
+
+      - name: Setup Rclone config
+        run: |
+          mkdir -p ~/.rclone
+          echo "${{ secrets.RCLONE_CONFIG }}" >> ~/.rclone/rclone.conf
+
+      - name: Test Rclone config
+        run: |
+          echo "hello Tom" | rclone rcat onedrive:SWB_Backups/test2.txt --config ~/.rclone/rclone.conf
