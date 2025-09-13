@@ -51,7 +51,7 @@ jobs:
 
           ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
             cd $INFRA_DIR
-            docker compose exec dfb-django tar  --exclude='CACHE' -czvf - /app/mediafiles > backup_imgs.tar.gz
+            docker compose exec dfb-django tar  --exclude='CACHE' -czf - /app/mediafiles > backup_imgs.tar.gz
             docker compose exec dfb-django python manage.py dumpdata > backup_data.json
           EOF
 
