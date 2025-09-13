@@ -40,10 +40,6 @@ jobs:
           chmod 0600 ~/.ssh/deploy.key
           ssh-keyscan ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Test Rclone
-        run: |
-          echo "hello Tom" | rclone rcat onedrive:SWB_Backups/test2.txt
-
       - name: Create a backup
         run: |
 
@@ -64,6 +60,10 @@ jobs:
             rm backup_data.json
           EOF
 
+      - name: Upload backups to OneDrive
+        run: |
+          rclone copy ./$(date +'%Y%m%d')_backup_imgs.tar.gz onedrive:SWB_Backups/
+          rclone copy ./$(date +'%Y%m%d')_backup_data.json onedrive:SWB_Backups/
 
       - name: Update Rclone config
         uses: AnimMouse/setup-rclone/update-config@0d99fa3878a334d3e307c1a8372ad55550fdaea7
