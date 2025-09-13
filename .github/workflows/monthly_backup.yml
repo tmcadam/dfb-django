@@ -32,6 +32,14 @@ jobs:
           rclone_config: ${{ secrets.RCLONE_CONFIG }}
           version: v1.71.0
 
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 0700 ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy.key
+          chmod 0600 ~/.ssh/deploy.key
+          ssh-keyscan ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
+
       - name: Test Rclone
         run: |
           echo "hello Tom" | rclone rcat onedrive:SWB_Backups/test2.txt
