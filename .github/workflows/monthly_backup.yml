@@ -1,0 +1,43 @@
+name: Backup DFB - Monthly
+description: Backup DFB Django application data and configuration.
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment_name:
+        description: 'Environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+
+jobs:
+
+  backup-dfb:
+
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment_name }}
+    env:
+      INFRA_DIR: ${{ vars.INFRA_DIR }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rclone
+        uses: AnimMouse/setup-rclone@0d99fa3878a334d3e307c1a8372ad55550fdaea7
+        with:
+          rclone_config: ${{ secrets.RCLONE_CONFIG }}
+          version: v1.71.0
+
+      - name: Test Rclone
+        run: |
+          echo "hello Tom" | rclone rcat onedrive:SWB_Backups/test2.txt
+
+      - name: Update Rclone config
+        uses: AnimMouse/setup-rclone/update-config@0d99fa3878a334d3e307c1a8372ad55550fdaea7
+        with:
+          rclone_config_secret_name: RCLONE_CONFIG
+          token: ${{ secrets.GH_PAT }}
