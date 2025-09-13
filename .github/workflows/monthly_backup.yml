@@ -26,23 +26,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Rclone
-        run: |
-          set -e
-          wget https://github.com/rclone/rclone/releases/download/v1.71.0/rclone-v1.71.0-linux-amd64.zip
-          echo "3ddbcfd535ef2e6eb00cd006831766537f1fef1c8baeed1ee4632e7bcc699e93 rclone-v1.71.0-linux-amd64.zip" | sha256sum --check --status
-          unzip rclone-v1.71.0-linux-amd64.zip
-          cp rclone-v1.71.0-linux-amd64/rclone .
-          chmod 755 rclone
-          sudo mv rclone /usr/bin/
-          rclone version
+      - name: Setup Rclone
+        uses: AnimMouse/setup-rclone@v1
+        with:
+          rclone_config: ${{ secrets.RCLONE_CONFIG }}
+          version: v1.71.0
 
-      - name: Setup Rclone config
+      - name: Test Rclone
         run: |
-          mkdir -p ~/.rclone
-          echo "${{ secrets.RCLONE_CONFIG }}" >> ~/.rclone/rclone.conf
-          cat ~/.rclone/rclone.conf
-
-      - name: Test Rclone config
-        run: |
-          echo "hello Tom" | rclone rcat onedrive:SWB_Backups/test2.txt --config ~/.rclone/rclone.conf
+          echo "hello Tom" | rclone rcat onedrive:SWB_Backups/test2.txt
