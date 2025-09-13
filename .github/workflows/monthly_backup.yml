@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Rclone
-        uses: AnimMouse/setup-rclone@v1
+        uses: AnimMouse/setup-rclone@0d99fa3878a334d3e307c1a8372ad55550fdaea7
         with:
           rclone_config: ${{ secrets.RCLONE_CONFIG }}
           version: v1.71.0
@@ -37,7 +37,7 @@ jobs:
           echo "hello Tom" | rclone rcat onedrive:SWB_Backups/test2.txt
 
       - name: Update Rclone config
-        uses: AnimMouse/setup-rclone/update-config@v1
+        uses: AnimMouse/setup-rclone/update-config@0d99fa3878a334d3e307c1a8372ad55550fdaea7
         with:
           rclone_config_secret_name: RCLONE_CONFIG
           token: ${{ secrets.GH_PAT }}
