@@ -40,10 +40,6 @@ jobs:
           chmod 0600 ~/.ssh/deploy.key
           ssh-keyscan ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Test Rclone
-        run: |
-          echo "hello Tom" | rclone rcat onedrive:SWB_Backups/test2.txt
-
       - name: Create a backup
         run: |
 
@@ -51,19 +47,22 @@ jobs:
 
           ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
             cd $INFRA_DIR
-            docker compose exec dfb-django tar  --exclude='CACHE' -czf - /app/mediafiles > backup_imgs.tar.gz
-            docker compose exec dfb-django python manage.py dumpdata > backup_data.json
+            docker compose exec dfb-django tar  --exclude='CACHE' -cf - mediafiles > backup.tar
+            docker compose exec dfb-django python manage.py dumpdata > database.json
+            tar -rf backup.tar database.json
+            gzip backup.tar
           EOF
 
-          scp -P ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:$INFRA_DIR/backup_imgs.tar.gz ./$(date +'%Y%m%d')_backup_imgs.tar.gz
-          scp -P ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:$INFRA_DIR/backup_data.json ./$(date +'%Y%m%d')_backup_data.json
+          scp -P ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:$INFRA_DIR/backup.tar.gz dfb_backup_$(date +'%Y%m%d').tar.gz
 
           ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
             cd $INFRA_DIR
-            rm backup_imgs.tar.gz
-            rm backup_data.json
+            rm backup.tar.gz
           EOF
 
+      - name: Upload backups to OneDrive
+        run: |
+          rclone copy dfb_backup_$(date +'%Y%m%d').tar.gz onedrive:SWB_Backups/
 
       - name: Update Rclone config
         uses: AnimMouse/setup-rclone/update-config@0d99fa3878a334d3e307c1a8372ad55550fdaea7
