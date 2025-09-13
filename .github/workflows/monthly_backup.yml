@@ -37,6 +37,7 @@ jobs:
         run: |
           mkdir -p ~/.rclone
           echo "${{ secrets.RCLONE_CONFIG }}" >> ~/.rclone/rclone.conf
+          cat ~/.rclone/rclone.conf
 
       - name: Test Rclone config
         run: |
