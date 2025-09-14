@@ -45,24 +45,23 @@ jobs:
 
           eval $(ssh-agent -s) && ssh-add ~/.ssh/deploy.key
 
-          ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
+          ssh -o ServerAliveInterval=20 -o TCPKeepAlive=no -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
             cd $INFRA_DIR
             docker compose exec dfb-django tar  --exclude='CACHE' -cf - mediafiles > backup.tar
             docker compose exec dfb-django python manage.py dumpdata > database.json
             tar -rf backup.tar database.json
-            gzip backup.tar
           EOF
 
-          scp -P ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:$INFRA_DIR/backup.tar.gz dfb_backup_$(date +'%Y%m%d').tar.gz
+          scp -P ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:$INFRA_DIR/backup.tar dfb_backup_$(date +'%Y%m%d').tar
 
           ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
             cd $INFRA_DIR
-            rm backup.tar.gz
+            rm backup.tar
           EOF
 
       - name: Upload backups to OneDrive
         run: |
-          rclone copy dfb_backup_$(date +'%Y%m%d').tar.gz onedrive:SWB_Backups/
+          rclone copy dfb_backup_$(date +'%Y%m%d').tar onedrive:SWB_Backups/
 
       - name: Update Rclone config
         uses: AnimMouse/setup-rclone/update-config@0d99fa3878a334d3e307c1a8372ad55550fdaea7
