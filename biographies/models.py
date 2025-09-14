@@ -47,15 +47,20 @@ class Biography(models.Model):
         return self.images.order_by("id").first().image300x300.url
 
     def save(self, *args, **kwargs):
-        self.body = clean_urls(self.body)
+        self.body = clean_urls(self.body or "")
         if self.authors:
             self.authors = self.authors.strip()
         if self.external_links:
             self.external_links = self.external_links.strip()
+            # this shouldn't have internal links, but it should
+            # be safe to check anyway
+            self.external_links = clean_urls(self.external_links)
         if self.references:
             self.references = self.references.strip()
+            self.references = clean_urls(self.references)
         if self.revisions:
             self.revisions = self.revisions.strip()
+            self.revisions = clean_urls(self.revisions)
         super().save(*args, **kwargs)
 
     def __str__(self):

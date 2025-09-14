@@ -1,4 +1,4 @@
-FROM python:3.13.0-bookworm
+FROM python:3.13-bookworm
 
 EXPOSE 8000
 
@@ -8,12 +8,13 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Install Postgres client
-RUN apt update
-RUN apt install postgresql-common -y
-RUN /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
-RUN apt update
-RUN apt install postgresql-client-16 -y
+# Install PostgreSQL 17 client
+RUN apt-get update \
+    && apt-get install -y wget gnupg lsb-release \
+    && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' \
+    && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+    && apt-get update \
+    && apt-get install -y postgresql-client-17
 
 # install Python dependencies
 ADD ./requirements-locked.txt  .
