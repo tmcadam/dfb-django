@@ -50,6 +50,7 @@ jobs:
             docker compose exec dfb-django tar  --exclude='CACHE' -cf - mediafiles > backup.tar
             docker compose exec dfb-django python manage.py dumpdata > database.json
             tar -rf backup.tar database.json
+            rm database.json
           EOF
 
           scp -P ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:$INFRA_DIR/backup.tar dfb_backup_$(date +'%Y%m%d').tar
