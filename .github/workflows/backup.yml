@@ -26,8 +26,7 @@ jobs:
     steps:
       - name: Set BACKUP_NAME with environment
         run: |
-          echo "BACKUP_NAME=dfb_backup_${{ github.event_name == 'schedule' && 'production' || \
-          inputs.environment_name }}_$(date +'%Y%m%d')" >> $GITHUB_ENV
+          echo "BACKUP_NAME=dfb_backup_${{ github.event_name == 'schedule' && 'production' || inputs.environment_name }}_$(date +'%Y%m%d')" >> $GITHUB_ENV
 
       - name: Setup Rclone
         uses: AnimMouse/setup-rclone@0d99fa3878a334d3e307c1a8372ad55550fdaea7
