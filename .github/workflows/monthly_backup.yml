@@ -2,6 +2,8 @@ name: Backup DFB - Monthly
 description: Backup DFB Django application data and configuration.
 
 on:
+  schedule:
+    - cron: "0 1 1 * *" # Runs at 01:00 UTC on the 1st of every month
   workflow_dispatch:
     inputs:
       environment_name:
@@ -12,15 +14,15 @@ on:
           - staging
           - production
 
-
 jobs:
 
   backup-dfb:
 
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment_name }}
+    environment: ${{  github.event_name == 'schedule' && 'production' || inputs.environment_name }}
     env:
       INFRA_DIR: ${{ vars.INFRA_DIR }}
+      BACKUP_NAME: dfb_backup_$(date +'%Y%m%d')
 
     steps:
       - name: Checkout code
@@ -45,28 +47,29 @@ jobs:
 
           eval $(ssh-agent -s) && ssh-add ~/.ssh/deploy.key
 
-          # 1. Stream mediafiles from remote container into backup.tar locally
+          echo "Stream mediafiles from remote container into backup.tar locally"
           ssh -o ServerAliveInterval=20 -o TCPKeepAlive=no \
               -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} \
               "cd $INFRA_DIR && docker compose exec dfb-django tar --exclude='CACHE' -cf - mediafiles" \
-              > backup.tar
+              > $BACKUP_NAME.tar
 
-          # 2. Dump the database into database.json locally
+          echo "Dump the database into database.json locally"
           ssh -o ServerAliveInterval=20 -o TCPKeepAlive=no \
               -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} \
               "cd $INFRA_DIR && docker compose exec dfb-django python manage.py dumpdata" \
               > database.json
 
-          # 3. Append DB dump to the tar archive
+          echo "Append DB dump to the tar archive"
           tar -rf backup.tar database.json
           rm database.json
 
-          # 4. (Optional) compress before upload
-          gzip -f backup.tar
+          echo "Compress before upload"
+          gzip -f $BACKUP_NAME.tar
 
       - name: Upload backups to OneDrive
         run: |
-          rclone copy backup.tar.gz onedrive:SWB_Backups/dfb_backup_$(date +'%Y%m%d').tar.gz
+          echo "Uploading $BACKUP_NAME to OneDrive"
+          rclone copy $BACKUP_NAME.tar.gz onedrive:SWB_Backups/
 
       - name: Update Rclone config
         uses: AnimMouse/setup-rclone/update-config@0d99fa3878a334d3e307c1a8372ad55550fdaea7
