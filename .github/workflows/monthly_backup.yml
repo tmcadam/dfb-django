@@ -45,24 +45,28 @@ jobs:
 
           eval $(ssh-agent -s) && ssh-add ~/.ssh/deploy.key
 
-          ssh -o ServerAliveInterval=20 -o TCPKeepAlive=no -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
-            cd $INFRA_DIR
-            docker compose exec dfb-django tar  --exclude='CACHE' -cf - mediafiles > backup.tar
-            docker compose exec dfb-django python manage.py dumpdata > database.json
-            tar -rf backup.tar database.json
-            rm database.json
-          EOF
+          # 1. Stream mediafiles from remote container into backup.tar locally
+          ssh -o ServerAliveInterval=20 -o TCPKeepAlive=no \
+              -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} \
+              "cd $INFRA_DIR && docker compose exec dfb-django tar --exclude='CACHE' -cf - mediafiles" \
+              > backup.tar
 
-          scp -P ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:$INFRA_DIR/backup.tar dfb_backup_$(date +'%Y%m%d').tar
+          # 2. Dump the database into database.json locally
+          ssh -o ServerAliveInterval=20 -o TCPKeepAlive=no \
+              -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} \
+              "cd $INFRA_DIR && docker compose exec dfb-django python manage.py dumpdata" \
+              > database.json
 
-          ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} <<EOF
-            cd $INFRA_DIR
-            rm backup.tar
-          EOF
+          # 3. Append DB dump to the tar archive
+          tar -rf backup.tar database.json
+          rm database.json
+
+          # 4. (Optional) compress before upload
+          gzip -f backup.tar
 
       - name: Upload backups to OneDrive
         run: |
-          rclone copy dfb_backup_$(date +'%Y%m%d').tar onedrive:SWB_Backups/
+          rclone copy backup.tar.gz onedrive:SWB_Backups/dfb_backup_$(date +'%Y%m%d').tar.gz
 
       - name: Update Rclone config
         uses: AnimMouse/setup-rclone/update-config@0d99fa3878a334d3e307c1a8372ad55550fdaea7
