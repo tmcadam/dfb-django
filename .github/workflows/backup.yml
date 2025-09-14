@@ -1,0 +1,82 @@
+name: Backup DFB
+description: Backup DFB Django application data and configuration.
+
+on:
+  schedule:
+    - cron: "0 2 * * *" # Runs at 02:00 UTC every day
+  workflow_dispatch:
+    inputs:
+      environment_name:
+        description: 'Environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+
+  backup-dfb:
+
+    runs-on: ubuntu-latest
+    environment: ${{  github.event_name == 'schedule' && 'production' || inputs.environment_name }}
+    env:
+      INFRA_DIR: ${{ vars.INFRA_DIR }}
+
+    steps:
+      - name: Set BACKUP_NAME with environment
+        run: |
+          echo "BACKUP_NAME=dfb_backup_${{ github.event_name == 'schedule' && 'production' || inputs.environment_name }}_$(date +'%Y%m%d')" >> $GITHUB_ENV
+
+      - name: Setup Rclone
+        uses: AnimMouse/setup-rclone@0d99fa3878a334d3e307c1a8372ad55550fdaea7
+        with:
+          rclone_config: ${{ secrets.RCLONE_CONFIG }}
+          version: v1.71.0
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 0700 ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" >> ~/.ssh/deploy.key
+          chmod 0600 ~/.ssh/deploy.key
+          ssh-keyscan ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Create a backup
+        run: |
+
+          eval $(ssh-agent -s) && ssh-add ~/.ssh/deploy.key
+
+          echo "Stream mediafiles from remote container into backup.tar locally"
+          ssh -o ServerAliveInterval=20 -o TCPKeepAlive=no \
+              -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} \
+              "cd $INFRA_DIR && docker compose exec dfb-django tar --exclude='CACHE' -cf - mediafiles" \
+              > $BACKUP_NAME.tar
+
+          echo "Dump the database into database.json locally"
+          ssh -o ServerAliveInterval=20 -o TCPKeepAlive=no \
+              -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} \
+              "cd $INFRA_DIR && docker compose exec dfb-django python manage.py dumpdata" \
+              > database.json
+
+          echo "Append DB dump to the tar archive"
+          tar -rf $BACKUP_NAME.tar database.json
+          rm database.json
+
+          echo "Compress before upload"
+          gzip -f $BACKUP_NAME.tar
+
+      - name: Upload backups to OneDrive
+        run: |
+          echo "Uploading $BACKUP_NAME to OneDrive"
+          if [ "$(date +%d)" = "01" ]; then
+            rclone copy $BACKUP_NAME.tar.gz onedrive:SWB_Backups/monthly
+          fi
+          rclone copy $BACKUP_NAME.tar.gz onedrive:SWB_Backups/daily
+          rclone delete onedrive:SWB_Backups/daily --min-age 14d
+
+      - name: Update Rclone config
+        uses: AnimMouse/setup-rclone/update-config@0d99fa3878a334d3e307c1a8372ad55550fdaea7
+        with:
+          rclone_config_secret_name: RCLONE_CONFIG
+          token: ${{ secrets.GH_PAT }}
