@@ -60,7 +60,7 @@ jobs:
               > database.json
 
           echo "Append DB dump to the tar archive"
-          tar -rf backup.tar database.json
+          tar -rf $BACKUP_NAME.tar database.json
           rm database.json
 
           echo "Compress before upload"
