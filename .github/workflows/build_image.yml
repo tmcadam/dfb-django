@@ -10,6 +10,7 @@ on:
       - '.github/**'
       - '.vscode/**'
       - 'container_infra/**'
+      - 'docs/**'
   pull_request:
     branches:
       - development
