@@ -56,7 +56,7 @@ jobs:
           echo "Dump the database into database.json locally"
           ssh -o ServerAliveInterval=20 -o TCPKeepAlive=no \
               -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} \
-              "cd $INFRA_DIR && docker compose exec dfb-django python manage.py dumpdata --exclude=contenttypes --exclude=auth.permission --ident 2" \
+              "cd $INFRA_DIR && docker compose exec dfb-django python manage.py dumpdata --exclude=contenttypes --exclude=auth.permission --indent 2" \
               > database.json
 
           echo "Dump the database into database.json locally"
