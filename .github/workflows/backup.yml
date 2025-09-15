@@ -59,10 +59,10 @@ jobs:
               "cd $INFRA_DIR && docker compose exec dfb-django python manage.py dumpdata --exclude=contenttypes --exclude=auth.permission --indent 2" \
               > database.json
 
-          echo "Dump the database into database.json locally"
+          echo "Dump the database into database.sql locally"
           ssh -o ServerAliveInterval=20 -o TCPKeepAlive=no \
               -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} \
-              "cd $INFRA_DIR && docker compose exec bash scripts/database_backup.sh" \
+              "cd $INFRA_DIR && docker compose exec dfb-django bash scripts/database_backup.sh" \
               > database.sql
 
           echo "Append DB dump to the tar archive"
