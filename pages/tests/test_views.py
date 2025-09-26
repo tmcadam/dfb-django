@@ -15,6 +15,15 @@ class PagesViewsTests(TestCase):
         self.assertContains(response, text='The Dictionary of Falklands Biography', status_code=200)
 
 
+    def test_footer_has_admin_link(self):
+        """
+        The footer contains a link to the admin page.
+        """
+        url = reverse('pages:home')
+        response = self.client.get(url)
+        self.assertContains(response, text='/admin/', status_code=200)
+
+
     def test_page(self):
         """
         The page view returns a 200 status code.
