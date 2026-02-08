@@ -2,8 +2,8 @@ name: Reset Featured Biographies
 description: Reset featured biographies for DFB Django application.
 
 on:
-  schedule:
-    - cron: "0 1 * * 0" # Runs at 01:00 UTC every Sunday
+  # schedule:
+  #   - cron: "0 1 * * 0" # Runs at 01:00 UTC every Sunday
   workflow_dispatch:
     inputs:
       environment_name:

@@ -2,8 +2,8 @@ name: Backup DFB
 description: Backup DFB Django application data and configuration.
 
 on:
-  schedule:
-    - cron: "0 2 * * *" # Runs at 02:00 UTC every day
+  # schedule:
+  #   - cron: "0 2 * * *" # Runs at 02:00 UTC every day
   workflow_dispatch:
     inputs:
       environment_name:
