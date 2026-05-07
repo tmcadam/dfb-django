@@ -140,3 +140,5 @@ volumes/
 .secrets
 .vars
 /emails/
+/local_data/
+
