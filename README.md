@@ -71,7 +71,22 @@ Run tests:
 
 ## Loading Historical Data
 
-TODO
+Export the following tables from legacy database in json format:
+
+```
+authors -> authors.json
+biographies -> biographies.json
+biography_authors -> biography_authors.json
+comments -> _comments_.json
+countries -> countries.json
+static_content -> static_content.json
+```
+
+ - `python mange.py collectstatic -l`
+ - `python mange.py migrate`
+ - `python mange.py load_dfb_legacy <path_to_json_folder>`
+ - `python manage.py clean_slugs`
+ - Rename `original` from legacy DFB to `images` from legacy DFB and copy to `mediafiles`
 
 
 ## CI/CD
