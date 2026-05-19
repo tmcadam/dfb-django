@@ -9,7 +9,7 @@ class Biography(models.Model):
     slug = models.SlugField(db_index=True, unique=True)
     lifespan = models.CharField(null=True, blank=True)
     body = models.TextField()
-    authors = models.CharField(null=True, blank=True)
+    authors = models.CharField(null=True, blank=True, verbose_name="Authors")
     revisions = models.TextField(null=True, blank=True)
     external_links = models.TextField(null=True, blank=True)
     references = models.TextField(null=True, blank=True)

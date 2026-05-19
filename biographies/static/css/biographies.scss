@@ -10,6 +10,10 @@
     clear: both;
 }
 
+div.biography_authors_wrapper {
+    clear: both;
+}
+
 div.biography_body h5 {
     font-weight: bold;
 }
@@ -22,24 +26,13 @@ div.biography_body blockquote {
     margin-left: 10px;
     padding-left: 15px;
     border-left: 3px solid #ccc;
-  } 
+  }
 
 
 div.biography_body {
     font-family:  "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 16px;
     line-height: 1.4;
-    div.note-editable {
-        height: 500px;
-    }
 }
 
-div.biography_external_links, div.biography_authors, div.biography_references   {
-    div.note-editable {
-        height: 150px;
-    }
-}
-
-div.biography_authors_wrapper {
-    clear: both;
-}
+@import "forms.scss";

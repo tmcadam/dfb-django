@@ -1,0 +1,85 @@
+// Place all the styles related to biography forms and management tables here.
+
+div.form-field-body {
+    div.note-editable {
+        height: 500px;
+    }
+}
+
+div.form-field-summernote {
+    div.note-editable {
+        min-height: 120px;
+        height: auto;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.25rem;
+    }
+
+    // Match Summernote editor container to standard textarea appearance
+    .note-editor {
+        border-radius: 0.25rem;
+        border: 1px solid #ced4da;
+        overflow: hidden;
+        min-height: 120px;
+
+        &.note-frame {
+            border: 1px solid #ced4da;
+            box-shadow: none;
+            min-height: 120px;
+
+            .note-statusbar {
+                border-radius: 0 0 0.25rem 0.25rem;
+                min-height: 1.5rem;
+            }
+        }
+    }
+}
+
+// Revisions textarea styling for consistency
+div.form-field-revisions {
+    textarea {
+        min-height: 120px;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.25rem;
+    }
+}
+
+// Make the inline author form items more compact
+.author-item {
+    .form-group {
+        margin-bottom: 0.5rem;
+        margin-top: 0.5rem;
+    }
+}
+
+// Responsive adjustments for all form containers
+@media (max-width: 768px) {
+    div.form-field-body {
+        div.note-editable {
+            height: 300px;
+        }
+    }
+
+    div.form-field-summernote {
+        div.note-editable {
+            min-height: 100px;
+            font-size: 0.85rem;
+            padding: 0.3rem 0.6rem;
+        }
+
+        .note-editor.note-frame {
+            border-radius: 0.25rem;
+        }
+    }
+
+    div.form-field-revisions textarea {
+        min-height: 100px;
+        font-size: 0.85rem;
+        padding: 0.3rem 0.6rem;
+    }
+}

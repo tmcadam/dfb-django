@@ -1,0 +1,371 @@
+{% extends 'common/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block app_js %}
+<!-- Add HTMX for dynamic slug validation -->
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+<!-- Add SortableJS for draggable authors -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="my-5 col-xl-10 offset-xl-1">
+    <h4>{% if object %}Edit{% else %}New{% endif %} Biography</h4>
+
+    <form method="post" class="form-vertical">
+        {% csrf_token %}
+
+        <!-- Render the main biography form -->
+        {% crispy form %}
+
+        <hr>
+        <h5>Authors</h5>
+        <!-- Biography-level authors field -->
+        <div class="form-group">
+            {{ form.authors|as_crispy_field }}
+        </div>
+        <!-- The formset for dynamically adding authors -->
+        <div id="nested-authors">
+            {{ authors_formset.management_form }}
+            {% for author_form in authors_formset.forms %}
+                <div class="row mx-0 nested-fields mb-2 author-item" style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 5px 0; align-items: center;">
+                    <div class="col-sm-1 d-flex justify-content-center drag-handle" style="cursor: grab;">
+                        <i class="fa fa-bars fa-lg text-muted"></i>
+                    </div>
+                    <div class="col-sm-9 mb-0">
+                        {% crispy author_form %}
+                    </div>
+                    <div class="col-sm-2 mb-0 d-flex align-items-center justify-content-end">
+                        {% if authors_formset.can_delete %}
+                            <span style="display:none">{{ author_form.DELETE|as_crispy_field }}</span>
+                            <button type="button" class="btn btn-danger btn-sm delete-author-btn" title="Remove author">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+            <!-- Hidden template for cloning new author rows -->
+            <template id="empty-author-template">
+                <div class="row mx-0 nested-fields mb-2 author-item" style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 5px 0; align-items: center;">
+                    <div class="col-sm-1 d-flex justify-content-center drag-handle" style="cursor: grab;">
+                        <i class="fa fa-bars fa-lg text-muted"></i>
+                    </div>
+                    <div class="col-sm-9 mb-0">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <select name="biographyauthor_set-__prefix__-author" class="form-control select">
+                                    <option value="">---------</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#addAuthorModal" onclick="setAuthorTargetField(this)">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 mb-0 d-flex align-items-center justify-content-end">
+                        <span style="display:none"><input type="checkbox" name="biographyauthor_set-__prefix__-DELETE" id="id_delete_biographyauthor_set___prefix__"></span>
+                        <button type="button" class="btn btn-danger btn-sm delete-author-btn" title="Remove author">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </template>
+        </div>
+        <!-- Add Author button -->
+        <button type="button" class="btn btn-outline-primary mt-2 btn-add-author">
+            <i class="fa fa-plus"></i> Add Author
+        </button>
+
+        <div class="form-actions mt-3">
+            <button type="submit" class="btn btn-success">Save Biography</button>
+            <a href="{% url 'biographies:index' %}" class="btn btn-outline-dark">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<!-- Modal for HTMX Add Author -->
+<div class="modal fade" id="addAuthorModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Author</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form hx-post="{% url 'biographies:add_author_htmx' %}"
+                        hx-target="#author-error"
+                        hx-swap="innerHTML">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="target_field" id="author_target_field" value="">
+                    <div class="form-group">
+                        <label for="author_first_name">First Name</label>
+                        <input type="text" class="form-control" name="first_name" id="author_first_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="author_last_name">Last Name</label>
+                        <input type="text" class="form-control" name="last_name" id="author_last_name" required>
+                        <div id="author-error" class="mt-2"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Author</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for HTMX Add Country -->
+<div class="modal fade" id="addCountryModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add New Country</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form hx-post="{% url 'biographies:add_country_htmx' %}"
+            hx-include="#id_primary_country, #id_secondary_country"
+            hx-target="#country-error"
+            hx-swap="innerHTML">
+        {% csrf_token %}
+        <div class="modal-body">
+          <input type="hidden" name="target_field" id="target_field" value="">
+          <div class="form-group">
+            <label for="country_name">Country Name</label>
+            <input type="text" class="form-control" name="name" id="country_name" required>
+            <div id="country-error" class="mt-2"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save Country</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+    var AUTHOR_FORM_INDEX = {{ authors_formset.total_form_count }};
+    var AUTHORS_EL = null;
+    var EXISTING_AUTHORS = {{ existing_authors_json|safe|default:'[]' }};
+    // Collect already-selected author IDs from existing form rows
+    var SELECTED_AUTHOR_IDS = [];
+    document.querySelectorAll('#nested-authors .author-item select[name$="-author"]').forEach(function(select) {
+        if (select.value) {
+            SELECTED_AUTHOR_IDS.push(parseInt(select.value));
+        }
+    });
+
+    function populateAuthorSelect(select, excludeIds) {
+        // Clear existing options except the first "---------" option
+        while (select.options.length > 1) {
+            select.remove(1);
+        }
+
+        // Add existing authors (excluding already-selected ones)
+        EXISTING_AUTHORS.forEach(function(author) {
+            if (excludeIds.indexOf(author.id) === -1) {
+                var option = new Option(author.first_name + ' ' + author.last_name, author.id);
+                select.add(option);
+            }
+        });
+    }
+
+    function setAuthorTargetField(button) {
+        var formGroup = button.closest('.form-group');
+        if (!formGroup) {
+            return;
+        }
+
+        var authorSelect = formGroup.querySelector('select[name$="-author"]');
+        if (authorSelect) {
+            authorSelect.id = authorSelect.id || ('id_' + authorSelect.name.replace(/-/g, '_'));
+            $('#author_target_field').val(authorSelect.id);
+        }
+    }
+
+    function addAuthorRow() {
+        var el = AUTHORS_EL;
+        var template = document.getElementById('empty-author-template');
+        if (!template || !el) return;
+
+        // Store the current index before incrementing
+        var formIndex = AUTHOR_FORM_INDEX;
+
+        // Clone the content from the template element
+        var fragment = template.content.cloneNode(true);
+        var newRow = fragment.firstElementChild;
+
+        // Replace __prefix__ with the current index in all name/id attributes
+        var allElements = [newRow].concat(Array.from(newRow.querySelectorAll('*')));
+        allElements.forEach(function(elem) {
+            if (elem.getAttribute('name')) {
+                elem.setAttribute('name', elem.getAttribute('name').replace(/__prefix__/g, formIndex));
+            }
+            if (elem.getAttribute('id')) {
+                elem.setAttribute('id', elem.getAttribute('id').replace(/__prefix__/g, formIndex));
+            }
+        });
+
+        // Add the hidden author_position field (use model name prefix for inlineformset)
+        var positionInput = document.createElement('input');
+        positionInput.type = 'hidden';
+        positionInput.name = 'biographyauthor_set-' + formIndex + '-author_position';
+        positionInput.id = 'id_biographyauthor_set-' + formIndex + '-author_position';
+        positionInput.value = '1';
+        positionInput.className = 'author-position';
+        newRow.appendChild(positionInput);
+
+        // Populate the author select with existing authors (excluding already selected ones)
+        var authorSelect = newRow.querySelector('select[name$="-author"]');
+        if (authorSelect) {
+            populateAuthorSelect(authorSelect, SELECTED_AUTHOR_IDS.slice());
+        }
+
+        // Increment the counter
+        AUTHOR_FORM_INDEX++;
+
+        // Update the management form TOTAL_FORMS so Django processes the new row
+        // The inlineformset uses the model name 'biographyauthor' as its default prefix
+        var totalFormsInput = document.querySelector('input[name="biographyauthor_set-TOTAL_FORMS"]');
+        if (totalFormsInput) {
+            totalFormsInput.value = AUTHOR_FORM_INDEX;
+        }
+
+        el.appendChild(newRow);
+        updatePositions();
+    }
+
+    function removeAuthorRow(item) {
+        // Fade out and hide the row visually, but keep it in DOM
+        // so the DELETE checkbox is still submitted with the form
+        item.style.transition = 'opacity 0.2s';
+        item.style.opacity = '0';
+        setTimeout(function() {
+            item.style.display = 'none';
+        }, 200);
+    }
+
+    function updatePositions() {
+        var el = AUTHORS_EL;
+        if (!el) return;
+        var items = el.querySelectorAll('.author-item');
+        var positionCounter = 1;
+        items.forEach(function (item) {
+            // Skip rows that are marked for deletion
+            var deleteCheckbox = item.querySelector('input[name$="-DELETE"]');
+            if (deleteCheckbox && deleteCheckbox.checked) {
+                return;
+            }
+            var positionInputs = item.querySelectorAll('input[name$="-author_position"]');
+            if (positionInputs.length > 0) {
+                positionInputs.forEach(function(positionInput) {
+                    positionInput.value = positionCounter;
+                });
+                positionCounter++;
+            }
+        });
+    }
+
+    $('#addCountryModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        $('#target_field').val(button.data('field'));
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        AUTHORS_EL = document.getElementById('nested-authors');
+        var el = AUTHORS_EL;
+
+        var sortable = Sortable.create(el, {
+            handle: '.drag-handle',
+            animation: 150,
+            onEnd: function () {
+                updatePositions();
+            }
+        });
+
+        // Listen for author select changes to update available options
+        el.addEventListener('change', function (e) {
+            if (e.target && e.target.name && e.target.name.endsWith('-author')) {
+                // Rebuild SELECTED_AUTHOR_IDS from all visible rows
+                SELECTED_AUTHOR_IDS = [];
+                el.querySelectorAll('.author-item').forEach(function(item) {
+                    var select = item.querySelector('select[name$="-author"]');
+                    if (select && select.value) {
+                        SELECTED_AUTHOR_IDS.push(parseInt(select.value));
+                    }
+                });
+
+                // Store current values before repopulating, then restore them after
+                var currentValues = {};
+                el.querySelectorAll('.author-item select[name$="-author"]').forEach(function(select) {
+                    currentValues[select.name] = select.value;
+                });
+
+                // Refresh all other author selects to exclude the newly selected one
+                el.querySelectorAll('.author-item select[name$="-author"]').forEach(function(select) {
+                    if (select !== e.target) {
+                        // Build exclude list: all selected IDs except this select's own current value
+                        var excludeIds = SELECTED_AUTHOR_IDS.slice();
+                        var thisValue = select.value;
+                        if (thisValue) {
+                            // Keep this select's own current value in the options
+                            excludeIds = excludeIds.filter(function(id) { return id !== parseInt(thisValue); });
+                        }
+                        populateAuthorSelect(select, excludeIds);
+                        // Restore existing selection from stored values
+                        if (currentValues[select.name]) {
+                            select.value = currentValues[select.name];
+                        }
+                    }
+                });
+            }
+            if (e.target && e.target.name && e.target.name.endsWith('-DELETE')) {
+                updatePositions();
+            }
+        });
+
+        // Store/restore current values when toggling DELETE checkbox
+        el.addEventListener('click', function (e) {
+            var deleteBtn = e.target.closest('.delete-author-btn');
+            if (deleteBtn) {
+                var authorItem = deleteBtn.closest('.author-item');
+                if (authorItem) {
+                    // Store current selection before hiding
+                    var select = authorItem.querySelector('select[name$="-author"]');
+                    if (select) {
+                        select.setAttribute('data-current-value', select.value);
+                    }
+                    // Check the hidden DELETE checkbox before removing
+                    var deleteCheckbox = authorItem.querySelector('input[name$="-DELETE"]');
+                    if (deleteCheckbox) {
+                        deleteCheckbox.checked = true;
+                    }
+                    updatePositions();
+                    removeAuthorRow(authorItem);
+                }
+            }
+        });
+
+
+        // Initial setup for positions on form load
+        updatePositions();
+
+        // Add "Add Author" button handler
+        var addAuthorBtn = document.querySelector('.btn-add-author');
+        if (addAuthorBtn) {
+            addAuthorBtn.addEventListener('click', function () {
+                addAuthorRow();
+            });
+        }
+    });
+</script>
+{% endblock %}

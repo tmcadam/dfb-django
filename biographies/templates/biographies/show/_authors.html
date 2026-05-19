@@ -1,10 +1,18 @@
-{% if biography.authors %}
+{% with ordered_authors=biography.get_ordered_authors %}
+{% if biography.authors or ordered_authors %}
     <div class="biography_authors_wrapper row-fluid" style="clear:both;">
         <hr>
         <h4><strong>Authors</strong></h4>
         <div class="biography_authors ml-3 mb-2">
-            {{ biography.authors }}
+            {%  if biography.authors %}
+                {{ biography.authors }}
+            {% elif ordered_authors %}
+                {% for author in ordered_authors %}
+                    {{ author.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            {% endif %}
             <button type="button" class="btn btn-outline-dark btn-sm ml-3" data-toggle="modal" data-target="#authors-info">Author Info</button>
         </div>
     </div>
 {% endif %}
+{% endwith %}

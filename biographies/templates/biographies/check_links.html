@@ -1,0 +1,39 @@
+{% extends "common/base.html" %}
+
+{% block content %}
+<h3>
+    <strong>Links Report</strong>
+</h3>
+
+<h4><strong>Report of links has been completed.</strong></h4>
+<p>
+    {% if fails %}
+        The following links returned an error (usually a timeout or broken link). 
+        You should test them and then manually edit the respective biographies to correct them.<br>
+        However, if the links work, maybe the site was temporarily unresponsive at the time of the test.<br>
+        Checked {{ count }} external links.
+    {% else %}
+        All checked links are working.
+    {% endif %}
+</p>
+
+{% if fails %}
+<table class="table">
+    <tr>
+        <th>Biography title</th>
+        <th>URL checked</th>
+    </tr>
+    {% for fail in fails %}
+    <tr>
+        <td>
+           <a href="{% url 'biographies:show' bio_slug=fail.bio.slug %}">{{ fail.bio.title }}</a>
+        </td>
+        <td class="small">
+            <a href="{{ fail.url }}">{{ fail.url }}</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+{% endblock %}

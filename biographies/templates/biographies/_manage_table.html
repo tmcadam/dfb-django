@@ -1,0 +1,83 @@
+<table class="table table-hover table-bordered table-striped bg-white shadow-sm mt-3">
+    <thead class="thead-light">
+        <tr>
+            <th>Title</th>
+            <th>Lifespan</th>
+            <th>Country</th>
+            <th class="text-right">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for biography in page_obj %}
+        <tr>
+            <td class="align-middle">
+                <strong class="text-dark">{{ biography.title }}</strong>
+                {% if biography.featured %}
+                    <i class="fa fa-star text-success ml-1" title="Featured"></i>
+                {% endif %}
+                {% if biography.south_georgia %}
+                    <span class="badge badge-secondary ml-1">SG</span>
+                {% endif %}
+            </td>
+            <td class="align-middle">{{ biography.lifespan|default:"-" }}</td>
+            <td class="align-middle">
+                {% if biography.primary_country %}
+                    {{ biography.primary_country.name }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td class="text-right align-middle">
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-link text-dark shadow-none" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right shadow-sm">
+                        <a class="dropdown-item" href="{% url 'biographies:show' biography.slug %}" target="_blank">
+                            <i class="fa fa-eye text-primary mr-2"></i>View
+                        </a>
+                        <!-- New Make Featured option -->
+                        <a class="dropdown-item" href="{% url 'biographies:make_featured' biography.slug %}">
+                            <i class="fa fa-star text-success mr-2"></i>Make Featured
+                        </a>
+                        <a class="dropdown-item" href="{% url 'biographies:edit' biography.slug %}">
+                            <i class="fa fa-pencil text-warning mr-2"></i>Edit
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger" href="{% url 'biographies:delete' biography.slug %}">
+                            <i class="fa fa-trash text-danger mr-2"></i>Delete
+                        </a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-center py-4 text-muted">No biographies found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if page_obj.has_other_pages %}
+<div class="mt-4">
+    <!-- Using HTMX to load pagination correctly into the target div -->
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <button class="page-link" hx-get="{% url 'biographies:manage' %}?page={{ page_obj.previous_page_number }}{% if search_term %}&search={{ search_term }}{% endif %}" hx-target="#manage-table-container">Previous</button>
+        </li>
+        {% endif %}
+
+        <li class="page-item">
+            <span class="page-link text-dark bg-white">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        </li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <button class="page-link" hx-get="{% url 'biographies:manage' %}?page={{ page_obj.next_page_number }}{% if search_term %}&search={{ search_term }}{% endif %}" hx-target="#manage-table-container">Next</button>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
