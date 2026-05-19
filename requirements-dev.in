@@ -1,6 +1,7 @@
 factory_boy
 pytest-django
 pytest-dotenv
+coverage
 beautifulsoup4
 pip-tools
 ruff

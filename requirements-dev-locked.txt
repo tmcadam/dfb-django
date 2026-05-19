@@ -33,6 +33,8 @@ click-plugins==1.1.1.2
     # via celery
 click-repl==0.3.0
     # via celery
+coverage==7.14.0
+    # via -r requirements-dev.in
 crispy-bootstrap4==2025.6
     # via -r requirements.in
 dj-database-url==3.0.1

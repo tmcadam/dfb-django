@@ -59,14 +59,34 @@ We need to grant the db user createdb permissions.
 
 `sudo -u  postgres psql -c "ALTER ROLE $APP_DB_USER CREATEDB;"`
 
-The tests are configured to use pytest (but look like unittest)
-
-The Vscode test discovery and GUI tools are configured
-
 Run tests:
-`pytest` (runs the full suite)
-`pytest biographies/tests/test_models.py`
-`pytest -m biographies`
+`python manage.py test` (runs the full suite)
+`python manage.py test biographies.tests.test_models`
+`python manage.py test biographies.tests`
+
+## Test Coverage
+
+Test coverage is tracked using `coverage.py`. Install the dependency first:
+
+```bash
+pip install coverage
+```
+
+### Viewing Coverage
+
+```bash
+# Run tests and collect coverage data
+coverage run manage.py test
+
+# Terminal report with line numbers for uncovered code
+coverage report -m
+
+# Generate HTML report
+coverage html
+xdg-open htmlcov/index.html
+```
+
+The HTML report in `htmlcov/index.html` provides an interactive view of covered and uncovered lines for each file.
 
 
 ## Loading Historical Data
