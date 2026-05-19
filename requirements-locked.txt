@@ -16,6 +16,10 @@ bleach==6.2.0
     # via django-summernote
 celery[ramq]==5.5.3
     # via -r requirements.in
+certifi==2026.4.22
+    # via requests
+charset-normalizer==3.4.7
+    # via requests
 click==8.2.1
     # via
     #   celery
@@ -61,6 +65,8 @@ django-summernote==0.8.20.0
     # via -r requirements.in
 gunicorn==23.0.0
     # via -r requirements.in
+idna==3.15
+    # via requests
 kombu==5.5.4
     # via celery
 libsass==0.23.0
@@ -85,6 +91,8 @@ python-dateutil==2.9.0.post0
     # via celery
 rcssmin==1.1.2
     # via django-compressor
+requests==2.34.2
+    # via -r requirements.in
 rjsmin==1.2.2
     # via django-compressor
 six==1.17.0
@@ -99,6 +107,8 @@ typing-extensions==4.14.1
     #   psycopg
 tzdata==2025.2
     # via kombu
+urllib3==2.7.0
+    # via requests
 vine==5.1.0
     # via
     #   amqp
