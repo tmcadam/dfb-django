@@ -16,6 +16,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from common.views import change_password
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -33,6 +34,7 @@ urlpatterns = [
     path("authors/", include("authors.urls")),
     path("comments/", include("comments.urls")),
     path("admin/", admin.site.urls),
+    path("accounts/password_change/", change_password, name="password_change"),
     path("accounts/", include("django.contrib.auth.urls")),
     # dirty fix, needed for django-summernote to work with attachments disabled
     path(
