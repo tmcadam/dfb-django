@@ -1,6 +1,20 @@
 from django.urls import path
 
-from .views import index, show_by_slug, show_by_id, BiographyCreateView, BiographyUpdateView, BiographyDeleteView, reset_featured, check_links, manage_biographies, make_featured, validate_slug, add_country_htmx, add_author_htmx
+from .views import (
+    index,
+    show_by_slug,
+    show_by_id,
+    BiographyCreateView,
+    BiographyUpdateView,
+    BiographyDeleteView,
+    reset_featured,
+    check_links,
+    manage_biographies,
+    make_featured,
+    validate_slug,
+    add_country_htmx,
+    add_author_htmx,
+)
 
 app_name = "biographies"
 urlpatterns = [

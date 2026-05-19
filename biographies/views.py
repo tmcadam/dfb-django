@@ -1,9 +1,24 @@
 import json
-from django.shortcuts import redirect, get_object_or_404, render
+import random
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from .models import Biography
+from django.http import HttpResponse
+from django.shortcuts import redirect, get_object_or_404, render
+from django.urls import reverse_lazy
+from django.utils.text import slugify
+from django.views.decorators.http import require_POST
+from django.views.generic import CreateView, UpdateView
+from django.views.generic.edit import DeleteView
+
+from .forms import BiographyForm, BiographyAuthorFormSet
+from .models import Biography, Country
 from .pagination_helper import generate_pagination_links
+from .featured_helper import reset_featured_bios
+from .link_checker import check_links_in_bios
 from comments.forms import SubmitCommentForm
+from authors.models import Author
 
 
 # Create your views here
@@ -44,11 +59,6 @@ def show_by_id(request, bio_id):
     biography = get_object_or_404(Biography, id=bio_id)
     return redirect("biographies:show", bio_slug=biography.slug)
 
-from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, UpdateView
-from .forms import BiographyForm, BiographyAuthorFormSet
-from authors.models import Author
 
 class BiographyCreateView(LoginRequiredMixin, CreateView):
     model = Biography
@@ -58,17 +68,17 @@ class BiographyCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.POST:
-            data['authors_formset'] = BiographyAuthorFormSet(self.request.POST)
+            data["authors_formset"] = BiographyAuthorFormSet(self.request.POST)
         else:
-            data['authors_formset'] = BiographyAuthorFormSet()
+            data["authors_formset"] = BiographyAuthorFormSet()
         # Pass existing authors as JSON for populating new dropdowns
-        all_authors = list(Author.objects.values('id', 'first_name', 'last_name'))
-        data['existing_authors_json'] = json.dumps(all_authors)
+        all_authors = list(Author.objects.values("id", "first_name", "last_name"))
+        data["existing_authors_json"] = json.dumps(all_authors)
         return data
 
     def form_valid(self, form):
         context = self.get_context_data()
-        authors_formset = context['authors_formset']
+        authors_formset = context["authors_formset"]
         if form.is_valid() and authors_formset.is_valid():
             self.object = form.save()
             authors_formset.instance = self.object
@@ -78,6 +88,7 @@ class BiographyCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy("biographies:show", kwargs={"bio_slug": self.object.slug})
+
 
 class BiographyUpdateView(LoginRequiredMixin, UpdateView):
     model = Biography
@@ -88,16 +99,20 @@ class BiographyUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.POST:
-            data['authors_formset'] = BiographyAuthorFormSet(self.request.POST, instance=self.object)
+            data["authors_formset"] = BiographyAuthorFormSet(
+                self.request.POST, instance=self.object
+            )
         else:
-            data['authors_formset'] = BiographyAuthorFormSet(instance=self.object)
+            data["authors_formset"] = BiographyAuthorFormSet(instance=self.object)
         # Pass existing authors as JSON for populating new dropdowns
-        data['existing_authors_json'] = json.dumps(list(Author.objects.values('id', 'first_name', 'last_name')))
+        data["existing_authors_json"] = json.dumps(
+            list(Author.objects.values("id", "first_name", "last_name"))
+        )
         return data
 
     def form_valid(self, form):
         context = self.get_context_data()
-        authors_formset = context['authors_formset']
+        authors_formset = context["authors_formset"]
         if form.is_valid() and authors_formset.is_valid():
             self.object = form.save()
             authors_formset.instance = self.object
@@ -108,10 +123,6 @@ class BiographyUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy("biographies:show", kwargs={"bio_slug": self.object.slug})
 
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from .featured_helper import reset_featured_bios
-from .link_checker import check_links_in_bios
 
 @login_required
 def reset_featured(request):
@@ -119,16 +130,13 @@ def reset_featured(request):
     messages.success(request, "Featured biographies reset successful")
     return redirect("pages:home")
 
+
 @login_required
 def check_links(request):
     links_result = check_links_in_bios()
-    context = {
-        'fails': links_result['fails'],
-        'count': links_result['count']
-    }
+    context = {"fails": links_result["fails"], "count": links_result["count"]}
     return render(request, "biographies/check_links.html", context)
 
-from django.views.generic.edit import DeleteView
 
 @login_required
 def manage_biographies(request):
@@ -144,7 +152,7 @@ def manage_biographies(request):
     page_obj = paginator.get_page(page_number)
 
     # HTMX response check
-    if request.headers.get('HX-Request'):
+    if request.headers.get("HX-Request"):
         return render(
             request,
             "biographies/_manage_table.html",
@@ -157,13 +165,13 @@ def manage_biographies(request):
         {"page_obj": page_obj, "search_term": search_term},
     )
 
+
 class BiographyDeleteView(LoginRequiredMixin, DeleteView):
     model = Biography
     template_name = "biographies/delete.html"
     success_url = reverse_lazy("biographies:manage")
     slug_url_kwarg = "bio_slug"
 
-import random
 
 @login_required
 def make_featured(request, bio_slug):
@@ -179,71 +187,76 @@ def make_featured(request, bio_slug):
 
         biography.featured = True
         biography.save()
-        messages.success(request, f'"{biography.title}" has been set as a featured biography.')
+        messages.success(
+            request, f'"{biography.title}" has been set as a featured biography.'
+        )
 
-    return redirect(request.META.get('HTTP_REFERER', 'biographies:manage'))
+    return redirect(request.META.get("HTTP_REFERER", "biographies:manage"))
 
-from django.utils.text import slugify
-from django.http import HttpResponse
 
 @login_required
 def validate_slug(request):
-    slug = request.GET.get('slug', '').strip()
-    bio_id = request.GET.get('bio_id', '')
+    slug = request.GET.get("slug", "").strip()
+    bio_id = request.GET.get("bio_id", "")
 
     if not slug:
-        return HttpResponse('')
+        return HttpResponse("")
 
-    is_valid_format = (slug == slugify(slug))
+    is_valid_format = slug == slugify(slug)
     if not is_valid_format:
-        return HttpResponse('<span class="text-danger"><i class="fa fa-times"></i> Invalid format (use lowercase, hyphens)</span>')
+        return HttpResponse(
+            '<span class="text-danger"><i class="fa fa-times"></i> Invalid format (use lowercase, hyphens)</span>'
+        )
 
     qs = Biography.objects.filter(slug=slug)
     if bio_id:
         qs = qs.exclude(pk=bio_id)
 
     if qs.exists():
-        return HttpResponse('<span class="text-danger"><i class="fa fa-times"></i> Slug is already in use</span>')
+        return HttpResponse(
+            '<span class="text-danger"><i class="fa fa-times"></i> Slug is already in use</span>'
+        )
 
-    return HttpResponse('<span class="text-success"><i class="fa fa-check"></i> Slug is available!</span>')
+    return HttpResponse(
+        '<span class="text-success"><i class="fa fa-check"></i> Slug is available!</span>'
+    )
 
-from django.views.decorators.http import require_POST
-from .models import Country
-from authors.models import Author
 
 @login_required
 @require_POST
 def add_country_htmx(request):
-    country_name = request.POST.get('name', '').strip()
-    target_field = request.POST.get('target_field', '')
+    country_name = request.POST.get("name", "").strip()
+    target_field = request.POST.get("target_field", "")
 
-    curr_primary = request.POST.get('primary_country', '')
-    curr_secondary = request.POST.get('secondary_country', '')
+    curr_primary = request.POST.get("primary_country", "")
+    curr_secondary = request.POST.get("secondary_country", "")
 
     if country_name:
         country_exists = Country.objects.filter(name__iexact=country_name).first()
 
         if country_exists:
-            return HttpResponse(f'<span class="text-danger"><i class="fa fa-exclamation-triangle"></i> "{country_exists.name}" already exists!</span>')
+            return HttpResponse(
+                f'<span class="text-danger"><i class="fa fa-exclamation-triangle"></i> "{country_exists.name}" already exists!</span>'
+            )
 
         country = Country.objects.create(name=country_name)
 
-        if target_field == 'id_primary_country':
+        if target_field == "id_primary_country":
             curr_primary = str(country.id)
-        elif target_field == 'id_secondary_country':
+        elif target_field == "id_secondary_country":
             curr_secondary = str(country.id)
 
         def render_options(selected_val):
             html = '<option value="">---------</option>\n'
             # Country model handles alphabetical ordering automatically
             for c in Country.objects.all():
-                selected = 'selected' if str(c.id) == str(selected_val) else ''
+                selected = "selected" if str(c.id) == str(selected_val) else ""
                 html += f'<option value="{c.id}" {selected}>{c.name}</option>\n'
             return html
 
         # Completely replacing both selects maintains alphabetical order
         # and doesn't overwrite whichever choice wasn't the target
-        response = f'''
+        response = f"""
         <select name="primary_country" class="select form-control" id="id_primary_country" hx-swap-oob="true">
             {render_options(curr_primary)}
         </select>
@@ -255,7 +268,7 @@ def add_country_htmx(request):
             $('#addCountryModal form')[0].reset();
             $('#country-error').html('');
         </script>
-        '''
+        """
 
         return HttpResponse(response)
 
@@ -265,15 +278,19 @@ def add_country_htmx(request):
 @login_required
 @require_POST
 def add_author_htmx(request):
-    first_name = request.POST.get('first_name', '').strip()
-    last_name = request.POST.get('last_name', '').strip()
-    target_field = request.POST.get('target_field', '')
+    first_name = request.POST.get("first_name", "").strip()
+    last_name = request.POST.get("last_name", "").strip()
+    target_field = request.POST.get("target_field", "")
 
     if last_name:
-        author_exists = Author.objects.filter(first_name__iexact=first_name, last_name__iexact=last_name).first()
+        author_exists = Author.objects.filter(
+            first_name__iexact=first_name, last_name__iexact=last_name
+        ).first()
 
         if author_exists:
-            return HttpResponse(f'<span class="text-danger"><i class="fa fa-exclamation-triangle"></i> "{author_exists.name}" already exists!</span>')
+            return HttpResponse(
+                f'<span class="text-danger"><i class="fa fa-exclamation-triangle"></i> "{author_exists.name}" already exists!</span>'
+            )
 
         author = Author.objects.create(first_name=first_name, last_name=last_name)
 

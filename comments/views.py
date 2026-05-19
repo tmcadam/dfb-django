@@ -1,10 +1,13 @@
 from urllib.parse import urljoin
 
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, UpdateView
 
 from comments.forms import SubmitCommentForm
+from comments.forms_admin import CommentEditForm
 from comments.tasks import send_user_email, send_admin_email
 from comments.models import Comment
 
@@ -59,16 +62,13 @@ def approve_comment(request, approve_key):
 
     return render(request, "comments/approve_result.html", context)
 
-from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, UpdateView
-from .forms_admin import CommentEditForm
 
 class CommentListView(LoginRequiredMixin, ListView):
     model = Comment
     template_name = "comments/index.html"
     context_object_name = "comments"
     paginate_by = 50
+
 
 class CommentUpdateView(LoginRequiredMixin, UpdateView):
     model = Comment
