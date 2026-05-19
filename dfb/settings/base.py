@@ -127,7 +127,7 @@ SUMMERNOTE_CONFIG = {
     "summernote": {
         "iframe": False,
         # Change editor size
-        "width": "650",
+        "width": "100%",
         "height": "480",
         "toolbar": [
             ["style", ["style"]],
@@ -147,3 +147,6 @@ SUMMERNOTE_CONFIG = {
 }
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
