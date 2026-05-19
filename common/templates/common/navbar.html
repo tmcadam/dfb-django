@@ -42,6 +42,31 @@
           <!--Contacts-->
           <li class="nav-item"><a href="{% url 'pages:show' 'contacts' %}" class="nav-link" %>Contacts</a></li>
 
+          <!--Admin Menu-->
+          {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" id="navbardrop" href="#">Admin</a>
+              <div class="dropdown-menu shadow">
+                <a class="dropdown-item" href="{% url 'biographies:manage' %}">Biographies</a>
+                <a class="dropdown-item" href="{% url 'images:index' %}">Images</a>
+                <a class="dropdown-item" href="{% url 'comments:index' %}">Comments</a>
+                <a class="dropdown-item" href="{% url 'biographies:reset_featured' %}">Reset featured</a>
+                <a class="dropdown-item" href="{% url 'biographies:check_links' %}">Check links</a>
+                <a class="dropdown-item" href="{% url 'pages:new' %}">Create new page</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'pages:show' 'docs_index' %}">Documentation</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'password_change' %}">Change password</a>
+                <form method="post" action="{% url 'logout' %}" style="margin:0;">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item" style="cursor:pointer;">Logout</button>
+                </form>
+              </div>
+            </li>
+          {% else %}
+            <li class="nav-item"><a href="{% url 'login' %}" class="nav-link">Login</a></li>
+          {% endif %}
+
         </ul>
       </div>
     </div><!--container-->
