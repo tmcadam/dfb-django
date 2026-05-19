@@ -33,6 +33,7 @@ urlpatterns = [
     path("authors/", include("authors.urls")),
     path("comments/", include("comments.urls")),
     path("admin/", admin.site.urls),
+    path("accounts/", include("django.contrib.auth.urls")),
     # dirty fix, needed for django-summernote to work with attachments disabled
     path(
         "summernote/upload_attachment/",
