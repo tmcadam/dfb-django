@@ -142,3 +142,4 @@ volumes/
 /emails/
 /local_data/
 
+db-test.sqlite3
