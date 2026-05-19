@@ -139,15 +139,6 @@ class BiographyAuthorModelTests(TestCase):
             BiographyAuthor.objects.create(biography=bio_1, author=author_1, author_position=2)
 
     @tag("authors_models")
-    def test_adding_author_to_biography_fails_with_duplicate_bio_and_position(self):
-        with self.assertRaises(IntegrityError):
-            author_1 = AuthorFactory.create()
-            author_2 = AuthorFactory.create()
-            bio_1 = BiographyFactory.create(title="Bio1")
-            BiographyAuthor.objects.create(biography=bio_1, author=author_1, author_position=1)
-            BiographyAuthor.objects.create(biography=bio_1, author=author_2, author_position=1)
-
-    @tag("authors_models")
     def test_biographyauthor_ordering_by_position(self):
         """
         NB: This does not reflect ordering when returning the queryset of all authors on

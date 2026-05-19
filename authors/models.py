@@ -46,7 +46,7 @@ class BiographyAuthor(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = [("biography", "author"), ("biography", "author_position")]
+        unique_together = [("biography", "author")]
         ordering = ["author_position"]
 
     def __str__(self):
