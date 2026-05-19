@@ -206,3 +206,83 @@ class CommentsViewsTests(TransactionTestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
+
+
+from django.test import TestCase, tag
+from django.urls import reverse
+from django.contrib.auth.models import User
+
+from comments.models import Comment
+from biographies.tests.factories import BiographyFactory
+
+
+class CommentListViewTests(TestCase):
+    """Test CommentListView functionality."""
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+
+    @tag("comments_new_views")
+    def test_comment_list_requires_login(self):
+        """Unauthenticated users should be redirected to login."""
+        url = reverse('comments:index')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    @tag("comments_new_views")
+    def test_comment_list_returns_200_for_authenticated(self):
+        """Authenticated users should see the comment list."""
+        self.client.login(username='testuser', password='testpass123')
+        url = reverse('comments:index')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+
+class CommentUpdateViewTests(TestCase):
+    """Test CommentUpdateView functionality."""
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.biography = BiographyFactory.create()
+        self.comment = Comment.objects.create(
+            biography=self.biography,
+            name='Test User',
+            email='test@example.com',
+            comment='Test comment',
+        )
+
+    @tag("comments_new_views")
+    def test_comment_update_requires_login(self):
+        """Unauthenticated users should be redirected to login."""
+        url = reverse('comments:edit', kwargs={'pk': self.comment.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    @tag("comments_new_views")
+    def test_comment_update_get_returns_200(self):
+        """Authenticated users should see the edit form."""
+        self.client.login(username='testuser', password='testpass123')
+        url = reverse('comments:edit', kwargs={'pk': self.comment.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    @tag("comments_new_views")
+    def test_comment_update_post_updates_comment(self):
+        """POST request should update the comment."""
+        self.client.login(username='testuser', password='testpass123')
+        url = reverse('comments:edit', kwargs={'pk': self.comment.pk})
+        data = {
+            'biography': self.biography.id,
+            'name': 'Updated Name',
+            'email': 'updated@example.com',
+            'comment': 'Updated comment text',
+            'approved': False,
+        }
+        response = self.client.post(url, data)
+        # The view may redirect after successful update or return 200
+        self.assertIn(response.status_code, [200, 302])
+        self.comment.refresh_from_db()
+        self.assertEqual(self.comment.name, 'Updated Name')
+        self.assertEqual(self.comment.comment, 'Updated comment text')

@@ -58,3 +58,20 @@ def approve_comment(request, approve_key):
         context = {"heading": "Approval Failed", "message": "Invalid approval key."}
 
     return render(request, "comments/approve_result.html", context)
+
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, UpdateView
+from .forms_admin import CommentEditForm
+
+class CommentListView(LoginRequiredMixin, ListView):
+    model = Comment
+    template_name = "comments/index.html"
+    context_object_name = "comments"
+    paginate_by = 50
+
+class CommentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Comment
+    form_class = CommentEditForm
+    template_name = "comments/form.html"
+    success_url = reverse_lazy("comments:index")

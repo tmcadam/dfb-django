@@ -1,0 +1,18 @@
+{% extends 'common/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="my-5 col-xl-10 offset-xl-1">
+    <h4>Edit Comment</h4>
+    
+    <form method="post" class="form-horizontal">
+        {% csrf_token %}
+        {% crispy form %}
+
+        <div class="form-actions mt-3">
+            <button type="submit" class="btn btn-success">Save Comment</button>
+            <a href="{% url 'comments:index' %}" class="btn btn-outline-dark">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
