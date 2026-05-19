@@ -71,3 +71,90 @@ class PagesViewsTests(TestCase):
         url = reverse('pages:home')
         response = self.client.get(url)
         self.assertContains(response, text='David Tatham. All rights reserved.', status_code=200)
+
+from django.test import TestCase, tag
+from django.urls import reverse
+from django.contrib.auth.models import User
+
+from pages.models import Page
+from pages.forms import PageForm
+
+
+class PageCreateViewTests(TestCase):
+    """Test PageCreateView functionality."""
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+
+    @tag("pages_new_views")
+    def test_page_create_requires_login(self):
+        """Unauthenticated users should be redirected to login."""
+        url = reverse('pages:new')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    @tag("pages_new_views")
+    def test_page_create_get_returns_200(self):
+        """Authenticated users should see the create form."""
+        self.client.login(username='testuser', password='testpass123')
+        url = reverse('pages:new')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    @tag("pages_new_views")
+    def test_page_create_post_creates_page(self):
+        """POST request should create a new page."""
+        self.client.login(username='testuser', password='testpass123')
+        url = reverse('pages:new')
+        data = {
+            'title': 'New Page',
+            'slug': 'new-page',
+            'body': '<p>This is a new page.</p>',
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(Page.objects.filter(title='New Page').exists())
+
+
+class PageUpdateViewTests(TestCase):
+    """Test PageUpdateView functionality."""
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.page = Page.objects.create(
+            title='Update Test',
+            slug='update-test',
+            body='<p>Original content.</p>',
+        )
+
+    @tag("pages_new_views")
+    def test_page_update_requires_login(self):
+        """Unauthenticated users should be redirected to login."""
+        url = reverse('pages:edit', kwargs={'page_slug': self.page.slug})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    @tag("pages_new_views")
+    def test_page_update_get_returns_200(self):
+        """Authenticated users should see the update form."""
+        self.client.login(username='testuser', password='testpass123')
+        url = reverse('pages:edit', kwargs={'page_slug': self.page.slug})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    @tag("pages_new_views")
+    def test_page_update_post_updates_page(self):
+        """POST request should update the page."""
+        self.client.login(username='testuser', password='testpass123')
+        url = reverse('pages:edit', kwargs={'page_slug': self.page.slug})
+        data = {
+            'title': 'Updated Page',
+            'slug': 'updated-page',
+            'body': '<p>Updated content.</p>',
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+        self.page.refresh_from_db()
+        self.assertEqual(self.page.title, 'Updated Page')
