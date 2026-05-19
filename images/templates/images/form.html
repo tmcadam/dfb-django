@@ -1,0 +1,18 @@
+{% extends 'common/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="my-5 col-xl-10 offset-xl-1">
+    <h4>{% if object %}Edit{% else %}New{% endif %} image</h4>
+    
+    <form method="post" enctype="multipart/form-data" class="form-horizontal">
+        {% csrf_token %}
+        {% crispy form %}
+
+        <div class="form-actions mt-3">
+            <button type="submit" class="btn btn-success">Save Image</button>
+            <a href="{% url 'images:index' %}" class="btn btn-outline-dark">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

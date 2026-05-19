@@ -1,0 +1,41 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+<h3>
+  <strong>Images</strong>
+  <a href="{% url 'images:new' %}" class="btn btn-success btn-sm float-right" role="button">New</a>
+</h3>
+
+<table id="index" class="table">
+    {% for image in images %}
+    <tr>
+        <td>
+            {{ image.biography.title }}
+        </td>
+        <td>
+            <a href="{{ image.original.url }}">
+                <img src="{{ image.thumbnail.url }}" alt="..." class="img-thumbnail" style="max-width:100px;">
+            </a>
+            <div class="small">
+                <strong>{{ image.title }}</strong><br>
+                {{ image.caption }}
+            </div>
+        </td>
+        <td>
+            <div class="btn-group float-right">
+            <a href="{% url 'images:edit' image.id %}" class="btn btn-outline-dark btn-sm float-right" role="button">Edit</a>
+            </div>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3">No results</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% if is_paginated %}
+  <!-- Add pagination if desired -->
+{% endif %}
+
+{% endblock %}

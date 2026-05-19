@@ -204,3 +204,98 @@ class ImageModelTests(TestCase):
         )
         self.assertEqual(bio1.images.count(), 2)
 
+
+
+from django.test import TestCase, tag
+from django.urls import reverse
+from django.contrib.auth.models import User
+from django.conf import settings
+import tempfile
+import os
+
+from images.models import Image
+from images.forms import ImageForm
+from biographies.tests.factories import BiographyFactory
+
+
+class ImageListViewTests(TestCase):
+    """Test ImageListView functionality."""
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+
+    @tag("images_new_views")
+    def test_image_list_requires_login(self):
+        """Unauthenticated users should be redirected to login."""
+        url = reverse('images:index')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    @tag("images_new_views")
+    def test_image_list_returns_200_for_authenticated(self):
+        """Authenticated users should see the image list."""
+        self.client.login(username='testuser', password='testpass123')
+        url = reverse('images:index')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+
+class ImageCreateViewTests(TestCase):
+    """Test ImageCreateView functionality."""
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+
+    @tag("images_new_views")
+    def test_image_create_requires_login(self):
+        """Unauthenticated users should be redirected to login."""
+        url = reverse('images:new')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    @tag("images_new_views")
+    def test_image_create_get_returns_200(self):
+        """Authenticated users should see the create form."""
+        self.client.login(username='testuser', password='testpass123')
+        url = reverse('images:new')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+
+class ImageUpdateViewTests(TestCase):
+    """Test ImageUpdateView functionality."""
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.biography = BiographyFactory.create()
+        with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as temp_file:
+            temp_file.write(b'\xff\xd8\xff\xe0' + b'\x00' * 100)
+            self.temp_image_path = temp_file.name
+        self.image = Image.objects.create(
+            title='Test Image',
+            caption='Test caption',
+            biography=self.biography,
+            image=self.temp_image_path,
+        )
+
+    def tearDown(self):
+        if os.path.exists(self.temp_image_path):
+            os.remove(self.temp_image_path)
+
+    @tag("images_new_views")
+    def test_image_update_requires_login(self):
+        """Unauthenticated users should be redirected to login."""
+        url = reverse('images:edit', kwargs={'pk': self.image.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/accounts/login/', response.url)
+
+    @tag("images_new_views")
+    def test_image_update_get_returns_200(self):
+        """Authenticated users should see the update form."""
+        self.client.login(username='testuser', password='testpass123')
+        url = reverse('images:edit', kwargs={'pk': self.image.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
